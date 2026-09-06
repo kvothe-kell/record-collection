@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale-1.0">
+    <title>My Record Collection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>MY Record Collection</h1>
+    <p>138 Records and Counting</p>
+    <h2>Add a Record</h2>
+
+    <label>Artist: <input type="text" id="artist"></label><br>
+    <label>Album: <input type="text" id="album"></label><br>
+    <label>Year: <input type="number" id="year"></label><br>
+    <label>Genre: <input type="text" id="genre"></label><br>
+    <label>Rating: <input type="number" id="rating" min="1" max="5"></label><br>
+
+    <button id="add-button">Add Record</button>
+    <p id="message"></p>
+    <button id="cancel-button">Cancel</button>
+
+    <h2>Collection</h2>
+
+    <div class="controls">
+        <label>Search: <input type="text" id="search"></label>
+        <label>Sort by:
+            <select id="sort">
+                <option value="artist">Artist</option>
+                <option value="album">Album</option>
+                <option value="year">Year</option>
+                <option value="rating">Rating</option>
+                <option value="added">Recently added</option>
+            </select>
+        </label>
+    </div>
+
+    <ul id="collection"></ul>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
