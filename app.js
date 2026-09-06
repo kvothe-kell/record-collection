@@ -24,6 +24,86 @@ const savedRecords = localStorage.getItem("records");
 const records = savedRecords ? JSON.parse(savedRecords) : [];
 let editingId = null;
 
+/* ============================================
+   DISPLAY HELPERS
+   ============================================ */
+
+// Create div with a class and some text. 
+function makeDiv(className, text) {
+    const div = document.createElement("div")
+    div.className = className;
+    div.textContent = text;
+    return div;
+}
+
+// Join the values that actaully exisit, seperated by a dot.
+function joinParts(parts) {
+    return parts.filter(Boolean).join(" . ");
+}
+
+// 90 -> $90.00, null ->""
+function formatPrice(price) {
+    if (price === null || price === undefined) {
+        return "";
+    }
+    return "$" + price.toFixed(2);
+}
+
+// Rating 3 to Stars
+function formatRating(rating) {
+    let stars = Number(rating) || 0;
+    if (stars < 0) stars = 0;
+    if (stars > 5) stars = 5;
+    return "★".repeat(stars) + "☆".repeat(5 - stars);
+}
+
+// Build the <li> for one record
+function createRecordElement(record) {
+    const item = document.createElement("li");
+    item.className = "record";
+
+    const info = document.createElement("div");
+    info.className = "record-info";
+
+    info.appendChild(makeDiv("record-title", `${record.artist} - ${record.album}`));
+    info.appendChild(makeDiv("record-details",
+        joinParts([record.year, record.label, record.format])));
+    info.appendChild(makeDiv("record-tags",
+        joinParts([record.genre, record.subgenre])));
+    info.appendChild(makeDiv("record-purchase",
+        joinParts([formatPrice(record.purchasePrice), record.purchaseLocation, record.mediaCondition])));
+
+    const side = document.createElement("div");
+    side.className = "record-side"
+    side.appendChild(makeDiv("record-rating", formatRating(record.rating)));
+
+    const actions = document.createElement("div");
+    actions.className = "record-actions"
+
+    const editButton = document.createElement("button");
+    editButton.className = "record-edit";
+    editButton.textContent = "Edit"
+    editButton.addEventListener("click", function () {
+        startEditing(record.id);
+    });
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "record-delete";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", function () {
+        deleteRecord(record.id);
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+    side.appendChild(actions);
+
+    item.appendChild(info);
+    item.appendChild(side);
+
+    return item;
+}
+
 
 /* ============================================
    RENDERING
@@ -62,35 +142,7 @@ function renderRecords() {
     }
 
     for (const record of visibleRecords) {
-        const item = document.createElement("li");
-        item.className = "record";
-
-        const text = document.createElement("span");
-        text.className = "record-text";
-        text.textContent = `${record.artist} — ${record.album} (${record.year})`
-            + ` · ${record.genre} · ${record.rating}/5`;
-
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "record-delete";
-        deleteButton.textContent = "Delete";
-
-        const editButton = document.createElement("button");
-        editButton.className = "record-edit";
-        editButton.textContent = "Edit";
-
-        editButton.addEventListener("click", function handleEdit() {
-            startEditing(record.id);
-        });
-
-
-        deleteButton.addEventListener("click", function handleDelete() {
-            deleteRecord(record.id);
-        });
-
-        item.appendChild(text);
-        item.appendChild(editButton);
-        item.appendChild(deleteButton);
-        collectionList.appendChild(item);
+        collectionList.appendChild(createRecordElement(record))
     }
 }
 

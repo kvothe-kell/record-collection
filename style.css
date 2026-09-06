@@ -17,7 +17,7 @@
    ============================================ */
 body {
     font-family: system-ui, sans-serif;
-    max-width: 700px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 2rem;
     background-color: var(--bg);
@@ -130,22 +130,65 @@ button:hover {
 .record {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.4rem;
     background-color: var(--bg-card);
     border-radius: 6px;
 }
 
+.record-info {
+    min-width: 0;
+}
+
+.record-title {
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+}
+
+.record-details,
+.record-tags,
+.record-purchase {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.record-tags {
+    color: var(--accent);
+    opacity: 0.75;
+}
+
+.record-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+.record-rating {
+    color: var(--accent);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.record-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.record-edit,
 .record-delete {
     background-color: transparent;
     color: var(--text-muted);
-    font-size: 0.8rem;
-    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
 }
 
+.record-edit:hover,
 .record-delete:hover {
-    color: var(--accent-hover);
+    color: var(--accent);
     background-color: transparent;
 }

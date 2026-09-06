@@ -267,13 +267,3 @@ function importRecords(newRecords) {
 
     console.log(`Added ${added}, skipped ${skipped}. Total now ${records.length}.`);
 }
-
-
-/*
-console.log("Mapped:", importedRecords.length);
-console.log("First:", importedRecords[0]);
-console.log("Blank price row:", importedRecords[88]);
-console.log("Artists still with a suffix:", importedRecords.filter(function (r) {
-    return /\(\d+\)$/.test(r.artist);
-}).length);
-console.log("Blank price check:", importedRecords[88].purchasePrice, importedRecords[88].purchaseLocation);*/
