@@ -11,18 +11,118 @@
 <body>
 
     <h1>MY Record Collection</h1>
-    <p>138 Records and Counting</p>
+    <p>155 Records and Counting</p>
+
     <h2>Add a Record</h2>
 
-    <label>Artist: <input type="text" id="artist"></label><br>
-    <label>Album: <input type="text" id="album"></label><br>
-    <label>Year: <input type="number" id="year"></label><br>
-    <label>Genre: <input type="text" id="genre"></label><br>
-    <label>Rating: <input type="number" id="rating" min="1" max="5"></label><br>
+    <fieldset class="form-section">
+        <legend>Album</legend>
+        <div class="form-grid">
+            <label class="field">
+                <span>Artist</span>
+                <input type="text" id="artist">
+            </label>
+            <label class="field">
+                <span>Album</span>
+                <input type="text" id="album">
+            </label>
+            <label class="field">
+                <span>Year</span>
+                <input type="number" id="year">
+            </label>
+            <label class="field">
+                <span>Label</span>
+                <input type="text" id="label">
+            </label>
+            <label class="field">
+                <span>Format</span>
+                <input type="text" id="format">
+            </label>
+            <label class="field">
+                <span>Genre</span>
+                <input type="text" id="genre">
+            </label>
+            <label class="field">
+                <span>Subgenre</span>
+                <input type="text" id="subgenre">
+            </label>
+            <label class="field">
+                <span>Discogs ID</span>
+                <input type="number" id="release-id">
+            </label>
+        </div>
+    </fieldset>
 
-    <button id="add-button">Add Record</button>
+    <fieldset class="form-section">
+        <legend>My Copy</legend>
+        <div class="form-grid">
+            <label class="field">
+                <span>Status</span>
+                <select id="status">
+                    <option value="owned">Owned</option>
+                    <option value="want">Want</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Rating</span>
+                <select id="rating">
+                    <option value="">—</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Media Condition</span>
+                <select id="media-condition">
+                    <option value="">—</option>
+                    <option value="Mint (M)">Mint (M)</option>
+                    <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
+                    <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
+                    <option value="Very Good (VG)">Very Good (VG)</option>
+                    <option value="Good Plus (G+)">Good Plus (G+)</option>
+                    <option value="Good (G)">Good (G)</option>
+                    <option value="Fair (F)">Fair (F)</option>
+                    <option value="Poor (P)">Poor (P)</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Sleeve Condition</span>
+                <select id="sleeve-condition">
+                    <option value="">—</option>
+                    <option value="Mint (M)">Mint (M)</option>
+                    <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
+                    <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
+                    <option value="Very Good (VG)">Very Good (VG)</option>
+                    <option value="Good Plus (G+)">Good Plus (G+)</option>
+                    <option value="Good (G)">Good (G)</option>
+                    <option value="Fair (F)">Fair (F)</option>
+                    <option value="Poor (P)">Poor (P)</option>
+                </select>
+            </label>
+            <label class="field">
+                <span>Price Paid</span>
+                <input type="number" id="purchase-price" step="0.01" min="0">
+            </label>
+            <label class="field">
+                <span>Bought From</span>
+                <input type="text" id="purchase-location">
+            </label>
+            <label class="field">
+                <span>Date Added</span>
+                <input type="date" id="date-added">
+            </label>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button id="add-button">Add Record</button>
+        <button id="cancel-button">Cancel</button>
+    </div>
+
     <p id="message"></p>
-    <button id="cancel-button">Cancel</button>
 
     <h2>Collection</h2>
 

@@ -1,13 +1,12 @@
 :root {
     --bg: #1a1a1a;
     --bg-card: #252525;
-    --bg: #1a1a1a;
-    --bg-card: #252525;
     --bg-input: #2a2a2a;
     --text: #e8e8e8;
     --text-muted: #999;
-    --accent: #008000;
-    --accent-hover: #b8431f;
+    --button-text: #0a1f12;
+    --accent: #22c55e;
+    --accent-hover: #006400;
     --border: #444;
     --error: #ff6b6b;
 }
@@ -37,52 +36,82 @@ h2 {
     font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #999;
+    color: var(--text-muted);
 }
 
 /* ============================================
    FORM
    ============================================ */
-label {
-    display: block;
-    margin-bottom: 0.5rem;
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-input {
-    padding: 0.4rem;
-    margin-left: 0.5rem;
-    background-color: var(--bg-input);
-    border: 1px solid var(--border);
-    color: var(--text);
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-    width: 6rem;
-}
-
+input,
 select {
     padding: 0.4rem;
     background-color: var(--bg-input);
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--text);
-    font-size: 1rem;
-    cursor: pointer;
+    font-size: 0.9rem;
 }
 
-.controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
+.form-section {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
     margin-bottom: 1rem;
+}
+
+.form-section legend {
+    padding: 0 0.5rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.field span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.field input,
+.field select {
+    width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+}
+
+.form-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
 }
 
 /* ============================================
@@ -91,7 +120,7 @@ select {
 button {
     padding: 0.5rem 1rem;
     background-color: var(--accent);
-    color: white;
+    color: var(--button-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -105,8 +134,8 @@ button:hover {
 #cancel-button {
     display: none;
     background-color: transparent;
-    color: var(--text-muted);
-    border: 1px solid var (--border);
+    color: var(--button-text);
+    border: 1px solid var(--border);
 }
 
 /* ============================================
