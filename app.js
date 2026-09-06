@@ -21,10 +21,7 @@ const cancelButton = document.getElementById("cancel-button");
 
 const savedRecords = localStorage.getItem("records");
 
-const records = savedRecords ? JSON.parse(savedRecords) : [
-    { id: 1, artist: "Saosin", album: "Saosin", year: 2006, genre: "Post-Hardcore", rating: 5 },
-    { id: 2, artist: "Anberlin", album: "Cities", year: 2007, genre: "Alternative", rating: 5 },
-];
+const records = savedRecords ? JSON.parse(savedRecords) : [];
 let editingId = null;
 
 
@@ -247,6 +244,7 @@ function handleAddButtonClick() {
         saveEdit();
     }
 }
+
 
 addButton.addEventListener("click", handleAddButtonClick);
 searchInput.addEventListener("input", renderRecords);
