@@ -154,12 +154,21 @@ function computeStats(list) {
         return record.purchasePrice !== null && record.purchasePrice !== undefined;
     });
 
+    const byArtist = countBy(owned, function (r) { return r.artist; });
+    const byLabel = countBy(owned, function (r) { return r.label; });
+    const byDecade = countBy(owned, function (r) {
+        return r.year ? Math.floor(r.year / 10) * 10 + "s" : "";
+    });
+
     return {
         count: owned.length,
         totalSpent: totalSpent,
         averagePrice: withPrice.length ? totalSpent / withPrice.length : 0,
         averageRating: rated.length ? ratingTotal / rated.length : 0,
-        missingPrice: owned.length - withPrice.length
+        missingPrice: owned.length - withPrice.length,
+        topArtists: topEntries(byArtist, 5),
+        topLabels: topEntries(byLabel, 5),
+        byDecade: byDecade
     };
 }
 
@@ -174,6 +183,10 @@ function renderStats(list) {
     statsArea.appendChild(makeStat("Average Price", formatPrice(stats.averagePrice)));
     statsArea.appendChild(makeStat("Average Rating", stats.averageRating.toFixed(2)));
     statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
+
+    statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
+    statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
+    statsArea.appendChild(makeDecadeChart(stats.byDecade));
 }
 
 // One label-and-value block.
@@ -184,6 +197,75 @@ function makeStat(label, value) {
     box.appendChild(makeDiv("stat-label", label));
     return box;
 }
+
+function makeStatList(title, entries) {
+    const box = document.createElement("div");
+    box.className = "stat-panel";
+    box.appendChild(makeDiv("stat-label", title));
+
+    for (const entry of entries) {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.appendChild(makeDiv("stat-row-name", entry[0]));
+        row.appendChild(makeDiv("stat-row-count", entry[1]));
+        box.appendChild(row);
+    }
+
+    return box;
+}
+
+function makeDecadeChart(counts) {
+    const box = document.createElement("div");
+    box.className = "stat-panel";
+    box.appendChild(makeDiv("stat-label", "By Decade"));
+
+    const decades = Object.entries(counts).sort(function (a, b) {
+        return a[0].localeCompare(b[0]);
+    });
+
+    const biggest = Math.max(...decades.map(function (d) { return d[1]; }));
+
+    for (const decade of decades) {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.appendChild(makeDiv("stat-row-name", decade[0]));
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const bar = document.createElement("div");
+        bar.className = "bar-fill";
+        bar.style.width = (decade[1] / biggest * 100) + "%";
+        track.appendChild(bar);
+
+        row.appendChild(track);
+        row.appendChild(makeDiv("stat-row-count", decade[1]));
+        box.appendChild(row);
+    }
+
+    return box;
+}
+
+function countBy(list, getKey) {
+    return list.reduce(function (counts, record) {
+        const key = getKey(record);
+
+        if (key) {
+            counts[key] = (counts[key] || 0) + 1;
+        }
+
+        return counts;
+    }, {});
+}
+
+function topEntries(counts, limit) {
+    return Object.entries(counts)
+        .sort(function (a, b) {
+            return b[1] - a[1];
+        })
+        .slice(0, limit);
+}
+
 
 /* ============================================
    RENDERING
@@ -227,6 +309,7 @@ function renderRecords() {
         collectionList.appendChild(createRecordElement(record))
     }
 }
+
 
 /* ============================================
    FORM HELPERS
