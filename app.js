@@ -33,6 +33,7 @@ const collectionList = document.getElementById("collection");
 const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
 const cancelButton = document.getElementById("cancel-button");
+const statsArea = document.getElementById("stats");
 
 
 /* ============================================
@@ -66,7 +67,10 @@ function formatPrice(price) {
     if (price === null || price === undefined) {
         return "";
     }
-    return "$" + price.toFixed(2);
+    return price.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+    });
 }
 
 // Rating 3 to Stars
@@ -124,6 +128,62 @@ function createRecordElement(record) {
     return item;
 }
 
+/* ============================================
+   STATS
+   ============================================ */
+
+// Work out the headline numbers for a set of records.
+function computeStats(list) {
+    const owned = list.filter(function (record) {
+        return record.status !== "want";
+    });
+
+    const totalSpent = owned.reduce(function (sum, record) {
+        return sum + (record.purchasePrice || 0);
+    }, 0);
+
+    const rated = owned.filter(function (record) {
+        return record.rating > 0;
+    });
+
+    const ratingTotal = rated.reduce(function (sum, record) {
+        return sum + record.rating;
+    }, 0);
+
+    const withPrice = owned.filter(function (record) {
+        return record.purchasePrice !== null && record.purchasePrice !== undefined;
+    });
+
+    return {
+        count: owned.length,
+        totalSpent: totalSpent,
+        averagePrice: withPrice.length ? totalSpent / withPrice.length : 0,
+        averageRating: rated.length ? ratingTotal / rated.length : 0,
+        missingPrice: owned.length - withPrice.length
+    };
+}
+
+//Draw the stats panel.
+function renderStats(list) {
+    const stats = computeStats(list);
+
+    statsArea.innerHTML = "";
+
+    statsArea.appendChild(makeStat("Records", stats.count));
+    statsArea.appendChild(makeStat("Total Spent", formatPrice(stats.totalSpent)))
+    statsArea.appendChild(makeStat("Average Price", formatPrice(stats.averagePrice)));
+    statsArea.appendChild(makeStat("Average Rating", stats.averageRating.toFixed(2)));
+    statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
+}
+
+// One label-and-value block.
+function makeStat(label, value) {
+    const box = document.createElement("div");
+    box.className = "stat";
+    box.appendChild(makeDiv("stat-value", value));
+    box.appendChild(makeDiv("stat-label", label));
+    return box;
+}
 
 /* ============================================
    RENDERING
@@ -153,6 +213,8 @@ function renderRecords() {
         }
         return a[sortBy].localeCompare(b[sortBy]);
     });
+
+    renderStats(visibleRecords)
 
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
