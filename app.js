@@ -1,11 +1,31 @@
 /* ============================================
-   DOM REFERENCES
+   FORM FIELD CONFIG
    ============================================ */
-const artistInput = document.getElementById("artist");
-const albumInput = document.getElementById("album");
-const yearInput = document.getElementById("year");
-const genreInput = document.getElementById("genre");
-const ratingInput = document.getElementById("rating");
+const FIELDS = [
+    { key: "artist", inputId: "artist", type: "text", required: true },
+    { key: "album", inputId: "album", type: "text", required: true },
+    { key: "year", inputId: "year", type: "number", required: true },
+    { key: "label", inputId: "label", type: "text" },
+    { key: "format", inputId: "format", type: "text" },
+    { key: "genre", inputId: "genre", type: "text", required: true },
+    { key: "subgenre", inputId: "subgenre", type: "text" },
+    { key: "releaseId", inputId: "release-id", type: "number" },
+    { key: "status", inputId: "status", type: "text", defaultValue: "owned" },
+    { key: "rating", inputId: "rating", type: "number" },
+    { key: "mediaCondition", inputId: "media-condition", type: "text" },
+    { key: "sleeveCondition", inputId: "sleeve-condition", type: "text" },
+    { key: "purchasePrice", inputId: "purchase-price", type: "number" },
+    { key: "purchaseLocation", inputId: "purchase-location", type: "text" },
+    { key: "dateAdded", inputId: "date-added", type: "text" }
+];
+
+for (const field of FIELDS) {
+    field.input = document.getElementById(field.inputId);
+};
+
+for (const field of FIELDS) {
+    if (!field.input) console.error("Missing input for", field.inputId);
+}
 
 const addButton = document.getElementById("add-button");
 const messageArea = document.getElementById("message");
@@ -38,7 +58,7 @@ function makeDiv(className, text) {
 
 // Join the values that actaully exisit, seperated by a dot.
 function joinParts(parts) {
-    return parts.filter(Boolean).join(" . ");
+    return parts.filter(Boolean).join(" · ");
 }
 
 // 90 -> $90.00, null ->""
@@ -152,17 +172,40 @@ function renderRecords() {
 
 // Empty every input in the form. 
 function clearForm() {
-    artistInput.value = "";
-    albumInput.value = "";
-    yearInput.value = "";
-    genreInput.value = "";
-    ratingInput.value = "";
+    for (const field of FIELDS) {
+        field.input.value = field.defaultValue || "";
+    }
 }
 
 // True only when every field has something in it. 
 function formIsValid() {
-    return artistInput.value && albumInput.value && yearInput.value
-        && genreInput.value && ratingInput.value;
+    return FIELDS.every(function (field) {
+        return !field.required || field.input.value.trim() !== "";
+    });
+}
+
+// Build a record object from the current form values.
+function readForm() {
+    const record = {};
+    for (const field of FIELDS) {
+        const raw = field.input.value.trim();
+
+        if (field.type === "number") {
+            record[field.key] = raw === "" ? null : Number(raw);
+        } else {
+            record[field.key] = raw;
+        }
+    }
+
+    return record;
+}
+
+// Put a record's values into the form.
+function fillForm(record) {
+    for (const field of FIELDS) {
+        const value = record[field.key];
+        field.input.value = value === null || value === undefined ? "" : value;
+    }
 }
 
 //Show message, then clear after a few seconds.
@@ -173,7 +216,6 @@ function showMessage(text) {
         messageArea.textContent = "";
     }, 3000);
 }
-
 
 /* ============================================
    ADD & EDIT
@@ -186,14 +228,8 @@ function addRecord() {
         return;
     }
 
-    const newRecord = {
-        id: Date.now(),
-        artist: artistInput.value,
-        album: albumInput.value,
-        year: Number(yearInput.value),
-        genre: genreInput.value,
-        rating: Number(ratingInput.value)
-    };
+    const newRecord = readForm();
+    newRecord.id = Date.now();
 
     records.push(newRecord);
     saveRecords();
@@ -212,12 +248,7 @@ function startEditing(id) {
     }
 
     editingId = id;
-
-    artistInput.value = record.artist;
-    albumInput.value = record.album;
-    yearInput.value = record.year;
-    genreInput.value = record.genre;
-    ratingInput.value = record.rating;
+    fillForm(record);
 
     addButton.textContent = "Save Changes";
     cancelButton.style.display = "inline-block";
@@ -237,11 +268,7 @@ function saveEdit() {
         return;
     }
 
-    record.artist = artistInput.value;
-    record.album = albumInput.value;
-    record.year = Number(yearInput.value);
-    record.genre = genreInput.value;
-    record.rating = Number(ratingInput.value);
+    Object.assign(record, readForm());
 
     saveRecords();
     stopEditing();
@@ -254,7 +281,6 @@ function stopEditing() {
     addButton.textContent = "Add Record";
     cancelButton.style.display = "none";
 }
-
 
 /* ============================================
    DELETE
