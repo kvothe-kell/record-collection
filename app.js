@@ -27,6 +27,9 @@ for (const field of FIELDS) {
     if (!field.input) console.error("Missing input for", field.inputId);
 }
 
+/* ============================================
+   DOM REFERENCES
+   ============================================ */
 const addButton = document.getElementById("add-button");
 const messageArea = document.getElementById("message");
 const collectionList = document.getElementById("collection");
@@ -34,7 +37,8 @@ const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
 const cancelButton = document.getElementById("cancel-button");
 const statsArea = document.getElementById("stats");
-
+const statusFilter = document.getElementById("status-filter");
+const missingPriceToggle = document.getElementById("missing-price");
 
 /* ============================================
    STATE
@@ -275,12 +279,26 @@ function renderRecords() {
     collectionList.innerHTML = "";
 
     const query = searchInput.value.toLowerCase();
+    const statusValue = statusFilter.value;
 
-    const visibleRecords = records.filter(function (record) {
-        return (record.artist || "").toLowerCase().includes(query)
-            || (record.album || "").toLowerCase().includes(query)
-            || (record.genre || "").toLowerCase().includes(query)
-    });
+    const visibleRecords = records
+        .filter(function (record) {
+            return statusValue === "all" || (record.status || "owned") === statusValue;
+        })
+        .filter(function (record) {
+            if (!missingPriceToggle.checked) {
+                return true;
+            }
+            return record.purchasePrice === null || record.purchasePrice === undefined
+        })
+        .filter(function (record) {
+            return (record.artist || "").toLowerCase().includes(query)
+                || (record.album || "").toLowerCase().includes(query)
+                || (record.genre || "").toLowerCase().includes(query)
+                || (record.subgenre || "").toLowerCase().includes(query)
+                || (record.label || "").toLowerCase().includes(query)
+                || (record.purchaseLocation || "").toLowerCase().includes(query);
+        });
 
     const sortBy = sortSelect.value;
     visibleRecords.sort(function (a, b) {
@@ -473,6 +491,8 @@ addButton.addEventListener("click", handleAddButtonClick);
 searchInput.addEventListener("input", renderRecords);
 sortSelect.addEventListener("change", renderRecords);
 cancelButton.addEventListener("click", stopEditing);
+statusFilter.addEventListener("change", renderRecords);
+missingPriceToggle.addEventListener("change", renderRecords);
 
 //Set the starting UI state and draw the collection
 renderRecords();
