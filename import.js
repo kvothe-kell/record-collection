@@ -1,4 +1,9 @@
 const csvText = `Artist,Title,Label,Format,Rating,Released,release_id,Date Added,Collection Media Condition,Collection Sleeve Condition,Location,Purchase Price,Genre,Subgenre
+A Day To Remember,You're Welcome,Fueled By Ramen,"LP, Ltd, Red",,2021,17717398,9/10/26 15:20,Mint (M),Mint (M),Discogs,27,Easycore,Alternative Rock
+All Time Low,Future Hearts,Hopeless Records,"LP, Album, Lig",,2015,6919251,9/7/26 14:48,Near Mint (NM or M-),Near Mint (NM or M-),Newbury Comics,31,Pop-Punk,
+Fall Out Boy,Infinity On High,"Island Records, Decaydance, Fueled By Ramen, Universal Music Special Markets","2xLP, Album, RE, 180",,2016,9506280,9/7/26 14:47,Near Mint (NM or M-),Near Mint (NM or M-),Newbury Comics,53,Pop punk,
+All Time Low,Nothing Personal,Hopeless Records,"LP, Album, Ltd, RE, Pur",,2024,31268360,9/7/26 12:24,Near Mint (NM or M-),Near Mint (NM or M-),Newbury Comics,26,Pop-Punk,
+Tame Impala,Currents,Interscope Records,"2xLP, Album, Gat",,2015,7250491,9/7/26 8:28,Near Mint (NM or M-),Near Mint (NM or M-),Discogs,40,Electronic,Synth-pop
 A Day To Remember,Bad Vibrations,ADTR Records,"LP, Album",3,2016,8983628,8/8/26,,,Wanna Hear It Record,90,Metalcore,Easycore
 A Day To Remember,Common Courtesy,"ADTR Records, Epitaph","2xLP, Album, Ltd, RE, Cle",3,2022,24610886,4/2/26,,,Wanna Hear It Record,35,Easycore,Pop-Punk
 A Day To Remember,What Separates Me From You,Craft Recordings,"LP, Album, Ltd, RE, Cok",4,2025,35728054,4/11/26,,,Wanna Hear It Record,50,Easycore,Melodic Metalcore
@@ -148,7 +153,6 @@ Stephen Schwartz,Wicked: For Good (The Soundtrack),"Republic Records, Universal 
 The Menzingers,Some Of It Was True,Epitaph,"LP, Album",2,2024,29631217,9/6/26,,,Discogs,43.27,Punk Rock,Heartland Rock
 Bilmuri,Kinda Hard,Columbia,"LP, Album, Ltd, Whi",3,2026,37069797,9/6/26,,,Discogs,47.77,Post-Hardcore,Country Rock
 AFI,Decemberunderground,"Interscope Records, Tiny Evil, UMe","LP, Album, RE, Bla + 7"", Whi + Ltd, 20t",3,2026,37898535,8/15/26,,,Direct,55.77,Alternative Rock,Gothic Rock`
-
 
 /* ============================================
    PARSE CSV IMPORT

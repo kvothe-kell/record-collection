@@ -6,7 +6,7 @@
     --text-muted: #999;
     --button-text: #0a1f12;
     --accent: #22c55e;
-    --accent-hover: #006400;
+    --accent-hover: #e8e8e8;
     --border: #444;
     --error: #ff6b6b;
 }
@@ -129,6 +129,13 @@ button {
 
 button:hover {
     background-color: var(--accent-hover);
+}
+
+#cancel-button {
+    display: none;
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
 }
 
 /* ============================================

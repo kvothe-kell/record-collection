@@ -17,15 +17,11 @@ const FIELDS = [
     { key: "purchasePrice", inputId: "purchase-price", type: "number" },
     { key: "purchaseLocation", inputId: "purchase-location", type: "text" },
     { key: "dateAdded", inputId: "date-added", type: "text" }
-];
+]
 
 for (const field of FIELDS) {
     field.input = document.getElementById(field.inputId);
 };
-
-for (const field of FIELDS) {
-    if (!field.input) console.error("Missing input for", field.inputId);
-}
 
 /* ============================================
    DOM REFERENCES
@@ -61,7 +57,7 @@ function makeDiv(className, text) {
     return div;
 }
 
-// Join the values that actaully exisit, seperated by a dot.
+// Join the values that actually exisit, seperated by a dot.
 function joinParts(parts) {
     return parts.filter(Boolean).join(" · ");
 }
@@ -288,7 +284,7 @@ function renderRecords() {
         .filter(function (record) {
             if (!missingPriceToggle.checked) {
                 return true;
-            }
+            };
             return record.purchasePrice === null || record.purchasePrice === undefined
         })
         .filter(function (record) {
@@ -311,10 +307,15 @@ function renderRecords() {
         if (sortBy === "added") {
             return b.id - a.id;
         }
-        return a[sortBy].localeCompare(b[sortBy]);
+
+        const primary = (a[sortBy] || "").localeCompare(b[sortBy] || "");
+        if (primary !== 0) {
+            return primary;
+        }
+        return (a.album || "").localeCompare(b.album || "");
     });
 
-    renderStats(visibleRecords)
+    renderStats(visibleRecords);
 
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
@@ -324,7 +325,7 @@ function renderRecords() {
     }
 
     for (const record of visibleRecords) {
-        collectionList.appendChild(createRecordElement(record))
+        collectionList.appendChild(createRecordElement(record));
     }
 }
 
@@ -340,7 +341,7 @@ function clearForm() {
     }
 }
 
-// True only when every field has something in it. 
+// True only when every required field has something in it. 
 function formIsValid() {
     return FIELDS.every(function (field) {
         return !field.required || field.input.value.trim() !== "";
