@@ -268,6 +268,29 @@ function topEntries(counts, limit) {
 
 
 /* ============================================
+   VIEWS
+   ============================================ */
+
+const navButtons = document.querySelectorAll(".nav-button");
+const views = document.querySelectorAll(".view");
+
+let currentView = "collection";
+
+//Show one view and higlight it's nav button.
+function showView(name) {
+    currentView = name;
+
+    for (const view of views) {
+        view.classList.toggle("active", view.id === "view-" + name);
+    }
+
+    for (const button of navButtons) {
+        button.classList.toggle("nav-active", button.dataset.view === name);
+    }
+}
+
+
+/* ============================================
    RENDERING
    ============================================ */
 
@@ -413,6 +436,7 @@ function startEditing(id) {
 
     editingId = id;
     fillForm(record);
+    showView("add")
 
     addButton.textContent = "Save Changes";
     cancelButton.style.display = "inline-block";
@@ -436,6 +460,7 @@ function saveEdit() {
 
     saveRecords();
     stopEditing();
+    showView("collection")
     renderRecords();
 }
 
@@ -487,14 +512,23 @@ function handleAddButtonClick() {
     }
 }
 
+for (const button of navButtons) {
+    button.addEventListener("click", function () {
+        showView(button.dataset.view);
+    });
+}
 
 addButton.addEventListener("click", handleAddButtonClick);
 searchInput.addEventListener("input", renderRecords);
 sortSelect.addEventListener("change", renderRecords);
-cancelButton.addEventListener("click", stopEditing);
+cancelButton.addEventListener("click", function () {
+    stopEditing();
+    showView("collection");
+});
 statusFilter.addEventListener("change", renderRecords);
 missingPriceToggle.addEventListener("change", renderRecords);
 
 //Set the starting UI state and draw the collection
 renderRecords();
+showView("collection");
 stopEditing();
