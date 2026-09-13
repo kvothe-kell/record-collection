@@ -17,7 +17,7 @@ const FIELDS = [
     { key: "purchasePrice", inputId: "purchase-price", type: "number" },
     { key: "purchaseLocation", inputId: "purchase-location", type: "text" },
     { key: "dateAdded", inputId: "date-added", type: "text" }
-]
+];
 
 for (const field of FIELDS) {
     field.input = document.getElementById(field.inputId);
@@ -436,7 +436,7 @@ function startEditing(id) {
 
     editingId = id;
     fillForm(record);
-    showView("add")
+    showView("add");
 
     addButton.textContent = "Save Changes";
     cancelButton.style.display = "inline-block";
@@ -460,7 +460,7 @@ function saveEdit() {
 
     saveRecords();
     stopEditing();
-    showView("collection")
+    showView("collection");
     renderRecords();
 }
 
@@ -514,7 +514,13 @@ function handleAddButtonClick() {
 
 for (const button of navButtons) {
     button.addEventListener("click", function () {
-        showView(button.dataset.view);
+        const target = button.dataset.view;
+        console.log("nav click:", target, "editingId:", editingId);
+        if (editingId !== null && target !== "add") {
+            stopEditing();
+        }
+
+        showView(target);
     });
 }
 
