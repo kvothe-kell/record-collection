@@ -36,6 +36,7 @@ const statsArea = document.getElementById("stats");
 const statusFilter = document.getElementById("status-filter");
 const missingPriceToggle = document.getElementById("missing-price");
 const exportButton = document.getElementById("export-button")
+const importFileInput = document.getElementById("import-file");
 
 /* ============================================
    STATE
@@ -275,12 +276,8 @@ function topEntries(counts, limit) {
 const navButtons = document.querySelectorAll(".nav-button");
 const views = document.querySelectorAll(".view");
 
-let currentView = "collection";
-
 //Show one view and higlight it's nav button.
 function showView(name) {
-    currentView = name;
-
     for (const view of views) {
         view.classList.toggle("active", view.id === "view-" + name);
     }
@@ -519,6 +516,47 @@ function exportRecords() {
     URL.revokeObjectURL(url);
 }
 
+//Read a JSON backup file and replace the collection with it. 
+function handleImportFile(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+        try {
+            const loaded = JSON.parse(reader.result);
+
+            if (!Array.isArray(loaded)) {
+                showMessage("That file doesn't contain a record array.");
+                return;
+            }
+
+            records.length = 0;
+
+            for (const record of loaded) {
+                records.push(record);
+            }
+
+            saveRecords();
+            renderRecords();
+            showMessage("Loaded " + records.length + " records.");
+        } catch (error) {
+            showMessage("Couldn't read that file: " + error.message);
+        }
+    };
+
+    reader.onerror = function () {
+        showMessage("Couldn't read that file.");
+    };
+
+    reader.readAsText(file);
+
+    importFileInput.value = "";
+}
 
 /* ============================================
    EVENTS
@@ -553,6 +591,7 @@ cancelButton.addEventListener("click", function () {
 statusFilter.addEventListener("change", renderRecords);
 missingPriceToggle.addEventListener("change", renderRecords);
 exportButton.addEventListener("click", exportRecords);
+importFileInput.addEventListener("change", handleImportFile);
 
 //Set the starting UI state and draw the collection
 renderRecords();

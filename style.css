@@ -189,7 +189,7 @@ button:hover {
 #message {
     color: var(--error);
     min-height: 1.2rem;
-    margin: 0.5rem 0;
+    margin: 0.5rem 0 1rem;
 }
 
 /* ============================================

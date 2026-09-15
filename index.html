@@ -18,6 +18,8 @@
         <button class="nav-button" data-view="data">Data</button>
     </nav>
 
+    <p id="message"></p>
+
     <div id="view-collection" class="view">
 
         <div class="controls">
@@ -162,8 +164,6 @@
             <button id="cancel-button">Cancel</button>
         </div>
 
-        <p id="message"></p>
-
     </div>
 
     <div id="view-data" class="view">
@@ -171,6 +171,11 @@
             <legend>Backup</legend>
             <p class="data-help">Download your whole collection as a JSON file.</p>
             <button id="export-button">Export JSON</button>
+        </fieldset>
+        <fieldset class="form-section">
+            <legend>Restore</legend>
+            <p class="data-help">Load a JSON backup. This replaces your current collection.</p>
+            <input type="file" id="import-file" accept=".json">
         </fieldset>
     </div>
 
