@@ -10,11 +10,12 @@
 
 <body>
 
-    <h1>MY Record Collection</h1>
+    <h1>My Record Collection</h1>
     <nav class="nav">
         <button class="nav-button" data-view="collection">Collection</button>
         <button class="nav-button" data-view="stats">Stats</button>
         <button class="nav-button" data-view="add">Add Record</button>
+        <button class="nav-button" data-view="data">Data</button>
     </nav>
 
     <div id="view-collection" class="view">
@@ -163,6 +164,14 @@
 
         <p id="message"></p>
 
+    </div>
+
+    <div id="view-data" class="view">
+        <fieldset class="form-section">
+            <legend>Backup</legend>
+            <p class="data-help">Download your whole collection as a JSON file.</p>
+            <button id="export-button">Export JSON</button>
+        </fieldset>
     </div>
 
     <script src="app.js"></script>

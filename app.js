@@ -35,6 +35,7 @@ const cancelButton = document.getElementById("cancel-button");
 const statsArea = document.getElementById("stats");
 const statusFilter = document.getElementById("status-filter");
 const missingPriceToggle = document.getElementById("missing-price");
+const exportButton = document.getElementById("export-button")
 
 /* ============================================
    STATE
@@ -501,6 +502,25 @@ function saveRecords() {
 
 
 /* ============================================
+   IMPORT AND EXPORT
+   ============================================ */
+
+//Download the collection as a JSON file. 
+function exportRecords() {
+    const text = JSON.stringify(records, null, 2)
+    const blob = new Blob([text], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "records-" + new Date().toISOString().slice(0, 10) + ".json";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+
+/* ============================================
    EVENTS
    ============================================ */
 
@@ -515,7 +535,6 @@ function handleAddButtonClick() {
 for (const button of navButtons) {
     button.addEventListener("click", function () {
         const target = button.dataset.view;
-        console.log("nav click:", target, "editingId:", editingId);
         if (editingId !== null && target !== "add") {
             stopEditing();
         }
@@ -533,6 +552,7 @@ cancelButton.addEventListener("click", function () {
 });
 statusFilter.addEventListener("change", renderRecords);
 missingPriceToggle.addEventListener("change", renderRecords);
+exportButton.addEventListener("click", exportRecords);
 
 //Set the starting UI state and draw the collection
 renderRecords();
