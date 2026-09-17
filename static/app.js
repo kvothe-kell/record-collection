@@ -405,7 +405,7 @@ function showMessage(text) {
    ============================================ */
 
 //Build a record from the form and add it to the array.
-function addRecord() {
+async function addRecord() {
     if (!formIsValid()) {
         showMessage("Hey Dummy, please fill in all fields.");
         return;
@@ -414,10 +414,14 @@ function addRecord() {
     const newRecord = readForm();
     newRecord.id = Date.now();
 
-    records.push(newRecord);
-    saveRecords();
-    clearForm();
-    renderRecords();
+    try {
+        await createRecordOnServer(newRecord);
+        records.push(newRecord);
+        clearForm();
+        renderRecords();
+    } catch (error) {
+        showMessage("Couldn't save: " + error.message);
+    }
 }
 
 // Fill the form with a record's values and switch to edit mode.
@@ -438,7 +442,7 @@ function startEditing(id) {
     cancelButton.style.display = "inline-block";
 }
 
-function saveEdit() {
+async function saveEdit() {
     if (!formIsValid()) {
         showMessage("Hey Dummy, please fill in all fields.");
         return;
@@ -452,12 +456,17 @@ function saveEdit() {
         return;
     }
 
-    Object.assign(record, readForm());
+    const updated = { ...record, ...readForm() };
 
-    saveRecords();
-    stopEditing();
-    showView("collection");
-    renderRecords();
+    try {
+        await updateRecordOnServer(updated);
+        Object.assign(record, updated);
+        stopEditing();
+        showView("collection");
+        renderRecords();
+    } catch (error) {
+        showMessage("Couldn't save: " + error.message);
+    }
 }
 
 function stopEditing() {
@@ -472,38 +481,68 @@ function stopEditing() {
    ============================================ */
 
 // Delete a record from the array and redraw the list.
-function deleteRecord(id) {
+async function deleteRecord(id) {
     const index = records.findIndex(function (record) {
         return record.id === id;
     });
 
-    if (index !== -1) {
+    if (index === -1) {
+        return;
+    }
+
+    try {
+        await deleteRecordOnServer(id);
         records.splice(index, 1);
-        saveRecords();
         renderRecords();
+    } catch (error) {
+        showMessage("Couldn't delete: " + error.message);
     }
 }
-
 
 /* ============================================
    PERSISTENCE
    ============================================ */
 
-// Send the whole collection to the server.
-async function saveRecords() {
-    try {
-        const response = await fetch("/api/records", {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(records)
-        });
+const JSON_HEADERS = { "Content-Type": "application/json" };
 
-        if (!response.ok) {
-            throw new Error("Server returned " + response.status);
-        }
-    } catch (error) {
-        showMessage("Couldn't save: " + error.message);
+// Send one API request and throw if the server refuses it. 
+async function apiFetch(url, options) {
+    const response = await fetch(url, options || {});
+
+    if (!response.ok) {
+        throw new Error("Server returned " + response.status);
     }
+
+    return response.json();
+}
+
+async function createRecordOnServer(record) {
+    return apiFetch("/api/records", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(record)
+    });
+}
+
+async function updateRecordOnServer(record) {
+    return apiFetch("/api/records/" + record.id, {
+        method: "PUT",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(record)
+    });
+}
+
+
+async function deleteRecordOnServer(id) {
+    return apiFetch("/api/records/" + id, { method: "DELETE" });
+}
+
+async function replaceAllOnServer(list) {
+    return apiFetch("/api/records", {
+        method: "PUT",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(list)
+    });
 }
 
 // Fetch the collection from the server into the records array.
@@ -555,7 +594,7 @@ function handleImportFile(event) {
 
     const reader = new FileReader();
 
-    reader.onload = function () {
+    reader.onload = async function () {
         try {
             const loaded = JSON.parse(reader.result);
 
@@ -570,7 +609,7 @@ function handleImportFile(event) {
                 records.push(record);
             }
 
-            saveRecords();
+            await replaceAllOnServer(records);
             renderRecords();
             showMessage("Loaded " + records.length + " records.");
         } catch (error) {
