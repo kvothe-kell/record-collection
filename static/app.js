@@ -42,9 +42,7 @@ const importFileInput = document.getElementById("import-file");
    STATE
    ============================================ */
 
-const savedRecords = localStorage.getItem("records");
-
-const records = savedRecords ? JSON.parse(savedRecords) : [];
+const records = [];
 let editingId = null;
 
 /* ============================================
@@ -497,6 +495,26 @@ function saveRecords() {
     localStorage.setItem("records", recordsString);
 }
 
+// Fetch the collection from the server into the records array.
+async function loadRecords() {
+    try {
+        const response = await fetch("/api/records");
+
+        if (!response.ok) {
+            throw new Error("Server returned " + response.status);
+        }
+
+        const loaded = await response.json();
+        records.length = 0;
+
+        for (const record of loaded) {
+            records.push(record);
+        }
+    } catch (error) {
+        showMessage("Couldn't load records: " + error.message);
+    }
+}
+
 
 /* ============================================
    IMPORT AND EXPORT
@@ -594,6 +612,12 @@ exportButton.addEventListener("click", exportRecords);
 importFileInput.addEventListener("change", handleImportFile);
 
 //Set the starting UI state and draw the collection
-renderRecords();
 showView("collection");
 stopEditing();
+
+async function init() {
+    await loadRecords();
+    renderRecords();
+}
+
+init();
