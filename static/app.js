@@ -489,10 +489,21 @@ function deleteRecord(id) {
    PERSISTENCE
    ============================================ */
 
-//Convert the array to text and stash it in local storage.
-function saveRecords() {
-    const recordsString = JSON.stringify(records);
-    localStorage.setItem("records", recordsString);
+// Send the whole collection to the server.
+async function saveRecords() {
+    try {
+        const response = await fetch("/api/records", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(records)
+        });
+
+        if (!response.ok) {
+            throw new Error("Server returned " + response.status);
+        }
+    } catch (error) {
+        showMessage("Couldn't save: " + error.message);
+    }
 }
 
 // Fetch the collection from the server into the records array.
