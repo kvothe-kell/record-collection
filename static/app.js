@@ -412,11 +412,10 @@ async function addRecord() {
     }
 
     const newRecord = readForm();
-    newRecord.id = Date.now();
 
     try {
-        await createRecordOnServer(newRecord);
-        records.push(newRecord);
+        const saved = await createRecordOnServer(newRecord);
+        records.push(saved);
         clearForm();
         renderRecords();
     } catch (error) {

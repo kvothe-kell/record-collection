@@ -1,35 +1,52 @@
-import json
-import os
+import sqlite3
 
-from flask import Flask, jsonify, request
+from flask import Flask, g, jsonify, request
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
-DATA_FILE = "records.json"
+DB_FILE = "records.db"
+COLUMNS = [
+    "releaseId",
+    "artist",
+    "album",
+    "year",
+    "genre",
+    "subgenre",
+    "label",
+    "format",
+    "rating",
+    "status",
+    "mediaCondition",
+    "sleeveCondition",
+    "purchasePrice",
+    "purchaseLocation",
+    "dateAdded",
+]
 
 
-def load_records():
-    """Read the collection from disk, or return and empty list."""
-    if not os.path.exists(DATA_FILE):
-        return []
+def get_db():
+    """One connection per request, reused within it."""
+    if "db" not in g:
+        g.db = sqlite3.connect(DB_FILE)
+        g.db.row_factory = sqlite3.Row
+    return g.db
 
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+
+@app.teardown_appcontext
+def close_db(exception):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
+
+
+def row_to_dict(row):
+    return {key: row[key] for key in row.keys()}
 
 
 @app.route("/api/records", methods=["GET"])
 def get_records():
-    return jsonify(load_records())
-
-
-def save_records(records):
-    """Write the collection to disk atomically."""
-    temp = DATA_FILE + ".tmp"
-
-    with open(temp, "w", encoding="utf-8") as f:
-        json.dump(records, f, indent=2)
-
-    os.replace(temp, DATA_FILE)
+    rows = get_db().execute("SELECT * FROM records").fetchall()
+    return jsonify([row_to_dict(row) for row in rows])
 
 
 @app.route("/api/records", methods=["POST"])
@@ -39,48 +56,59 @@ def create_record():
     if not isinstance(record, dict):
         return jsonify({"error": "Expected a record object"}), 400
 
-    records = load_records()
-    records.append(record)
-    save_records(records)
+    placeholders = ", ".join(["?"] * len(COLUMNS))
+    sql = (
+        "INSERT INTO records (" + ", ".join(COLUMNS) + ") VALUES (" + placeholders + ")"
+    )
+    values = [record.get(column) for column in COLUMNS]
 
-    return jsonify(record), 201
+    db = get_db()
+
+    try:
+        cursor = db.execute(sql, values)
+        db.commit()
+    except sqlite3.IntegrityError as error:
+        return jsonify({"error": str(error)}), 409
+
+    row = db.execute(
+        "SELECT * FROM records WHERE id = ?", (cursor.lastrowid,)
+    ).fetchone()
+    return jsonify(row_to_dict(row)), 201
 
 
 @app.route("/api/records/<int:record_id>", methods=["PUT"])
 def update_record(record_id):
     updated = request.get_json()
-    records = load_records()
 
-    for i, record in enumerate(records):
-        if record.get("id") == record_id:
-            records[i] = updated
-            save_records(records)
-            return jsonify(updated)
+    assignments = ", ".join([column + " = ?" for column in COLUMNS])
+    sql = "UPDATE records SET " + assignments + " WHERE id = ?"
+    values = [updated.get(column) for column in COLUMNS] + [record_id]
 
-    return jsonify({"error": "Record not found"}), 404
+    db = get_db()
+
+    try:
+        cursor = db.execute(sql, values)
+        db.commit()
+    except sqlite3.IntegrityError as error:
+        return jsonify({"error": str(error)}), 409
+
+    if cursor.rowcount == 0:
+        return jsonify({"error": "Record not found"}), 404
+
+    row = db.execute("SELECT * FROM records WHERE id = ?", (record_id,)).fetchone()
+    return jsonify(row_to_dict(row))
 
 
 @app.route("/api/records/<int:record_id>", methods=["DELETE"])
 def delete_record(record_id):
-    records = load_records()
-    remaining = [r for r in records if r.get("id") != record_id]
+    db = get_db()
+    cursor = db.execute("DELETE FROM records WHERE id = ?", (record_id,))
+    db.commit()
 
-    if len(remaining) == len(records):
+    if cursor.rowcount == 0:
         return jsonify({"error": "Record not found"}), 404
 
-    save_records(remaining)
     return jsonify({"deleted": record_id})
-
-
-@app.route("/api/records", methods=["PUT"])
-def put_records():
-    records = request.get_json()
-
-    if not isinstance(records, list):
-        return jsonify({"error": "Expected a list of records"}), 400
-
-    save_records(records)
-    return jsonify({"saved": len(records)})
 
 
 @app.route("/")
