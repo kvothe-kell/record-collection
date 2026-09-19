@@ -37,6 +37,9 @@ const statusFilter = document.getElementById("status-filter");
 const missingPriceToggle = document.getElementById("missing-price");
 const exportButton = document.getElementById("export-button")
 const importFileInput = document.getElementById("import-file");
+const dialogContent = document.getElementById("dialog-content");
+const recordDialog = document.getElementById("record-dialog");
+const recordDialogClose = document.getElementById("dialog-close-button")
 
 /* ============================================
    STATE
@@ -108,7 +111,6 @@ function hashString(str) {
 function coverColorFor(record) {
     const key = record.artist + record.album;
     const index = hashString(key) % COVER_COLORS.length;
-    console.log(record.artist, record.album, index);
     return COVER_COLORS[index];
 }
 
@@ -133,14 +135,16 @@ function createRecordElement(record) {
     const editButton = document.createElement("button");
     editButton.className = "record-edit";
     editButton.textContent = "Edit"
-    editButton.addEventListener("click", function () {
+    editButton.addEventListener("click", function (event) {
+        event.stopPropagation()
         startEditing(record.id);
     });
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "record-delete";
     deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", function () {
+    deleteButton.addEventListener("click", function (event) {
+        event.stopPropagation();
         deleteRecord(record.id);
     });
 
@@ -150,6 +154,10 @@ function createRecordElement(record) {
     item.appendChild(cover);
     item.appendChild(body);
     item.appendChild(actions);
+
+    item.addEventListener("click", function () {
+        openRecordDialog(record);
+    });
 
     return item;
 }
@@ -290,6 +298,53 @@ function topEntries(counts, limit) {
             return b[1] - a[1];
         })
         .slice(0, limit);
+}
+
+
+/* ============================================
+   RECORD DETAIL DIALOG
+   ============================================ */
+
+// One "Label: value" row for the detail dialog.
+function makeDialogRow(label, value) {
+    const row = document.createElement("div");
+    row.className - "dialog-row";
+
+    const isEmpty = value === null || value === undefined || value === "";
+    row.appendChild(makeDiv("dialog-row-label", label));
+    row.appendChild(makeDiv("dialog-row-value", isEmpty ? "-" : value));
+
+    return row;
+}
+
+function renderRecordDialog(record) {
+    dialogContent.innerHTML = "";
+
+    dialogContent.appendChild(makeDiv("dialog-title", record.album));
+    dialogContent.appendChild(makeDiv("dialog-subtitle", record.artist));
+
+    dialogContent.appendChild(makeDialogRow("Year", record.year));
+    dialogContent.appendChild(makeDialogRow("Label", record.label));
+    dialogContent.appendChild(makeDialogRow("Format", record.format));
+    dialogContent.appendChild(makeDialogRow("Genre", record.genre));
+    dialogContent.appendChild(makeDialogRow("Subgenre", record.subgenre));
+
+    dialogContent.appendChild(makeDialogRow("Status", record.status));
+    dialogContent.appendChild(makeDialogRow("Rating", record.rating ? formatRating(record.rating) : null));
+    dialogContent.appendChild(makeDialogRow("Media Condition", record.mediaCondition));
+    dialogContent.appendChild(makeDialogRow("Sleeve Condition", record.sleeveCondition));
+
+    dialogContent.appendChild(makeDialogRow("Price Paid", record.purchasePrice === null ? null : formatPrice(record.purchasePrice)));
+    dialogContent.appendChild(makeDialogRow("Bought From", record.purchaseLocation));
+    dialogContent.appendChild(makeDialogRow("Date Added", record.dateAdded));
+
+    dialogContent.appendChild(makeDialogRow("Discogs ID", record.releaseId));
+}
+
+// Fill the dialog with a record and show it.
+function openRecordDialog(record) {
+    renderRecordDialog(record);
+    recordDialog.showModal();
 }
 
 
@@ -676,6 +731,14 @@ sortSelect.addEventListener("change", renderRecords);
 cancelButton.addEventListener("click", function () {
     stopEditing();
     showView("collection");
+});
+recordDialogClose.addEventListener("click", function () {
+    recordDialog.close()
+});
+recordDialog.addEventListener("click", function (event) {
+    if (event.target === recordDialog) {
+        recordDialog.close();
+    }
 });
 statusFilter.addEventListener("change", renderRecords);
 missingPriceToggle.addEventListener("change", renderRecords);
