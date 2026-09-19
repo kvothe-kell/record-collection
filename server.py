@@ -1,6 +1,8 @@
+import json
 import sqlite3
+from datetime import date
 
-from flask import Flask, g, jsonify, request
+from flask import Flask, Response, g, jsonify, request
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
@@ -47,6 +49,19 @@ def row_to_dict(row):
 def get_records():
     rows = get_db().execute("SELECT * FROM records").fetchall()
     return jsonify([row_to_dict(row) for row in rows])
+
+
+@app.route("/api/records/export", methods=["GET"])
+def export_records():
+    rows = get_db().execute("SELECT * FROM records").fetchall()
+    text = json.dumps([row_to_dict(row) for row in rows], indent=2)
+
+    response = Response(text, mimetype="application/json")
+
+    filename = "records-" + date.today().isoformat() + ".json"
+    response.headers["Content-Disposition"] = 'attachment; filename="' + filename + '"'
+
+    return response
 
 
 @app.route("/api/records", methods=["POST"])

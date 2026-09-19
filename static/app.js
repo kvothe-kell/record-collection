@@ -571,16 +571,7 @@ async function loadRecords() {
 
 //Download the collection as a JSON file. 
 function exportRecords() {
-    const text = JSON.stringify(records, null, 2)
-    const blob = new Blob([text], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "records-" + new Date().toISOString().slice(0, 10) + ".json";
-    link.click();
-
-    URL.revokeObjectURL(url);
+    window.location.href = "/api/records/export";
 }
 
 //Read a JSON backup file and replace the collection with it. 
