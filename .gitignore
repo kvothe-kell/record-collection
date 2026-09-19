@@ -5,3 +5,4 @@ node_modules/
 venv/
 records.json
 records.json.tmp
+records.db

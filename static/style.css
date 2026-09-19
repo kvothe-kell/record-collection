@@ -1,14 +1,14 @@
 :root {
-    --bg: #1a1a1a;
-    --bg-card: #252525;
-    --bg-input: #2a2a2a;
-    --text: #e8e8e8;
-    --text-muted: #999;
-    --button-text: #0a1f12;
-    --accent: #22c55e;
-    --accent-hover: #4ade80;
-    --border: #444;
-    --error: #ff6b6b;
+    --bg: #191612;
+    --bg-card: #221e19;
+    --bg-input: #2b2620;
+    --text: #ece7dd;
+    --text-muted: #a89e8e;
+    --button-text: #14231a;
+    --accent: #8fbf9a;
+    --accent-hover: #a9d3b2;
+    --border: #3a342c;
+    --error: #e08a72;
 
     --space-1: 0.25rem;
     --space-2: 0.5rem;
@@ -22,14 +22,19 @@
     --text-base: 1rem;
     --text-lg: 1.125rem;
     --text-xl: 1.5rem;
+    --text-display: 2.75rem;
+
+    --font-display: "Playfair Display", Georgia, serif;
+    --font-body: "DM Sans", system-ui, sans-serif;
+    --font-mono: "DM Mono", ui-monospace, monospace;
 }
 
 /* ============================================
    RESET & BASE
    ============================================ */
 body {
-    font-family: system-ui, sans-serif;
-    max-width: 900px;
+    font-family: var(--font-body);
+    max-width: 1200px;
     margin: 0 auto;
     padding: var(--space-8);
     background-color: var(--bg);
@@ -41,10 +46,15 @@ body {
    TYPOGRAPHY
    ============================================ */
 h1 {
-    margin-bottom: var(--space-1);
+    font-family: var(--font-display);
+    font-size: var(--text-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-1);
 }
 
 h2 {
+    font-family: var(--font-mono);
     margin-top: 2rem;
     font-size: var(--text-lg);
     text-transform: uppercase;
@@ -127,6 +137,7 @@ select {
 }
 
 .form-section legend {
+    font-family: var(--font-mono);
     padding: 0 var(--space-2);
     font-size: var(--text-xs);
     text-transform: uppercase;
@@ -234,67 +245,62 @@ select:focus-visible {
 #collection {
     list-style: none;
     padding: 0;
-}
-
-.record {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    margin-bottom: var(--space-2);
-    background-color: var(--bg-card);
-    border: 1px solid transparent;
-    border-radius: 6px;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.record:hover {
-    background-color: var(--bg-input);
-    border-color: var(--border);
+.record-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.record-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.record-cover {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3);
+    text-align: center;
+}
+
+.record-cover-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: rgba(0, 0, 0, 0.75);
+    line-height: 1.2;
+}
+
+.record-body {
+    padding: var(--space-3);
 }
 
 .record-title {
     font-weight: 600;
     margin-bottom: var(--space-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.record-details,
-.record-tags,
-.record-purchase {
+.record-meta {
     font-size: var(--text-sm);
     color: var(--text-muted);
-    line-height: 1.4;
-}
-
-.record-info {
-    min-width: 0;
-}
-
-.record-tags {
-    color: var(--accent);
-    opacity: 0.75;
-}
-
-
-
-.record-side {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: var(--space-2);
-    flex-shrink: 0;
-}
-
-.record-rating {
-    color: var(--accent);
-    font-size: var(--text-sm);
-    white-space: nowrap;
 }
 
 .record-actions {
     display: flex;
     gap: var(--space-1);
+    padding: 0 var(--space-3) var(--space-3);
 }
 
 .record-edit,
@@ -351,6 +357,7 @@ select:focus-visible {
 }
 
 .stat-label {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 0.05em;

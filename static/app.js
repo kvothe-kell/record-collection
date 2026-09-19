@@ -81,25 +81,51 @@ function formatRating(rating) {
     return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
+// A small set of muted, "album cover" background colors.
+const COVER_COLORS = [
+    "#c97b63",
+    "#c9a63d",
+    "#8fa66b",
+    "#5f9ea0",
+    "#7b8fc9",
+    "#a66bb0",
+    "#c96b8f",
+    "#6b9e8f"
+];
+
+// Turn any string into a stable, non-negative number.
+// Same input always produces the same output, so a given
+// album always lands on the same color.
+function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = hash * 31 + str.charCodeAt(i) | 0;
+    }
+    return Math.abs(hash);
+}
+
+// Pick a cover color for a record, based on artist + album.
+function coverColorFor(record) {
+    const key = record.artist + record.album;
+    const index = hashString(key) % COVER_COLORS.length;
+    console.log(record.artist, record.album, index);
+    return COVER_COLORS[index];
+}
+
 // Build the <li> for one record
 function createRecordElement(record) {
     const item = document.createElement("li");
-    item.className = "record";
+    item.className = "record-card";
 
-    const info = document.createElement("div");
-    info.className = "record-info";
+    const cover = document.createElement("div");
+    cover.className = "record-cover";
+    cover.style.backgroundColor = coverColorFor(record);
+    cover.appendChild(makeDiv("record-cover-title", record.album));
 
-    info.appendChild(makeDiv("record-title", `${record.artist} - ${record.album}`));
-    info.appendChild(makeDiv("record-details",
-        joinParts([record.year, record.label, record.format])));
-    info.appendChild(makeDiv("record-tags",
-        joinParts([record.genre, record.subgenre])));
-    info.appendChild(makeDiv("record-purchase",
-        joinParts([formatPrice(record.purchasePrice), record.purchaseLocation, record.mediaCondition])));
-
-    const side = document.createElement("div");
-    side.className = "record-side"
-    side.appendChild(makeDiv("record-rating", formatRating(record.rating)));
+    const body = document.createElement("div");
+    body.className = "record-body";
+    body.appendChild(makeDiv("record-title", record.artist));
+    body.appendChild(makeDiv("record-meta", joinParts([record.year, record.genre])));
 
     const actions = document.createElement("div");
     actions.className = "record-actions"
@@ -120,10 +146,10 @@ function createRecordElement(record) {
 
     actions.appendChild(editButton);
     actions.appendChild(deleteButton);
-    side.appendChild(actions);
 
-    item.appendChild(info);
-    item.appendChild(side);
+    item.appendChild(cover);
+    item.appendChild(body);
+    item.appendChild(actions);
 
     return item;
 }
