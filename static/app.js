@@ -392,11 +392,13 @@ function fillForm(record) {
 }
 
 //Show message, then clear after a few seconds.
-function showMessage(text) {
+function showMessage(text, tone) {
     messageArea.textContent = text;
+    messageArea.className = "message-" + (tone || "error");
 
     setTimeout(function () {
         messageArea.textContent = "";
+        messageArea.className = "";
     }, 3000);
 }
 
@@ -603,7 +605,7 @@ function handleImportFile(event) {
 
             renderRecords();
 
-            showMessage("Loaded " + records.length + " records.");
+            showMessage("Loaded " + records.length + " records.", "success");
         } catch (error) {
             showMessage("Couldn't read that file: " + error.message);
         }
