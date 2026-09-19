@@ -76,6 +76,33 @@ def create_record():
     return jsonify(row_to_dict(row)), 201
 
 
+@app.route("/api/records", methods=["PUT"])
+def replace_records():
+    incoming = request.get_json()
+
+    if not isinstance(incoming, list):
+        return jsonify({"error": "Expected a list of records"}), 400
+
+    placeholders = ", ".join(["?"] * len(COLUMNS))
+    sql = (
+        "INSERT INTO records (" + ", ".join(COLUMNS) + ") VALUES (" + placeholders + ")"
+    )
+
+    db = get_db()
+
+    try:
+        db.execute("DELETE FROM records")
+        for record in incoming:
+            db.execute(sql, [record.get(column) for column in COLUMNS])
+        db.commit()
+    except sqlite3.IntegrityError as error:
+        db.rollback()
+        return jsonify({"error": str(error)}), 409
+
+    rows = db.execute("SELECT * FROM records").fetchall()
+    return jsonify([row_to_dict(row) for row in rows])
+
+
 @app.route("/api/records/<int:record_id>", methods=["PUT"])
 def update_record(record_id):
     updated = request.get_json()

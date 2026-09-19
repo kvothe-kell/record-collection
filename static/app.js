@@ -602,14 +602,16 @@ function handleImportFile(event) {
                 return;
             }
 
+            const saved = await replaceAllOnServer(loaded);
+
             records.length = 0;
 
-            for (const record of loaded) {
+            for (const record of saved) {
                 records.push(record);
             }
 
-            await replaceAllOnServer(records);
             renderRecords();
+
             showMessage("Loaded " + records.length + " records.");
         } catch (error) {
             showMessage("Couldn't read that file: " + error.message);
