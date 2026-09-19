@@ -244,7 +244,14 @@ select:focus-visible {
     padding: var(--space-3) var(--space-4);
     margin-bottom: var(--space-2);
     background-color: var(--bg-card);
+    border: 1px solid transparent;
     border-radius: 6px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.record:hover {
+    background-color: var(--bg-input);
+    border-color: var(--border);
 }
 
 .record-title {
@@ -298,10 +305,24 @@ select:focus-visible {
     padding: var(--space-1) var(--space-2);
 }
 
-.record-edit:hover,
-.record-delete:hover {
+.record-edit:hover {
     color: var(--accent);
     background-color: transparent;
+}
+
+.record-delete:hover {
+    color: var(--error);
+    background-color: transparent;
+}
+
+.empty-state {
+    padding: var(--space-8) var(--space-4);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    background-color: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: 6px;
 }
 
 /* ============================================
@@ -317,6 +338,7 @@ select:focus-visible {
 
 .stat {
     background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: var(--space-3);
     text-align: center;
@@ -343,6 +365,7 @@ select:focus-visible {
 .stat-panel {
     grid-column: span 2;
     background-color: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: var(--space-3);
     text-align: left;

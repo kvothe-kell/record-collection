@@ -303,8 +303,8 @@ function renderRecords() {
         .filter(function (record) {
             if (!missingPriceToggle.checked) {
                 return true;
-            };
-            return record.purchasePrice === null || record.purchasePrice === undefined
+            }
+            return record.purchasePrice === null || record.purchasePrice === undefined;
         })
         .filter(function (record) {
             return (record.artist || "").toLowerCase().includes(query)
@@ -339,6 +339,7 @@ function renderRecords() {
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
         empty.textContent = "No records found.";
+        empty.className = "empty-state";
         collectionList.appendChild(empty);
         return;
     }
