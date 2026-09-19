@@ -106,6 +106,27 @@ h2 {
     margin: 0 0 var(--space-3);
 }
 
+.status-tabs {
+    display: flex;
+    gap: var(--space-1);
+}
+
+.status-tab {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+.status-tab:hover {
+    background-color: var(--bg-card);
+    color: var(--text);
+}
+
+.status-tab.tab-active {
+    background-color: var(--bg-card);
+    color: var(--accent);
+    font-weight: 600;
+}
 
 /* ============================================
    FORM

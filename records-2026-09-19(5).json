@@ -1,24 +1,6 @@
 [
   {
-    "id": 1788724196500,
-    "releaseId": 8983628,
-    "artist": "A Day To Remember",
-    "album": "Bad Vibrations",
-    "year": 2016,
-    "genre": "Metalcore",
-    "subgenre": "Easycore",
-    "label": "ADTR Records",
-    "format": "LP, Album",
-    "rating": 3,
-    "status": "owned",
-    "mediaCondition": "",
-    "sleeveCondition": "",
-    "purchasePrice": 90,
-    "purchaseLocation": "Wanna Hear It Record",
-    "dateAdded": "2026-08-08"
-  },
-  {
-    "id": 1788724196502,
+    "id": 1,
     "releaseId": 24610886,
     "artist": "A Day To Remember",
     "album": "Common Courtesy",
@@ -31,12 +13,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-02"
   },
   {
-    "id": 1788724196503,
+    "id": 2,
     "releaseId": 35728054,
     "artist": "A Day To Remember",
     "album": "What Separates Me From You",
@@ -49,12 +31,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 50,
+    "purchasePrice": 50.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196504,
+    "id": 3,
     "releaseId": 33201780,
     "artist": "A Day To Remember",
     "album": "Big Ole Album Vol. 1",
@@ -72,7 +54,7 @@
     "dateAdded": "2026-04-18"
   },
   {
-    "id": 1788724196505,
+    "id": 4,
     "releaseId": 14224286,
     "artist": "A Day To Remember",
     "album": "For Those Who Have Heart",
@@ -85,12 +67,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 90,
+    "purchasePrice": 90.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196506,
+    "id": 5,
     "releaseId": 14713183,
     "artist": "A Day To Remember",
     "album": "Old Record",
@@ -103,12 +85,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 90,
+    "purchasePrice": 90.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-05-10"
   },
   {
-    "id": 1788724196507,
+    "id": 6,
     "releaseId": 31721663,
     "artist": "A Day To Remember",
     "album": "Homesick",
@@ -121,12 +103,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196508,
+    "id": 7,
     "releaseId": 31852316,
     "artist": "AFI",
     "album": "Sing The Sorrow",
@@ -139,12 +121,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 45,
+    "purchasePrice": 45.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-05-25"
   },
   {
-    "id": 1788724196509,
+    "id": 8,
     "releaseId": 12656930,
     "artist": "Alkaline Trio",
     "album": "Is This Thing Cursed?",
@@ -157,12 +139,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196510,
+    "id": 9,
     "releaseId": 36977493,
     "artist": "Alkaline Trio",
     "album": "Crimson",
@@ -175,12 +157,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 28,
+    "purchasePrice": 28.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196511,
+    "id": 10,
     "releaseId": 35881768,
     "artist": "All Time Low",
     "album": "Everyone's Talking!",
@@ -198,7 +180,7 @@
     "dateAdded": "2026-04-01"
   },
   {
-    "id": 1788724196512,
+    "id": 11,
     "releaseId": 27180027,
     "artist": "All Time Low",
     "album": "Tell Me I'm Alive",
@@ -216,7 +198,7 @@
     "dateAdded": "2026-07-13"
   },
   {
-    "id": 1788724196513,
+    "id": 12,
     "releaseId": 29537746,
     "artist": "All Time Low",
     "album": "Put Up Or Shut Up",
@@ -234,7 +216,7 @@
     "dateAdded": "2026-07-18"
   },
   {
-    "id": 1788724196514,
+    "id": 13,
     "releaseId": 13140346,
     "artist": "All Time Low",
     "album": "So Wrong, It's Right",
@@ -247,12 +229,12 @@
     "status": "owned",
     "mediaCondition": "Mint (M)",
     "sleeveCondition": "Mint (M)",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196515,
+    "id": 14,
     "releaseId": 32610546,
     "artist": "All Time Low",
     "album": "The Forever Sessions Vol. 1",
@@ -270,7 +252,7 @@
     "dateAdded": "2026-07-18"
   },
   {
-    "id": 1788724196516,
+    "id": 15,
     "releaseId": 31428161,
     "artist": "Anberlin",
     "album": "Vega",
@@ -288,7 +270,7 @@
     "dateAdded": "2026-09-03"
   },
   {
-    "id": 1788724196517,
+    "id": 16,
     "releaseId": 3554357,
     "artist": "Anberlin",
     "album": "Blueprints For The Black Market",
@@ -301,12 +283,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 190,
+    "purchasePrice": 190.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-08-24"
   },
   {
-    "id": 1788724196518,
+    "id": 17,
     "releaseId": 5918085,
     "artist": "Anberlin",
     "album": "Lowborn",
@@ -319,12 +301,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Very Good Plus (VG+)",
-    "purchasePrice": 133,
+    "purchasePrice": 133.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-07-06"
   },
   {
-    "id": 1788724196519,
+    "id": 18,
     "releaseId": 33541980,
     "artist": "Anberlin",
     "album": "Never Take Friendship Personal",
@@ -342,7 +324,7 @@
     "dateAdded": "2026-06-08"
   },
   {
-    "id": 1788724196520,
+    "id": 19,
     "releaseId": 24986845,
     "artist": "Anberlin",
     "album": "Cities",
@@ -360,7 +342,7 @@
     "dateAdded": "2026-04-20"
   },
   {
-    "id": 1788724196521,
+    "id": 20,
     "releaseId": 2014116,
     "artist": "Anberlin",
     "album": "New Surrender",
@@ -373,12 +355,12 @@
     "status": "owned",
     "mediaCondition": "Mint (M)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 175,
+    "purchasePrice": 175.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-08-24"
   },
   {
-    "id": 1788724196522,
+    "id": 21,
     "releaseId": 2817150,
     "artist": "Anberlin",
     "album": "Dark Is The Way, Light Is A Place",
@@ -391,12 +373,12 @@
     "status": "owned",
     "mediaCondition": "Very Good Plus (VG+)",
     "sleeveCondition": "Very Good Plus (VG+)",
-    "purchasePrice": 160,
+    "purchasePrice": 160.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-07-08"
   },
   {
-    "id": 1788724196523,
+    "id": 22,
     "releaseId": 3972929,
     "artist": "Anberlin",
     "album": "Vital",
@@ -409,12 +391,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 50,
+    "purchasePrice": 50.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-08-31"
   },
   {
-    "id": 1788724196524,
+    "id": 23,
     "releaseId": 26757740,
     "artist": "Bad Omens",
     "album": "The Death Of Peace Of Mind",
@@ -432,7 +414,7 @@
     "dateAdded": "2026-08-20"
   },
   {
-    "id": 1788724196525,
+    "id": 24,
     "releaseId": 8922974,
     "artist": "Bayside",
     "album": "Vacancy",
@@ -450,7 +432,7 @@
     "dateAdded": "2026-07-28"
   },
   {
-    "id": 1788724196526,
+    "id": 25,
     "releaseId": 28279951,
     "artist": "Bayside",
     "album": "Interrobang",
@@ -463,12 +445,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 34,
+    "purchasePrice": 34.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196527,
+    "id": 26,
     "releaseId": 29871628,
     "artist": "Bayside",
     "album": "Cult",
@@ -481,12 +463,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196528,
+    "id": 27,
     "releaseId": 30654712,
     "artist": "Bayside",
     "album": "There Are Worse Things Than Being Alive",
@@ -499,12 +481,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 89,
+    "purchasePrice": 89.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-07-03"
   },
   {
-    "id": 1788724196529,
+    "id": 28,
     "releaseId": 6682444,
     "artist": "Bayside",
     "album": "Bayside",
@@ -517,12 +499,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 90,
+    "purchasePrice": 90.0,
     "purchaseLocation": "Crystal Ball Records",
     "dateAdded": "2026-05-30"
   },
   {
-    "id": 1788724196530,
+    "id": 29,
     "releaseId": 3008453,
     "artist": "Bayside",
     "album": "Killing Time",
@@ -535,12 +517,12 @@
     "status": "owned",
     "mediaCondition": "Very Good Plus (VG+)",
     "sleeveCondition": "Very Good Plus (VG+)",
-    "purchasePrice": 90,
+    "purchasePrice": 90.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-08-20"
   },
   {
-    "id": 1788724196531,
+    "id": 30,
     "releaseId": 32337336,
     "artist": "Blink-182",
     "album": "Nine",
@@ -553,12 +535,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196532,
+    "id": 31,
     "releaseId": 28644379,
     "artist": "Blink-182",
     "album": "One More Time...",
@@ -571,12 +553,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196533,
+    "id": 32,
     "releaseId": 32953185,
     "artist": "Blink-182",
     "album": "One More Time... Part-2",
@@ -594,7 +576,7 @@
     "dateAdded": "2026-04-16"
   },
   {
-    "id": 1788724196534,
+    "id": 33,
     "releaseId": 34371619,
     "artist": "Blink-182",
     "album": "Take Off Your Pants And Jacket",
@@ -607,12 +589,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196535,
+    "id": 34,
     "releaseId": 3355814,
     "artist": "Blink-182",
     "album": "Blink-182",
@@ -625,12 +607,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 175,
+    "purchasePrice": 175.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-05-10"
   },
   {
-    "id": 1788724196536,
+    "id": 35,
     "releaseId": 11205543,
     "artist": "Blink-182",
     "album": "Enema Of The State",
@@ -643,12 +625,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 250,
+    "purchasePrice": 250.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-03-24"
   },
   {
-    "id": 1788724196537,
+    "id": 36,
     "releaseId": 23026412,
     "artist": "Boygenius",
     "album": "Boygenius",
@@ -661,12 +643,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Bull Moose",
     "dateAdded": "2026-07-26"
   },
   {
-    "id": 1788724196538,
+    "id": 37,
     "releaseId": 32788689,
     "artist": "Bring Me The Horizon",
     "album": "Post Human: Nex Gen",
@@ -679,12 +661,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196539,
+    "id": 38,
     "releaseId": 7391387,
     "artist": "Bring Me The Horizon",
     "album": "That's The Spirit",
@@ -697,12 +679,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196540,
+    "id": 39,
     "releaseId": 37044096,
     "artist": "Bring Me The Horizon",
     "album": "Lo-Files",
@@ -720,7 +702,7 @@
     "dateAdded": "2026-05-04"
   },
   {
-    "id": 1788724196541,
+    "id": 40,
     "releaseId": 29251054,
     "artist": "Chunk! No, Captain Chunk!",
     "album": "Pardon My French",
@@ -733,12 +715,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Joe's Albums",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196542,
+    "id": 41,
     "releaseId": 22532156,
     "artist": "Chvrches",
     "album": "Every Open Eye",
@@ -756,7 +738,7 @@
     "dateAdded": "2026-08-30"
   },
   {
-    "id": 1788724196543,
+    "id": 42,
     "releaseId": 30432287,
     "artist": "David Byrne / Paramore",
     "album": "Hard Times / Burning Down The House",
@@ -774,7 +756,7 @@
     "dateAdded": "2026-04-13"
   },
   {
-    "id": 1788724196544,
+    "id": 43,
     "releaseId": 35488660,
     "artist": "Dayseeker",
     "album": "Creature In The Black Night",
@@ -792,7 +774,7 @@
     "dateAdded": "2026-09-04"
   },
   {
-    "id": 1788724196545,
+    "id": 44,
     "releaseId": 27237531,
     "artist": "Death Cab For Cutie",
     "album": "Plans",
@@ -805,12 +787,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196546,
+    "id": 45,
     "releaseId": 27812145,
     "artist": "Death Cab For Cutie",
     "album": "Transatlanticism",
@@ -823,12 +805,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-05-10"
   },
   {
-    "id": 1788724196547,
+    "id": 46,
     "releaseId": 27838320,
     "artist": "Death Cab For Cutie",
     "album": "Narrow Stairs",
@@ -841,12 +823,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 17,
+    "purchasePrice": 17.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196548,
+    "id": 47,
     "releaseId": 6734891,
     "artist": "Death Cab For Cutie",
     "album": "Kintsugi",
@@ -864,7 +846,7 @@
     "dateAdded": "2026-04-06"
   },
   {
-    "id": 1788724196549,
+    "id": 48,
     "releaseId": 12451484,
     "artist": "Death Cab For Cutie",
     "album": "Thank You For Today",
@@ -882,7 +864,7 @@
     "dateAdded": "2026-04-06"
   },
   {
-    "id": 1788724196550,
+    "id": 49,
     "releaseId": 33601368,
     "artist": "Djo",
     "album": "The Crux",
@@ -900,7 +882,7 @@
     "dateAdded": "2026-09-03"
   },
   {
-    "id": 1788724196551,
+    "id": 50,
     "releaseId": 10723375,
     "artist": "Eisley",
     "album": "I'm Only Dreaming",
@@ -913,12 +895,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 32,
+    "purchasePrice": 32.0,
     "purchaseLocation": "Directly",
     "dateAdded": "2026-04-05"
   },
   {
-    "id": 1788724196552,
+    "id": 51,
     "releaseId": 21918385,
     "artist": "Emancipator",
     "album": "Soon It Will Be Cold Enough",
@@ -936,7 +918,7 @@
     "dateAdded": "2026-06-26"
   },
   {
-    "id": 1788724196553,
+    "id": 52,
     "releaseId": 37101120,
     "artist": "Fall Out Boy",
     "album": "So Much For (2our) Dust (Live From Madison Square Garden)",
@@ -949,12 +931,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 70,
+    "purchasePrice": 70.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-05-11"
   },
   {
-    "id": 1788724196554,
+    "id": 53,
     "releaseId": 26531192,
     "artist": "Fall Out Boy",
     "album": "So Much (For) Stardust",
@@ -967,12 +949,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 50,
+    "purchasePrice": 50.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-03-24"
   },
   {
-    "id": 1788724196555,
+    "id": 54,
     "releaseId": 27025875,
     "artist": "Fall Out Boy",
     "album": "American Beauty / American Psycho",
@@ -990,7 +972,7 @@
     "dateAdded": "2026-05-03"
   },
   {
-    "id": 1788724196556,
+    "id": 55,
     "releaseId": 11592808,
     "artist": "Fall Out Boy",
     "album": "Mania",
@@ -1003,15 +985,15 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Joe's Albums",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196557,
+    "id": 56,
     "releaseId": 2621572,
     "artist": "Fall Out Boy",
-    "album": "Folie À Deux",
+    "album": "Folie \u00c0 Deux",
     "year": 2008,
     "genre": "Emo-Pop",
     "subgenre": "Baroque Pop",
@@ -1026,7 +1008,7 @@
     "dateAdded": "2026-06-06"
   },
   {
-    "id": 1788724196558,
+    "id": 57,
     "releaseId": 35337928,
     "artist": "Fall Out Boy",
     "album": "From Under The Cork Tree",
@@ -1039,12 +1021,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196559,
+    "id": 58,
     "releaseId": 12639419,
     "artist": "Fleetwood Mac",
     "album": "The Dance",
@@ -1057,12 +1039,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 60,
+    "purchasePrice": 60.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-05-30"
   },
   {
-    "id": 1788724196560,
+    "id": 59,
     "releaseId": 873439,
     "artist": "Fleetwood Mac",
     "album": "Mirage",
@@ -1075,12 +1057,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "Bugbees",
     "dateAdded": "2026-07-13"
   },
   {
-    "id": 1788724196561,
+    "id": 60,
     "releaseId": 15886799,
     "artist": "Fleetwood Mac",
     "album": "Greatest Hits",
@@ -1093,12 +1075,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196562,
+    "id": 61,
     "releaseId": 32503800,
     "artist": "Fleetwood Mac",
     "album": "Tango In The Night",
@@ -1111,12 +1093,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Bugbees on Main",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196563,
+    "id": 62,
     "releaseId": 20214244,
     "artist": "Four Year Strong",
     "album": "Rise Or Die Trying",
@@ -1129,12 +1111,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-07-27"
   },
   {
-    "id": 1788724196564,
+    "id": 63,
     "releaseId": 22826081,
     "artist": "Four Year Strong",
     "album": "Four Year Strong",
@@ -1152,7 +1134,7 @@
     "dateAdded": "2026-07-09"
   },
   {
-    "id": 1788724196565,
+    "id": 64,
     "releaseId": 21399715,
     "artist": "Four Year Strong",
     "album": "Brain Pain",
@@ -1170,7 +1152,7 @@
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196566,
+    "id": 65,
     "releaseId": 26280707,
     "artist": "Four Year Strong",
     "album": "Enemy Of The World",
@@ -1183,12 +1165,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196567,
+    "id": 66,
     "releaseId": 31489499,
     "artist": "Four Year Strong",
     "album": "Analysis Paralysis",
@@ -1201,12 +1183,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196568,
+    "id": 67,
     "releaseId": 33183039,
     "artist": "Grayscale",
     "album": "The Hart",
@@ -1224,7 +1206,7 @@
     "dateAdded": "2026-07-03"
   },
   {
-    "id": 1788724196569,
+    "id": 68,
     "releaseId": 15268991,
     "artist": "Hayley Williams",
     "album": "Petals For Armor",
@@ -1237,12 +1219,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 44,
+    "purchasePrice": 44.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196570,
+    "id": 69,
     "releaseId": 20151163,
     "artist": "Hayley Williams",
     "album": "Flowers For Vases / Descansos",
@@ -1260,7 +1242,7 @@
     "dateAdded": "2026-04-13"
   },
   {
-    "id": 1788724196571,
+    "id": 70,
     "releaseId": 36942138,
     "artist": "Hayley Williams",
     "album": "Ego Death At A Bachelorette Party",
@@ -1273,12 +1255,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-04-05"
   },
   {
-    "id": 1788724196572,
+    "id": 71,
     "releaseId": 35576206,
     "artist": "Hayley Williams",
     "album": "Ego Death At A Bachelorette Party",
@@ -1291,12 +1273,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-04-05"
   },
   {
-    "id": 1788724196573,
+    "id": 72,
     "releaseId": 13835948,
     "artist": "I Prevail",
     "album": "Trauma",
@@ -1309,12 +1291,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-07-13"
   },
   {
-    "id": 1788724196574,
+    "id": 73,
     "releaseId": 37675386,
     "artist": "I Prevail",
     "album": "True Power",
@@ -1327,12 +1309,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-06-20"
   },
   {
-    "id": 1788724196575,
+    "id": 74,
     "releaseId": 33146664,
     "artist": "I Prevail",
     "album": "Heart Vs. Mind",
@@ -1345,12 +1327,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 27,
+    "purchasePrice": 27.0,
     "purchaseLocation": "Bull Moose",
     "dateAdded": "2026-07-26"
   },
   {
-    "id": 1788724196576,
+    "id": 75,
     "releaseId": 35245144,
     "artist": "I Prevail",
     "album": "Violent Nature",
@@ -1363,12 +1345,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-06-02"
   },
   {
-    "id": 1788724196577,
+    "id": 76,
     "releaseId": 37524195,
     "artist": "Isles & Glaciers",
     "album": "The Hearts Of Lonely People",
@@ -1386,10 +1368,10 @@
     "dateAdded": "2026-06-19"
   },
   {
-    "id": 1788724196578,
+    "id": 77,
     "releaseId": 16150872,
     "artist": "Joe Hisaishi",
-    "album": "千と千尋の神隠し (イメージアルバム) = Spirited Away (Image Album)",
+    "album": "\u5343\u3068\u5343\u5c0b\u306e\u795e\u96a0\u3057 (\u30a4\u30e1\u30fc\u30b8\u30a2\u30eb\u30d0\u30e0) = Spirited Away (Image Album)",
     "year": 2020,
     "genre": "Film Score",
     "subgenre": "Neoclassical",
@@ -1404,10 +1386,10 @@
     "dateAdded": "2026-07-14"
   },
   {
-    "id": 1788724196579,
+    "id": 78,
     "releaseId": 16150880,
     "artist": "Joe Hisaishi",
-    "album": "ハウルの動く城 サウンドトラック = Howl's Moving Castle",
+    "album": "\u30cf\u30a6\u30eb\u306e\u52d5\u304f\u57ce \u30b5\u30a6\u30f3\u30c9\u30c8\u30e9\u30c3\u30af = Howl's Moving Castle",
     "year": 2020,
     "genre": "Film Score",
     "subgenre": "Neoclassical",
@@ -1422,7 +1404,7 @@
     "dateAdded": "2026-07-14"
   },
   {
-    "id": 1788724196580,
+    "id": 79,
     "releaseId": 36387781,
     "artist": "Joyce Manor",
     "album": "I Used To Go To This Bar",
@@ -1435,12 +1417,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196581,
+    "id": 80,
     "releaseId": 7623681,
     "artist": "Led Zeppelin",
     "album": "Led Zeppelin II",
@@ -1453,12 +1435,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196582,
+    "id": 81,
     "releaseId": 24124004,
     "artist": "LIGHTS",
     "album": "PEP",
@@ -1476,7 +1458,7 @@
     "dateAdded": "2026-04-05"
   },
   {
-    "id": 1788724196583,
+    "id": 82,
     "releaseId": 37092390,
     "artist": "LIGHTS",
     "album": "A6 Extended",
@@ -1494,7 +1476,7 @@
     "dateAdded": "2026-06-06"
   },
   {
-    "id": 1788724196584,
+    "id": 83,
     "releaseId": 11137072,
     "artist": "LIGHTS",
     "album": "Skin & Earth",
@@ -1512,7 +1494,7 @@
     "dateAdded": "2026-04-13"
   },
   {
-    "id": 1788724196585,
+    "id": 84,
     "releaseId": 10890203,
     "artist": "LIGHTS",
     "album": "Skin & Earth",
@@ -1530,7 +1512,7 @@
     "dateAdded": "2026-04-20"
   },
   {
-    "id": 1788724196586,
+    "id": 85,
     "releaseId": 33545490,
     "artist": "Memphis May Fire",
     "album": "Shapeshifter",
@@ -1543,12 +1525,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 36,
+    "purchasePrice": 36.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-06-09"
   },
   {
-    "id": 1788724196587,
+    "id": 86,
     "releaseId": 23565884,
     "artist": "Memphis May Fire",
     "album": "Remade In Misery",
@@ -1566,7 +1548,7 @@
     "dateAdded": "2026-06-11"
   },
   {
-    "id": 1788724196588,
+    "id": 87,
     "releaseId": 12989495,
     "artist": "mewithoutYou",
     "album": "[Untitled]",
@@ -1584,7 +1566,7 @@
     "dateAdded": "2026-08-29"
   },
   {
-    "id": 1788724196589,
+    "id": 88,
     "releaseId": 12905045,
     "artist": "mewithoutYou",
     "album": "[untitled]",
@@ -1597,12 +1579,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196590,
+    "id": 89,
     "releaseId": 30188108,
     "artist": "mewithoutYou",
     "album": "It's All Crazy! It's All False! It's All A Dream! It's Alright",
@@ -1615,12 +1597,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Directly",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196591,
+    "id": 90,
     "releaseId": 22299313,
     "artist": "My Chemical Romance",
     "album": "Three Cheers For Sweet Revenge",
@@ -1633,12 +1615,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 34,
+    "purchasePrice": 34.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-05-10"
   },
   {
-    "id": 1788724196592,
+    "id": 91,
     "releaseId": 37957854,
     "artist": "Motionless In White",
     "album": "Decades",
@@ -1656,7 +1638,7 @@
     "dateAdded": "2026-07-27"
   },
   {
-    "id": 1788724196593,
+    "id": 92,
     "releaseId": 26050270,
     "artist": "Paramore",
     "album": "This Is Why",
@@ -1669,12 +1651,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196594,
+    "id": 93,
     "releaseId": 7680529,
     "artist": "Paramore",
     "album": "Riot!",
@@ -1687,12 +1669,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196595,
+    "id": 94,
     "releaseId": 4502205,
     "artist": "Paramore",
     "album": "Paramore",
@@ -1705,12 +1687,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196596,
+    "id": 95,
     "releaseId": 4635536,
     "artist": "Paramore",
     "album": "Paramore",
@@ -1723,12 +1705,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 250,
+    "purchasePrice": 250.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-05-10"
   },
   {
-    "id": 1788724196597,
+    "id": 96,
     "releaseId": 10718124,
     "artist": "Paramore",
     "album": "After Laughter",
@@ -1741,12 +1723,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 175,
+    "purchasePrice": 175.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-03-24"
   },
   {
-    "id": 1788724196598,
+    "id": 97,
     "releaseId": 10654688,
     "artist": "Paramore",
     "album": "After Laughter",
@@ -1759,12 +1741,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 175,
+    "purchasePrice": 175.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-03-24"
   },
   {
-    "id": 1788724196599,
+    "id": 98,
     "releaseId": 23138342,
     "artist": "Paramore",
     "album": "All We Know Is Falling",
@@ -1777,12 +1759,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Joe's Albums",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196600,
+    "id": 99,
     "releaseId": 7706611,
     "artist": "Paramore",
     "album": "Brand New Eyes",
@@ -1795,12 +1777,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-08-27"
   },
   {
-    "id": 1788724196601,
+    "id": 100,
     "releaseId": 10901377,
     "artist": "Phoebe Bridgers",
     "album": "Stranger In The Alps",
@@ -1813,12 +1795,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196602,
+    "id": 101,
     "releaseId": 33036054,
     "artist": "Pierce The Veil",
     "album": "Selfish Machines",
@@ -1836,7 +1818,7 @@
     "dateAdded": "2026-04-18"
   },
   {
-    "id": 1788724196603,
+    "id": 102,
     "releaseId": 4604367,
     "artist": "Pierce The Veil",
     "album": "Collide With The Sky",
@@ -1854,7 +1836,7 @@
     "dateAdded": "2026-05-11"
   },
   {
-    "id": 1788724196604,
+    "id": 103,
     "releaseId": 13341115,
     "artist": "Pink Floyd",
     "album": "The Dark Side Of The Moon",
@@ -1867,12 +1849,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 50,
+    "purchasePrice": 50.0,
     "purchaseLocation": "Target",
     "dateAdded": "2026-09-03"
   },
   {
-    "id": 1788724196605,
+    "id": 104,
     "releaseId": 4258384,
     "artist": "Saosin",
     "album": "Saosin",
@@ -1885,12 +1867,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 145,
+    "purchasePrice": 145.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-05-19"
   },
   {
-    "id": 1788724196606,
+    "id": 105,
     "releaseId": 31109333,
     "artist": "Silverstein",
     "album": "A Shipwreck In The Sand",
@@ -1903,12 +1885,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 34,
+    "purchasePrice": 34.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-06-08"
   },
   {
-    "id": 1788724196607,
+    "id": 106,
     "releaseId": 28278346,
     "artist": "Silverstein",
     "album": "Discovering The Waterfront",
@@ -1921,12 +1903,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-05-25"
   },
   {
-    "id": 1788724196608,
+    "id": 107,
     "releaseId": 25207795,
     "artist": "Silverstein",
     "album": "Arrivals & Departures",
@@ -1939,12 +1921,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Joe's Albums",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196609,
+    "id": 108,
     "releaseId": 6582438,
     "artist": "Silverstein",
     "album": "This Is How The Wind Shifts",
@@ -1962,7 +1944,7 @@
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196610,
+    "id": 109,
     "releaseId": 29079436,
     "artist": "Silverstein",
     "album": "Rescue",
@@ -1975,12 +1957,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196611,
+    "id": 110,
     "releaseId": 30382646,
     "artist": "Silverstein",
     "album": "I Am Alive In Everything I Touch",
@@ -1998,7 +1980,7 @@
     "dateAdded": "2026-05-23"
   },
   {
-    "id": 1788724196612,
+    "id": 111,
     "releaseId": 10591447,
     "artist": "Silverstein",
     "album": "Dead Reflection",
@@ -2016,7 +1998,7 @@
     "dateAdded": "2026-04-18"
   },
   {
-    "id": 1788724196613,
+    "id": 112,
     "releaseId": 14894916,
     "artist": "Silverstein",
     "album": "A Beautiful Place To Drown",
@@ -2034,7 +2016,7 @@
     "dateAdded": "2026-04-01"
   },
   {
-    "id": 1788724196614,
+    "id": 113,
     "releaseId": 24101756,
     "artist": "Silverstein",
     "album": "Misery Made Me",
@@ -2052,7 +2034,7 @@
     "dateAdded": "2026-04-01"
   },
   {
-    "id": 1788724196615,
+    "id": 114,
     "releaseId": 33214914,
     "artist": "Silverstein",
     "album": "Antibloom",
@@ -2070,7 +2052,7 @@
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196616,
+    "id": 115,
     "releaseId": 35078504,
     "artist": "Silverstein",
     "album": "Pink Moon",
@@ -2088,7 +2070,7 @@
     "dateAdded": "2026-04-09"
   },
   {
-    "id": 1788724196617,
+    "id": 116,
     "releaseId": 19804315,
     "artist": "Silverstein",
     "album": "When Broken Is Easily Fixed",
@@ -2101,12 +2083,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 35,
+    "purchasePrice": 35.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-06-08"
   },
   {
-    "id": 1788724196618,
+    "id": 117,
     "releaseId": 37628373,
     "artist": "Sleeping With Sirens",
     "album": "An Ending In Itself",
@@ -2119,12 +2101,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 27,
+    "purchasePrice": 27.0,
     "purchaseLocation": "Bull Moose",
     "dateAdded": "2026-07-26"
   },
   {
-    "id": 1788724196619,
+    "id": 118,
     "releaseId": 24992164,
     "artist": "Sleeping With Sirens",
     "album": "Complete Collapse",
@@ -2142,7 +2124,7 @@
     "dateAdded": "2026-04-20"
   },
   {
-    "id": 1788724196620,
+    "id": 119,
     "releaseId": 1875606,
     "artist": "Talking Heads",
     "album": "Talking Heads: 77",
@@ -2155,12 +2137,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 50,
+    "purchasePrice": 50.0,
     "purchaseLocation": "Bugbees on Main",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196621,
+    "id": 120,
     "releaseId": 224182,
     "artist": "Talking Heads",
     "album": "Little Creatures",
@@ -2173,12 +2155,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 20,
+    "purchasePrice": 20.0,
     "purchaseLocation": "Bugbees",
     "dateAdded": "2026-07-13"
   },
   {
-    "id": 1788724196622,
+    "id": 121,
     "releaseId": 30681973,
     "artist": "Taylor Swift",
     "album": "Lover",
@@ -2191,12 +2173,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 45,
+    "purchasePrice": 45.0,
     "purchaseLocation": "Target",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196623,
+    "id": 122,
     "releaseId": 16190187,
     "artist": "Taylor Swift",
     "album": "Folklore",
@@ -2209,12 +2191,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 45,
+    "purchasePrice": 45.0,
     "purchaseLocation": "Target",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196624,
+    "id": 123,
     "releaseId": 30444293,
     "artist": "Taylor Swift",
     "album": "The Tortured Poets Department",
@@ -2227,12 +2209,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 47,
+    "purchasePrice": 47.0,
     "purchaseLocation": "Target",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196625,
+    "id": 124,
     "releaseId": 21775264,
     "artist": "Taylor Swift",
     "album": "Evermore",
@@ -2245,12 +2227,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 45,
+    "purchasePrice": 45.0,
     "purchaseLocation": "Target",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196626,
+    "id": 125,
     "releaseId": 30688954,
     "artist": "The 1975",
     "album": "Being Funny In A Foreign Language",
@@ -2268,7 +2250,7 @@
     "dateAdded": "2026-09-03"
   },
   {
-    "id": 1788724196627,
+    "id": 126,
     "releaseId": 35694370,
     "artist": "The Devil Wears Prada",
     "album": "Flowers",
@@ -2286,7 +2268,7 @@
     "dateAdded": "2026-07-03"
   },
   {
-    "id": 1788724196628,
+    "id": 127,
     "releaseId": 24794651,
     "artist": "The Grateful Dead",
     "album": "American Beauty",
@@ -2299,12 +2281,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196629,
+    "id": 128,
     "releaseId": 34364482,
     "artist": "The Maine",
     "album": "American Candy",
@@ -2322,7 +2304,7 @@
     "dateAdded": "2026-04-23"
   },
   {
-    "id": 1788724196630,
+    "id": 129,
     "releaseId": 11189905,
     "artist": "The Maine",
     "album": "Lovely, Little, Lonely",
@@ -2340,7 +2322,7 @@
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196631,
+    "id": 130,
     "releaseId": 37370268,
     "artist": "The Maine",
     "album": "Joy Next Door",
@@ -2358,7 +2340,7 @@
     "dateAdded": "2026-05-30"
   },
   {
-    "id": 1788724196632,
+    "id": 131,
     "releaseId": 32904993,
     "artist": "The Maine",
     "album": "Dyed (2008-2023)",
@@ -2376,7 +2358,7 @@
     "dateAdded": "2026-03-30"
   },
   {
-    "id": 1788724196633,
+    "id": 132,
     "releaseId": 37214571,
     "artist": "The Maine",
     "album": "Joy Next Door",
@@ -2394,7 +2376,7 @@
     "dateAdded": "2026-05-03"
   },
   {
-    "id": 1788724196634,
+    "id": 133,
     "releaseId": 37174197,
     "artist": "The Maine",
     "album": "Joy Next Door (Instrumental)",
@@ -2412,7 +2394,7 @@
     "dateAdded": "2026-04-29"
   },
   {
-    "id": 1788724196635,
+    "id": 134,
     "releaseId": 28685425,
     "artist": "The Maine",
     "album": "The Maine",
@@ -2430,10 +2412,10 @@
     "dateAdded": "2026-04-15"
   },
   {
-    "id": 1788724196636,
+    "id": 135,
     "releaseId": 29053477,
     "artist": "The Maine",
-    "album": "Can’t Stop Won’t Stop (15th Anniversary)",
+    "album": "Can\u2019t Stop Won\u2019t Stop (15th Anniversary)",
     "year": 2023,
     "genre": "Pop-Punk",
     "subgenre": "Pop-Rock",
@@ -2443,12 +2425,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Discogs",
     "dateAdded": "2026-07-03"
   },
   {
-    "id": 1788724196637,
+    "id": 136,
     "releaseId": 19907425,
     "artist": "The Maine",
     "album": "XOXO: From Love And Anxiety In Real Time",
@@ -2466,7 +2448,7 @@
     "dateAdded": "2026-04-15"
   },
   {
-    "id": 1788724196638,
+    "id": 137,
     "releaseId": 1229444,
     "artist": "The Postal Service",
     "album": "Give Up",
@@ -2479,12 +2461,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Wanna Hear It Record",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196639,
+    "id": 138,
     "releaseId": 36207934,
     "artist": "These Green Eyes",
     "album": "Relapse To Recovery",
@@ -2502,7 +2484,7 @@
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196640,
+    "id": 139,
     "releaseId": 34195621,
     "artist": "Turnstile",
     "album": "Never Enough",
@@ -2515,12 +2497,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 25,
+    "purchasePrice": 25.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": "2026-04-11"
   },
   {
-    "id": 1788724196641,
+    "id": 140,
     "releaseId": 21927796,
     "artist": "Turnstile",
     "album": "Glow On",
@@ -2533,12 +2515,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 30,
+    "purchasePrice": 30.0,
     "purchaseLocation": "Bull Moose",
     "dateAdded": "2026-07-26"
   },
   {
-    "id": 1788724196642,
+    "id": 141,
     "releaseId": 18633793,
     "artist": "Twenty One Pilots",
     "album": "Vessel",
@@ -2556,7 +2538,7 @@
     "dateAdded": "2026-08-08"
   },
   {
-    "id": 1788724196643,
+    "id": 142,
     "releaseId": 33605079,
     "artist": "Underoath",
     "album": "The Place After This One",
@@ -2574,7 +2556,7 @@
     "dateAdded": "2026-08-14"
   },
   {
-    "id": 1788724196644,
+    "id": 143,
     "releaseId": 29640223,
     "artist": "Wage War",
     "album": "Manic",
@@ -2587,12 +2569,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 27,
+    "purchasePrice": 27.0,
     "purchaseLocation": "Bull Moose",
     "dateAdded": "2026-06-02"
   },
   {
-    "id": 1788724196645,
+    "id": 144,
     "releaseId": 31730297,
     "artist": "Wage War",
     "album": "Stigma",
@@ -2605,12 +2587,12 @@
     "status": "owned",
     "mediaCondition": "",
     "sleeveCondition": "",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Direct",
     "dateAdded": "2026-07-26"
   },
   {
-    "id": 1788724196646,
+    "id": 145,
     "releaseId": 35746591,
     "artist": "Stephen Schwartz",
     "album": "Wicked: For Good (The Soundtrack)",
@@ -2628,7 +2610,7 @@
     "dateAdded": "2026-06-08"
   },
   {
-    "id": 1788724196647,
+    "id": 146,
     "releaseId": 29631217,
     "artist": "The Menzingers",
     "album": "Some Of It Was True",
@@ -2646,7 +2628,7 @@
     "dateAdded": "2026-09-06"
   },
   {
-    "id": 1788724196648,
+    "id": 147,
     "releaseId": 37069797,
     "artist": "Bilmuri",
     "album": "Kinda Hard",
@@ -2664,7 +2646,7 @@
     "dateAdded": "2026-09-06"
   },
   {
-    "id": 1788724196649,
+    "id": 148,
     "releaseId": 37898535,
     "artist": "AFI",
     "album": "Decemberunderground",
@@ -2682,25 +2664,25 @@
     "dateAdded": "2026-08-15"
   },
   {
+    "id": 149,
+    "releaseId": 37201086,
     "artist": "Noah Khan",
     "album": "The Great Divide",
     "year": 2026,
-    "label": "Mercury",
-    "format": "2 x Vinyl, LP, Album, Limited Edition, Cigarette Smoke",
     "genre": "Folk",
     "subgenre": "Pop",
-    "releaseId": 37201086,
-    "status": "owned",
+    "label": "Mercury",
+    "format": "2 x Vinyl, LP, Album, Limited Edition, Cigarette Smoke",
     "rating": 4,
+    "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 56,
+    "purchasePrice": 56.0,
     "purchaseLocation": "Discogs",
-    "dateAdded": "2026-09-04",
-    "id": 1788739932550
+    "dateAdded": "2026-09-04"
   },
   {
-    "id": 1789079418576,
+    "id": 150,
     "releaseId": 17717398,
     "artist": "A Day To Remember",
     "album": "You're Welcome",
@@ -2713,12 +2695,12 @@
     "status": "owned",
     "mediaCondition": "Mint (M)",
     "sleeveCondition": "Mint (M)",
-    "purchasePrice": 27,
+    "purchasePrice": 27.0,
     "purchaseLocation": "Discogs",
     "dateAdded": ""
   },
   {
-    "id": 1789079418577,
+    "id": 151,
     "releaseId": 6919251,
     "artist": "All Time Low",
     "album": "Future Hearts",
@@ -2731,12 +2713,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 31,
+    "purchasePrice": 31.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": ""
   },
   {
-    "id": 1789079418578,
+    "id": 152,
     "releaseId": 9506280,
     "artist": "Fall Out Boy",
     "album": "Infinity On High",
@@ -2749,12 +2731,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 53,
+    "purchasePrice": 53.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": ""
   },
   {
-    "id": 1789079418579,
+    "id": 153,
     "releaseId": 31268360,
     "artist": "All Time Low",
     "album": "Nothing Personal",
@@ -2767,12 +2749,12 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 26,
+    "purchasePrice": 26.0,
     "purchaseLocation": "Newbury Comics",
     "dateAdded": ""
   },
   {
-    "id": 1789079418580,
+    "id": 154,
     "releaseId": 7250491,
     "artist": "Tame Impala",
     "album": "Currents",
@@ -2785,8 +2767,44 @@
     "status": "owned",
     "mediaCondition": "Near Mint (NM or M-)",
     "sleeveCondition": "Near Mint (NM or M-)",
-    "purchasePrice": 40,
+    "purchasePrice": 40.0,
     "purchaseLocation": "Discogs",
     "dateAdded": ""
+  },
+  {
+    "id": 155,
+    "releaseId": 8983628,
+    "artist": "A Day To Remember",
+    "album": "Bad Vibrations",
+    "year": 2016,
+    "genre": "Metalcore",
+    "subgenre": "Easycore",
+    "label": "ADTR Records",
+    "format": "LP, Album",
+    "rating": 3,
+    "status": "owned",
+    "mediaCondition": "Near Mint (NM or M-)",
+    "sleeveCondition": "Near Mint (NM or M-)",
+    "purchasePrice": 90.0,
+    "purchaseLocation": "Wanna Hear It Record",
+    "dateAdded": "2026-08-08"
+  },
+  {
+    "id": 156,
+    "releaseId": null,
+    "artist": "Ariana Grande",
+    "album": "Petal",
+    "year": 2026,
+    "genre": "Pop",
+    "subgenre": "",
+    "label": "Republic Records",
+    "format": "LP, Album, Stereo, Translucent Pearly White",
+    "rating": 3,
+    "status": "owned",
+    "mediaCondition": "Near Mint (NM or M-)",
+    "sleeveCondition": "Near Mint (NM or M-)",
+    "purchasePrice": 45.0,
+    "purchaseLocation": "Direct",
+    "dateAdded": "2026-09-18"
   }
 ]

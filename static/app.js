@@ -33,7 +33,7 @@ const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
 const cancelButton = document.getElementById("cancel-button");
 const statsArea = document.getElementById("stats");
-const statusFilter = document.getElementById("status-filter");
+const statusTabs = document.querySelectorAll(".status-tab");
 const missingPriceToggle = document.getElementById("missing-price");
 const exportButton = document.getElementById("export-button")
 const importFileInput = document.getElementById("import-file");
@@ -47,6 +47,7 @@ const recordDialogClose = document.getElementById("dialog-close-button")
 
 const records = [];
 let editingId = null;
+let statusFilterValue = "all";
 
 /* ============================================
    DISPLAY HELPERS
@@ -371,11 +372,35 @@ function showView(name) {
    RENDERING
    ============================================ */
 
+function updateStatusTabsCounts() {
+    const ownedCount = records.filter(function (record) {
+        return (record.status || "owned") !== "want";
+    }).length;
+
+    const wantCount = records.length - ownedCount;
+
+    for (const tab of statusTabs) {
+        const status = tab.dataset.status;
+        let count;
+
+        if (status === "all") {
+            count = records.length;
+        } else if (status === "owned") {
+            count = ownedCount;
+        } else {
+            count = wantCount;
+        }
+
+        tab.textContent = tab.dataset.label + " " + count;
+    }
+}
+
 function renderRecords() {
     collectionList.innerHTML = "";
 
     const query = searchInput.value.toLowerCase();
-    const statusValue = statusFilter.value;
+    updateStatusTabsCounts();
+    const statusValue = statusFilterValue;
 
     const visibleRecords = records
         .filter(function (record) {
@@ -740,7 +765,19 @@ recordDialog.addEventListener("click", function (event) {
         recordDialog.close();
     }
 });
-statusFilter.addEventListener("change", renderRecords);
+
+for (const tab of statusTabs) {
+    tab.addEventListener("click", function () {
+        statusFilterValue = tab.dataset.status;
+
+        for (const t of statusTabs) {
+            t.classList.toggle("tab-active", t === tab);
+        }
+
+        renderRecords();
+    });
+}
+
 missingPriceToggle.addEventListener("change", renderRecords);
 exportButton.addEventListener("click", exportRecords);
 importFileInput.addEventListener("change", handleImportFile);

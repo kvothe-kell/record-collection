@@ -98,9 +98,14 @@ def replace_records():
     if not isinstance(incoming, list):
         return jsonify({"error": "Expected a list of records"}), 400
 
-    placeholders = ", ".join(["?"] * len(COLUMNS))
+    import_columns = ["id"] + COLUMNS
+    placeholders = ", ".join(["?"] * len(import_columns))
     sql = (
-        "INSERT INTO records (" + ", ".join(COLUMNS) + ") VALUES (" + placeholders + ")"
+        "INSERT INTO records ("
+        + ", ".join(import_columns)
+        + ") VALUES ("
+        + placeholders
+        + ")"
     )
 
     db = get_db()
@@ -108,7 +113,7 @@ def replace_records():
     try:
         db.execute("DELETE FROM records")
         for record in incoming:
-            db.execute(sql, [record.get(column) for column in COLUMNS])
+            db.execute(sql, [record.get(column) for column in import_columns])
         db.commit()
     except sqlite3.IntegrityError as error:
         db.rollback()
