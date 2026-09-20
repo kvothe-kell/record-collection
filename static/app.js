@@ -33,6 +33,7 @@ const searchInput = document.getElementById("search");
 const sortSelect = document.getElementById("sort");
 const cancelButton = document.getElementById("cancel-button");
 const statsArea = document.getElementById("stats");
+const summaryCardsArea = document.getElementById("summary-cards");
 const statusTabs = document.querySelectorAll(".status-tab");
 const missingPriceToggle = document.getElementById("missing-price");
 const exportButton = document.getElementById("export-button")
@@ -190,6 +191,7 @@ function computeStats(list) {
     });
 
     const byArtist = countBy(owned, function (r) { return r.artist; });
+    const byGenre = countBy(owned, function (r) { return r.genre; });
     const byLabel = countBy(owned, function (r) { return r.label; });
     const byDecade = countBy(owned, function (r) {
         return r.year ? Math.floor(r.year / 10) * 10 + "s" : "";
@@ -203,6 +205,7 @@ function computeStats(list) {
         missingPrice: owned.length - withPrice.length,
         topArtists: topEntries(byArtist, 5),
         topLabels: topEntries(byLabel, 5),
+        topGenres: topEntries(byGenre, 5),
         byDecade: byDecade
     };
 }
@@ -222,6 +225,38 @@ function renderStats(list) {
     statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
     statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
     statsArea.appendChild(makeDecadeChart(stats.byDecade));
+}
+//Draw the summary cards
+function makeSummaryCard(label, value, sub) {
+    const card = document.createElement("div");
+    card.className = "summary-card";
+    card.appendChild(makeDiv("summary-card-label", label));
+    card.appendChild(makeDiv("summary-card-value", value));
+    if (sub) {
+        card.appendChild(makeDiv("summary-card-sub", sub));
+    }
+    return card;
+}
+function renderSummaryCards(list) {
+    const stats = computeStats(list);
+
+    summaryCardsArea.innerHTML = "";
+    summaryCardsArea.appendChild(makeSummaryCard("Collection Size", stats.count));
+    summaryCardsArea.appendChild(makeSummaryCard(
+        "Total Spent", formatPrice(stats.totalSpent),
+        "Avg " + formatPrice(stats.averagePrice) + " / record"));
+
+    const topArtist = stats.topArtists[0];
+    if (topArtist) {
+        summaryCardsArea.appendChild(makeSummaryCard(
+            "Top Artist", topArtist[0], topArtist[1] + " records"));
+    }
+
+    const topGenre = stats.topGenres[0];
+    if (topGenre) {
+        summaryCardsArea.appendChild(makeSummaryCard(
+            "Top Genre", topGenre[0], topGenre[1] + " records"));
+    }
 }
 
 // One label-and-value block.
@@ -400,6 +435,7 @@ function renderRecords() {
 
     const query = searchInput.value.toLowerCase();
     updateStatusTabsCounts();
+    renderSummaryCards(records);
     const statusValue = statusFilterValue;
 
     const visibleRecords = records
