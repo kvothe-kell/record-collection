@@ -40,7 +40,8 @@ const exportButton = document.getElementById("export-button")
 const importFileInput = document.getElementById("import-file");
 const dialogContent = document.getElementById("dialog-content");
 const recordDialog = document.getElementById("record-dialog");
-const recordDialogClose = document.getElementById("dialog-close-button")
+const recordDialogClose = document.getElementById("dialog-close-button");
+const genreListArea = document.getElementById("genre-list");
 
 /* ============================================
    STATE
@@ -49,6 +50,7 @@ const recordDialogClose = document.getElementById("dialog-close-button")
 const records = [];
 let editingId = null;
 let statusFilterValue = "all";
+let genreFilterValue = "";
 
 /* ============================================
    DISPLAY HELPERS
@@ -206,6 +208,7 @@ function computeStats(list) {
         topArtists: topEntries(byArtist, 5),
         topLabels: topEntries(byLabel, 5),
         topGenres: topEntries(byGenre, 5),
+        byGenre: byGenre,
         byDecade: byDecade
     };
 }
@@ -256,6 +259,32 @@ function renderSummaryCards(list) {
     if (topGenre) {
         summaryCardsArea.appendChild(makeSummaryCard(
             "Top Genre", topGenre[0], topGenre[1] + " records"));
+    }
+}
+
+function renderGenreList() {
+    const stats = computeStats(records);
+    const genres = Object.entries(stats.byGenre).sort(function (a, b) {
+        return b[1] - a[1];
+    });
+
+    genreListArea.innerHTML = "";
+
+    for (const entry of genres) {
+        const name = entry[0];
+        const count = entry[1];
+
+        const chip = document.createElement("button");
+        chip.className = "genre-chip";
+        chip.textContent = name + " (" + count + ")";
+        chip.classList.toggle("chip-active", name === genreFilterValue);
+
+        chip.addEventListener("click", function () {
+            genreFilterValue = (genreFilterValue === name) ? "" : name;
+            renderRecords();
+        });
+
+        genreListArea.appendChild(chip)
     }
 }
 
@@ -436,11 +465,15 @@ function renderRecords() {
     const query = searchInput.value.toLowerCase();
     updateStatusTabsCounts();
     renderSummaryCards(records);
+    renderGenreList();
     const statusValue = statusFilterValue;
 
     const visibleRecords = records
         .filter(function (record) {
             return statusValue === "all" || (record.status || "owned") === statusValue;
+        })
+        .filter(function (record) {
+            return genreFilterValue === "" || record.genre === genreFilterValue;
         })
         .filter(function (record) {
             if (!missingPriceToggle.checked) {

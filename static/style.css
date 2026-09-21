@@ -512,6 +512,40 @@ select:focus-visible {
     margin-top: var(--space-1);
 }
 
+
+/* ============================================
+   GENRE LIST
+   ============================================ */
+
+.genre-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin: var(--space-4) 0;
+}
+
+.genre-chip {
+    background-color: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+    cursor: pointer;
+}
+
+.genre-chip:hover {
+    background-color: var(--bg-card);
+    color: var(--text);
+}
+
+.genre-chip.chip-active {
+    background-color: var(--bg-card);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+
 /* ============================================
    RECORD DETAIL DIALOG
    ============================================ */
