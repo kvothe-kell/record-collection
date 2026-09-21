@@ -34,9 +34,6 @@
    ============================================ */
 body {
     font-family: var(--font-body);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-8);
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.5;
@@ -92,6 +89,32 @@ h2 {
     font-weight: 600;
 }
 
+/* ============================================
+   App Shell (sidebar + main)
+   ============================================ */
+.app-shell {
+    display: flex;
+    gap: var(--space-8);
+    align-items: flex-start;
+}
+
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    padding: var(--space-8) var(--space-4);
+}
+
+.sidebar .nav {
+    flex-direction: column;
+    border-bottom: none;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-8);
+}
+
 .view {
     display: none;
 }
@@ -143,12 +166,14 @@ h2 {
     position: relative;
     flex: 1;
     min-width: 200px;
+    max-width: 400px;
 }
 
 .search-wrap input {
     width: 100%;
     padding-left: var(--space-8);
     padding-right: var(--space-8);
+    box-sizing: border-box;
 }
 
 .search-icon {
@@ -182,6 +207,10 @@ select {
     color: var(--text);
     font-size: var(--text-base);
     transition: border-color 0.15s ease;
+}
+
+#sort {
+    min-width: 160px;
 }
 
 .form-section {

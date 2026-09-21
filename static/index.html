@@ -14,183 +14,193 @@
 
 <body>
 
-    <h1>Our Record Collection</h1>
-    <nav class="nav">
-        <button class="nav-button" data-view="collection">Collection</button>
-        <button class="nav-button" data-view="stats">Stats</button>
-        <button class="nav-button" data-view="add">Add Record</button>
-        <button class="nav-button" data-view="data">Data</button>
-    </nav>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <h1>Our Record Collection</h1>
+            <nav class="nav">
+                <button class="nav-button" data-view="collection">Collection</button>
+                <button class="nav-button" data-view="stats">Stats</button>
+                <button class="nav-button" data-view="add">Add Record</button>
+                <button class="nav-button" data-view="data">Data</button>
+            </nav>
 
-    <p id="message"></p>
-
-    <div id="view-collection" class="view">
-        <div id="summary-cards" class="summary-grid"></div>
-        <div id="genre-list" class="genre-list"></div>
-        <div class="controls">
-            <div class="search-wrap">
-                <span class="search-icon">⌕</span>
-                <input type="text" id="search" placeholder="Search artist, album, genre, label..." aria-label="Search">
-                <kbd class="search-hint">/</kbd>
-            </div>
-            <label>Sort by:
-                <select id="sort">
-                    <option value="artist">Artist</option>
-                    <option value="album">Album</option>
-                    <option value="year">Year</option>
-                    <option value="rating">Rating</option>
-                    <option value="added">Recently added</option>
-                </select>
-            </label>
             <div class="status-tabs">
                 <button class="status-tab tab-active" data-status="all" data-label="All">All</button>
                 <button class="status-tab" data-status="owned" data-label="Owned">Owned</button>
                 <button class="status-tab" data-status="want" data-label="Wishlist">Wishlist</button>
             </div>
-            </select>
-            <label class="checkbox-label">
-                <input type="checkbox" id="missing-price">
-                <span>Missing Price</span>
-            </label>
-        </div>
 
-        <ul id="collection"></ul>
+            <div id="genre-list" class="genre-list"></div>
+        </aside>
 
-    </div>
+        <main>
+            <p id="message"></p>
 
-    <div id="view-stats" class="view">
-        <div id="stats" class="stats"></div>
-    </div>
+            <div id="view-collection" class="view">
+                <div id="summary-cards" class="summary-grid"></div>
+                <div id="genre-list" class="genre-list"></div>
+                <div class="controls">
+                    <div class="search-wrap">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" id="search" placeholder="Search artist, album, genre, label..."
+                            aria-label="Search">
+                        <kbd class="search-hint">/</kbd>
+                    </div>
+                    <label>Sort by:
+                        <select id="sort">
+                            <option value="artist">Artist</option>
+                            <option value="album">Album</option>
+                            <option value="year">Year</option>
+                            <option value="rating">Rating</option>
+                            <option value="added">Recently added</option>
+                        </select>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="missing-price">
+                        <span>Missing Price</span>
+                    </label>
+                </div>
 
+                <ul id="collection"></ul>
 
-    <div id="view-add" class="view">
-
-        <fieldset class="form-section">
-            <legend>Album</legend>
-            <div class="form-grid">
-                <label class="field">
-                    <span>Artist</span>
-                    <input type="text" id="artist">
-                </label>
-                <label class="field">
-                    <span>Album</span>
-                    <input type="text" id="album">
-                </label>
-                <label class="field">
-                    <span>Year</span>
-                    <input type="number" id="year">
-                </label>
-                <label class="field">
-                    <span>Label</span>
-                    <input type="text" id="label">
-                </label>
-                <label class="field">
-                    <span>Format</span>
-                    <input type="text" id="format">
-                </label>
-                <label class="field">
-                    <span>Genre</span>
-                    <input type="text" id="genre">
-                </label>
-                <label class="field">
-                    <span>Subgenre</span>
-                    <input type="text" id="subgenre">
-                </label>
-                <label class="field">
-                    <span>Discogs ID</span>
-                    <input type="number" id="release-id">
-                </label>
             </div>
-        </fieldset>
 
-        <fieldset class="form-section">
-            <legend>My Copy</legend>
-            <div class="form-grid">
-                <label class="field">
-                    <span>Status</span>
-                    <select id="status">
-                        <option value="owned">Owned</option>
-                        <option value="want">Want</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span>Rating</span>
-                    <select id="rating">
-                        <option value="">—</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span>Media Condition</span>
-                    <select id="media-condition">
-                        <option value="">—</option>
-                        <option value="Mint (M)">Mint (M)</option>
-                        <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
-                        <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
-                        <option value="Very Good (VG)">Very Good (VG)</option>
-                        <option value="Good Plus (G+)">Good Plus (G+)</option>
-                        <option value="Good (G)">Good (G)</option>
-                        <option value="Fair (F)">Fair (F)</option>
-                        <option value="Poor (P)">Poor (P)</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span>Sleeve Condition</span>
-                    <select id="sleeve-condition">
-                        <option value="">—</option>
-                        <option value="Mint (M)">Mint (M)</option>
-                        <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
-                        <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
-                        <option value="Very Good (VG)">Very Good (VG)</option>
-                        <option value="Good Plus (G+)">Good Plus (G+)</option>
-                        <option value="Good (G)">Good (G)</option>
-                        <option value="Fair (F)">Fair (F)</option>
-                        <option value="Poor (P)">Poor (P)</option>
-                    </select>
-                </label>
-                <label class="field">
-                    <span>Price Paid</span>
-                    <input type="number" id="purchase-price" step="0.01" min="0">
-                </label>
-                <label class="field">
-                    <span>Bought From</span>
-                    <input type="text" id="purchase-location">
-                </label>
-                <label class="field">
-                    <span>Date Added</span>
-                    <input type="date" id="date-added">
-                </label>
+            <div id="view-stats" class="view">
+                <div id="stats" class="stats"></div>
             </div>
-        </fieldset>
 
-        <div class="form-actions">
-            <button id="add-button">Add Record</button>
-            <button id="cancel-button">Cancel</button>
-        </div>
 
+            <div id="view-add" class="view">
+
+                <fieldset class="form-section">
+                    <legend>Album</legend>
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Artist</span>
+                            <input type="text" id="artist">
+                        </label>
+                        <label class="field">
+                            <span>Album</span>
+                            <input type="text" id="album">
+                        </label>
+                        <label class="field">
+                            <span>Year</span>
+                            <input type="number" id="year">
+                        </label>
+                        <label class="field">
+                            <span>Label</span>
+                            <input type="text" id="label">
+                        </label>
+                        <label class="field">
+                            <span>Format</span>
+                            <input type="text" id="format">
+                        </label>
+                        <label class="field">
+                            <span>Genre</span>
+                            <input type="text" id="genre">
+                        </label>
+                        <label class="field">
+                            <span>Subgenre</span>
+                            <input type="text" id="subgenre">
+                        </label>
+                        <label class="field">
+                            <span>Discogs ID</span>
+                            <input type="number" id="release-id">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-section">
+                    <legend>My Copy</legend>
+                    <div class="form-grid">
+                        <label class="field">
+                            <span>Status</span>
+                            <select id="status">
+                                <option value="owned">Owned</option>
+                                <option value="want">Want</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Rating</span>
+                            <select id="rating">
+                                <option value="">—</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Media Condition</span>
+                            <select id="media-condition">
+                                <option value="">—</option>
+                                <option value="Mint (M)">Mint (M)</option>
+                                <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
+                                <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
+                                <option value="Very Good (VG)">Very Good (VG)</option>
+                                <option value="Good Plus (G+)">Good Plus (G+)</option>
+                                <option value="Good (G)">Good (G)</option>
+                                <option value="Fair (F)">Fair (F)</option>
+                                <option value="Poor (P)">Poor (P)</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Sleeve Condition</span>
+                            <select id="sleeve-condition">
+                                <option value="">—</option>
+                                <option value="Mint (M)">Mint (M)</option>
+                                <option value="Near Mint (NM or M-)">Near Mint (NM or M-)</option>
+                                <option value="Very Good Plus (VG+)">Very Good Plus (VG+)</option>
+                                <option value="Very Good (VG)">Very Good (VG)</option>
+                                <option value="Good Plus (G+)">Good Plus (G+)</option>
+                                <option value="Good (G)">Good (G)</option>
+                                <option value="Fair (F)">Fair (F)</option>
+                                <option value="Poor (P)">Poor (P)</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Price Paid</span>
+                            <input type="number" id="purchase-price" step="0.01" min="0">
+                        </label>
+                        <label class="field">
+                            <span>Bought From</span>
+                            <input type="text" id="purchase-location">
+                        </label>
+                        <label class="field">
+                            <span>Date Added</span>
+                            <input type="date" id="date-added">
+                        </label>
+                    </div>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button id="add-button">Add Record</button>
+                    <button id="cancel-button">Cancel</button>
+                </div>
+
+            </div>
+
+            <div id="view-data" class="view">
+                <fieldset class="form-section">
+                    <legend>Backup</legend>
+                    <p class="data-help">Download your whole collection as a JSON file.</p>
+                    <button id="export-button">Export JSON</button>
+                </fieldset>
+                <fieldset class="form-section">
+                    <legend>Restore</legend>
+                    <p class="data-help">Load a JSON backup. This replaces your current collection.</p>
+                    <input type="file" id="import-file" accept=".json">
+                </fieldset>
+            </div>
+
+            <dialog id="record-dialog">
+                <button id="dialog-close-button">Close</button>
+                <div id="dialog-content"></div>
+            </dialog>
+
+        </main>
     </div>
-
-    <div id="view-data" class="view">
-        <fieldset class="form-section">
-            <legend>Backup</legend>
-            <p class="data-help">Download your whole collection as a JSON file.</p>
-            <button id="export-button">Export JSON</button>
-        </fieldset>
-        <fieldset class="form-section">
-            <legend>Restore</legend>
-            <p class="data-help">Load a JSON backup. This replaces your current collection.</p>
-            <input type="file" id="import-file" accept=".json">
-        </fieldset>
-    </div>
-
-    <dialog id="record-dialog">
-        <button id="dialog-close-button">Close</button>
-        <div id="dialog-content"></div>
-    </dialog>
 
     <script src="app.js"></script>
     <!-- <script src="import.js"></script> -->
