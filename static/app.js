@@ -847,6 +847,23 @@ for (const tab of statusTabs) {
     });
 }
 
+document.addEventListener("keydown", function (event) {
+    if (event.key !== "/") {
+        return;
+    }
+
+    const active = document.activeElement;
+    const isTpying = active.tagName === "INPUT"
+        || active.tagName === "TEXTAREA"
+        || active.tagName === "SELECT";
+    if (isTpying) {
+        return;
+    }
+
+    event.preventDefault();
+    searchInput.focus();
+})
+
 missingPriceToggle.addEventListener("change", renderRecords);
 exportButton.addEventListener("click", exportRecords);
 importFileInput.addEventListener("change", handleImportFile);
