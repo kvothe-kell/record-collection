@@ -373,7 +373,7 @@ function topEntries(counts, limit) {
 // One "Label: value" row for the detail dialog.
 function makeDialogRow(label, value) {
     const row = document.createElement("div");
-    row.className - "dialog-row";
+    row.className = "dialog-row";
 
     const isEmpty = value === null || value === undefined || value === "";
     row.appendChild(makeDiv("dialog-row-label", label));
