@@ -51,6 +51,7 @@ const records = [];
 let editingId = null;
 let statusFilterValue = "all";
 let genreFilterValue = "";
+let overviewStats = null;
 
 /* ============================================
    DISPLAY HELPERS
@@ -170,52 +171,14 @@ function createRecordElement(record) {
    STATS
    ============================================ */
 
-// Work out the headline numbers for a set of records.
-function computeStats(list) {
-    const owned = list.filter(function (record) {
-        return record.status !== "want";
-    });
-
-    const totalSpent = owned.reduce(function (sum, record) {
-        return sum + (record.purchasePrice || 0);
-    }, 0);
-
-    const rated = owned.filter(function (record) {
-        return record.rating > 0;
-    });
-
-    const ratingTotal = rated.reduce(function (sum, record) {
-        return sum + record.rating;
-    }, 0);
-
-    const withPrice = owned.filter(function (record) {
-        return record.purchasePrice !== null && record.purchasePrice !== undefined;
-    });
-
-    const byArtist = countBy(owned, function (r) { return r.artist; });
-    const byGenre = countBy(owned, function (r) { return r.genre; });
-    const byLabel = countBy(owned, function (r) { return r.label; });
-    const byDecade = countBy(owned, function (r) {
-        return r.year ? Math.floor(r.year / 10) * 10 + "s" : "";
-    });
-
-    return {
-        count: owned.length,
-        totalSpent: totalSpent,
-        averagePrice: withPrice.length ? totalSpent / withPrice.length : 0,
-        averageRating: rated.length ? ratingTotal / rated.length : 0,
-        missingPrice: owned.length - withPrice.length,
-        topArtists: topEntries(byArtist, 5),
-        topLabels: topEntries(byLabel, 5),
-        topGenres: topEntries(byGenre, 5),
-        byGenre: byGenre,
-        byDecade: byDecade
-    };
-}
 
 //Draw the stats panel.
-function renderStats(list) {
-    const stats = computeStats(list);
+function renderStats() {
+    if (!overviewStats) {
+        return;
+    }
+
+    const stats = overviewStats;
 
     statsArea.innerHTML = "";
 
@@ -240,8 +203,12 @@ function makeSummaryCard(label, value, sub) {
     }
     return card;
 }
-function renderSummaryCards(list) {
-    const stats = computeStats(list);
+function renderSummaryCards() {
+    if (!overviewStats) {
+        return;
+    }
+
+    const stats = overviewStats;
 
     summaryCardsArea.innerHTML = "";
     summaryCardsArea.appendChild(makeSummaryCard("Collection Size", stats.count));
@@ -252,19 +219,22 @@ function renderSummaryCards(list) {
     const topArtist = stats.topArtists[0];
     if (topArtist) {
         summaryCardsArea.appendChild(makeSummaryCard(
-            "Top Artist", topArtist[0], topArtist[1] + " records"));
+            "Top Artist", topArtist.name, topArtist.count + " / records"));
     }
 
     const topGenre = stats.topGenres[0];
     if (topGenre) {
         summaryCardsArea.appendChild(makeSummaryCard(
-            "Top Genre", topGenre[0], topGenre[1] + " records"));
+            "Top Genre", topGenre.name, topGenre.count + " / records"));
     }
 }
 
 function renderGenreList() {
-    const stats = computeStats(records);
-    const genres = Object.entries(stats.byGenre).sort(function (a, b) {
+    if (!overviewStats) {
+        return;
+    }
+
+    const genres = Object.entries(overviewStats.byGenre).sort(function (a, b) {
         return b[1] - a[1];
     });
 
@@ -305,8 +275,8 @@ function makeStatList(title, entries) {
     for (const entry of entries) {
         const row = document.createElement("div");
         row.className = "stat-row";
-        row.appendChild(makeDiv("stat-row-name", entry[0]));
-        row.appendChild(makeDiv("stat-row-count", entry[1]));
+        row.appendChild(makeDiv("stat-row-name", entry.name));
+        row.appendChild(makeDiv("stat-row-count", entry.count));
         box.appendChild(row);
     }
 
@@ -344,27 +314,6 @@ function makeDecadeChart(counts) {
 
     return box;
 }
-
-function countBy(list, getKey) {
-    return list.reduce(function (counts, record) {
-        const key = getKey(record);
-
-        if (key) {
-            counts[key] = (counts[key] || 0) + 1;
-        }
-
-        return counts;
-    }, {});
-}
-
-function topEntries(counts, limit) {
-    return Object.entries(counts)
-        .sort(function (a, b) {
-            return b[1] - a[1];
-        })
-        .slice(0, limit);
-}
-
 
 /* ============================================
    RECORD DETAIL DIALOG
@@ -464,7 +413,7 @@ function renderRecords() {
 
     const query = searchInput.value.toLowerCase();
     updateStatusTabsCounts();
-    renderSummaryCards(records);
+    renderSummaryCards();
     renderGenreList();
     const statusValue = statusFilterValue;
 
@@ -509,7 +458,7 @@ function renderRecords() {
         return (a.album || "").localeCompare(b.album || "");
     });
 
-    renderStats(visibleRecords);
+    renderStats();
 
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
@@ -594,6 +543,7 @@ async function addRecord() {
     try {
         const saved = await createRecordOnServer(newRecord);
         records.push(saved);
+        await loadOverviewStats();
         clearForm();
         renderRecords();
     } catch (error) {
@@ -638,6 +588,7 @@ async function saveEdit() {
     try {
         await updateRecordOnServer(updated);
         Object.assign(record, updated);
+        await loadOverviewStats();
         stopEditing();
         showView("collection");
         renderRecords();
@@ -670,6 +621,7 @@ async function deleteRecord(id) {
     try {
         await deleteRecordOnServer(id);
         records.splice(index, 1);
+        await loadOverviewStats();
         renderRecords();
     } catch (error) {
         showMessage("Couldn't delete: " + error.message);
@@ -742,6 +694,13 @@ async function loadRecords() {
     }
 }
 
+async function loadOverviewStats() {
+    try {
+        overviewStats = await apiFetch("/api/stats/overview");
+    } catch (error) {
+        showMessage("Couldn't loan stats: " + error.message);
+    }
+}
 
 /* ============================================
    IMPORT AND EXPORT
@@ -778,6 +737,8 @@ function handleImportFile(event) {
             for (const record of saved) {
                 records.push(record);
             }
+
+            await loadOverviewStats();
 
             renderRecords();
 
@@ -874,6 +835,7 @@ stopEditing();
 
 async function init() {
     await loadRecords();
+    await loadOverviewStats();
     renderRecords();
 }
 

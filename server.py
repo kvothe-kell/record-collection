@@ -2,7 +2,10 @@ import json
 import sqlite3
 from datetime import date
 
+import pandas as pd
 from flask import Flask, Response, g, jsonify, request
+
+from stats import compute_growth, compute_overview
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
@@ -62,6 +65,18 @@ def export_records():
     response.headers["Content-Disposition"] = 'attachment; filename="' + filename + '"'
 
     return response
+
+
+@app.route("/api/stats/growth", methods=["GET"])
+def stats_growth():
+    df = pd.read_sql_query("SELECT * FROM records", get_db())
+    return jsonify(compute_growth(df))
+
+
+@app.route("/api/stats/overview", methods=["GET"])
+def stats_overview():
+    df = pd.read_sql_query("SELECT * FROM records", get_db())
+    return jsonify(compute_overview(df))
 
 
 @app.route("/api/records", methods=["POST"])
