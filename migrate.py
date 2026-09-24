@@ -2,7 +2,7 @@ import json
 import os
 import sqlite3
 
-DB_File = "records.db"
+DB_FILE = "records.db"
 JSON_FILE = "records.json"
 
 COLUMNS = [
@@ -25,14 +25,14 @@ COLUMNS = [
 
 
 def main():
-    if os.path.exists(DB_File):
-        print(DB_File + " already exists. Delete it first if you want to start over.")
+    if os.path.exists(DB_FILE):
+        print(DB_FILE + " already exists. Delete it first if you want to start over.")
         return
 
     with open(JSON_FILE, "r", encoding="utf-8") as f:
         records = json.load(f)
 
-    connection = sqlite3.connect(DB_File)
+    connection = sqlite3.connect(DB_FILE)
 
     with open("schema.sql", "r", encoding="utf-8") as f:
         connection.executescript(f.read())

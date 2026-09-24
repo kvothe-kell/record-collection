@@ -21,7 +21,12 @@ const FIELDS = [
 
 for (const field of FIELDS) {
     field.input = document.getElementById(field.inputId);
-};
+}
+
+const MONTH_NAMES = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
 
 /* ============================================
    DOM REFERENCES
@@ -36,12 +41,13 @@ const statsArea = document.getElementById("stats");
 const summaryCardsArea = document.getElementById("summary-cards");
 const statusTabs = document.querySelectorAll(".status-tab");
 const missingPriceToggle = document.getElementById("missing-price");
-const exportButton = document.getElementById("export-button")
+const exportButton = document.getElementById("export-button");
 const importFileInput = document.getElementById("import-file");
 const dialogContent = document.getElementById("dialog-content");
 const recordDialog = document.getElementById("record-dialog");
 const recordDialogClose = document.getElementById("dialog-close-button");
 const genreListArea = document.getElementById("genre-list");
+const growthPanelArea = document.getElementById("growth-panel");
 
 /* ============================================
    STATE
@@ -52,6 +58,7 @@ let editingId = null;
 let statusFilterValue = "all";
 let genreFilterValue = "";
 let overviewStats = null;
+let growthStats = null;
 
 /* ============================================
    DISPLAY HELPERS
@@ -65,7 +72,7 @@ function makeDiv(className, text) {
     return div;
 }
 
-// Join the values that actually exisit, seperated by a dot.
+// Join the values that actually exist, seperated by a dot.
 function joinParts(parts) {
     return parts.filter(Boolean).join(" · ");
 }
@@ -81,12 +88,19 @@ function formatPrice(price) {
     });
 }
 
-// Rating 3 to Stars
+// Rating to Stars
 function formatRating(rating) {
     let stars = Number(rating) || 0;
     if (stars < 0) stars = 0;
     if (stars > 5) stars = 5;
     return "★".repeat(stars) + "☆".repeat(5 - stars);
+}
+
+function formatMonthLabel(monthKey) {
+    const parts = monthKey.split("-");
+    const year = parts[0];
+    const monthIndex = Number(parts[1]) - 1;
+    return MONTH_NAMES[monthIndex] + " " + year;
 }
 
 // A small set of muted, "album cover" background colors.
@@ -369,7 +383,7 @@ function openRecordDialog(record) {
 const navButtons = document.querySelectorAll(".nav-button");
 const views = document.querySelectorAll(".view");
 
-//Show one view and higlight it's nav button.
+//Show one view and higlight its nav button.
 function showView(name) {
     for (const view of views) {
         view.classList.toggle("active", view.id === "view-" + name);
@@ -459,6 +473,7 @@ function renderRecords() {
     });
 
     renderStats();
+    renderGrowthPanel();
 
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
@@ -470,6 +485,39 @@ function renderRecords() {
 
     for (const record of visibleRecords) {
         collectionList.appendChild(createRecordElement(record));
+    }
+}
+
+function renderGrowthPanel() {
+    if (!growthStats) {
+        return;
+    }
+
+    growthPanelArea.innerHTML = "";
+    growthPanelArea.appendChild(makeDiv("stat-label", "Records Added by Month"));
+
+    const months = Object.entries(growthStats).sort(function (a, b) {
+        return a[0].localeCompare(b[0]);
+    });
+
+    const biggest = Math.max(...months.map(function (m) { return m[1]; }));
+
+    for (const month of months) {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.appendChild(makeDiv("stat-row-name", formatMonthLabel(month[0])));
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const bar = document.createElement("div");
+        bar.className = "bar-fill";
+        bar.style.width = (month[1] / biggest * 100) + "%";
+        track.appendChild(bar);
+
+        row.appendChild(track);
+        row.appendChild(makeDiv("stat-row-count", month[1]));
+        growthPanelArea.appendChild(row);
     }
 }
 
@@ -544,6 +592,7 @@ async function addRecord() {
         const saved = await createRecordOnServer(newRecord);
         records.push(saved);
         await loadOverviewStats();
+        await loadGrowthStats();
         clearForm();
         renderRecords();
     } catch (error) {
@@ -589,6 +638,7 @@ async function saveEdit() {
         await updateRecordOnServer(updated);
         Object.assign(record, updated);
         await loadOverviewStats();
+        await loadGrowthStats();
         stopEditing();
         showView("collection");
         renderRecords();
@@ -622,6 +672,7 @@ async function deleteRecord(id) {
         await deleteRecordOnServer(id);
         records.splice(index, 1);
         await loadOverviewStats();
+        await loadGrowthStats();
         renderRecords();
     } catch (error) {
         showMessage("Couldn't delete: " + error.message);
@@ -698,7 +749,15 @@ async function loadOverviewStats() {
     try {
         overviewStats = await apiFetch("/api/stats/overview");
     } catch (error) {
-        showMessage("Couldn't loan stats: " + error.message);
+        showMessage("Couldn't load stats: " + error.message);
+    }
+}
+
+async function loadGrowthStats() {
+    try {
+        growthStats = await apiFetch("/api/stats/growth");
+    } catch (error) {
+        showMessage("Couldn't load growth stats: " + error.message);
     }
 }
 
@@ -739,6 +798,7 @@ function handleImportFile(event) {
             }
 
             await loadOverviewStats();
+            await loadGrowthStats();
 
             renderRecords();
 
@@ -814,10 +874,10 @@ document.addEventListener("keydown", function (event) {
     }
 
     const active = document.activeElement;
-    const isTpying = active.tagName === "INPUT"
+    const isTyping = active.tagName === "INPUT"
         || active.tagName === "TEXTAREA"
         || active.tagName === "SELECT";
-    if (isTpying) {
+    if (isTyping) {
         return;
     }
 
@@ -836,6 +896,7 @@ stopEditing();
 async function init() {
     await loadRecords();
     await loadOverviewStats();
+    await loadGrowthStats();
     renderRecords();
 }
 
