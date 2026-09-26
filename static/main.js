@@ -1,9 +1,6 @@
-/* global FIELDS, apiFetch, replaceAllOnServer, renderRecords, showMessage, editingId, addRecord, saveEdit, stopEditing */
+/* global apiFetch, replaceAllOnServer, renderRecords, showMessage, editingId,
+addRecord, saveEdit, stopEditing */
 /* exported growthStats, overviewStats, statusFilterValue, genreFilterValue */
-
-for (const field of FIELDS) {
-    field.input = document.getElementById(field.inputId);
-}
 
 
 /* ============================================
@@ -30,6 +27,15 @@ let genreFilterValue = "";
 let overviewStats = null;
 let growthStats = null;
 
+// Replace the contents of the records array in place.
+function replaceLocalRecords(list) {
+    records.length = 0;
+
+    for (const record of list) {
+        records.push(record);
+    }
+}
+
 
 /* ============================================
    VIEWS
@@ -49,18 +55,15 @@ function showView(name) {
     }
 }
 
+/* ============================================
+   DATA LOADING
+   ============================================ */
 
 // Fetch the collection from the server into the records array.
 async function loadRecords() {
     try {
-        const response = await fetch("/api/records");
-
-        if (!response.ok) {
-            throw new Error("Server returned " + response.status);
-        }
-
-        const loaded = await response.json();
-        records.length = 0;
+        const loaded = await apiFetch("/api/records");
+        replaceLocalRecords(loaded);
 
         for (const record of loaded) {
             records.push(record);
@@ -116,7 +119,7 @@ function handleImportFile(event) {
 
             const saved = await replaceAllOnServer(loaded);
 
-            records.length = 0;
+            replaceLocalRecords(loaded);
 
             for (const record of saved) {
                 records.push(record);
@@ -214,11 +217,16 @@ missingPriceToggle.addEventListener("change", renderRecords);
 exportButton.addEventListener("click", exportRecords);
 importFileInput.addEventListener("change", handleImportFile);
 
-//Set the starting UI state and draw the collection
-showView("collection");
-stopEditing();
 
+/* ============================================
+   STARTUP
+   ============================================ */
+
+//Set the starting UI state and draw the collection
 async function init() {
+    showView("collection");
+    stopEditing();
+
     await loadRecords();
     await loadOverviewStats();
     await loadGrowthStats();

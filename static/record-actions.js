@@ -3,6 +3,9 @@
 
 let editingId = null;
 
+for (const field of FIELDS) {
+    field.input = document.getElementById(field.inputId);
+}
 
 /* ============================================
    FORM HELPERS
