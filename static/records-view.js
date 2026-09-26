@@ -140,7 +140,7 @@ function renderGenreList() {
     }
 
     const genres = Object.entries(overviewStats.byGenre).sort(function (a, b) {
-        return b[1] - a[1];
+        return a[0].localeCompare(b[0]);
     });
 
     genreListArea.innerHTML = "";

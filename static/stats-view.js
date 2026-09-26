@@ -9,6 +9,7 @@ const growthPanelArea = document.getElementById("growth-panel");
 const summaryCardsArea = document.getElementById("summary-cards");
 const statsArea = document.getElementById("stats");
 
+
 // One label-and-value block.
 function makeStat(label, value) {
     const box = document.createElement("div");
@@ -34,6 +35,9 @@ function makeStatList(title, entries) {
     return box;
 }
 
+/* ============================================
+   PANELS
+   ============================================ */
 function makeDecadeChart(counts) {
     const box = document.createElement("div");
     box.className = "stat-panel";
@@ -66,6 +70,53 @@ function makeDecadeChart(counts) {
     return box;
 }
 
+function makeGenreChart(counts) {
+    const box = document.createElement("div");
+    box.className = "stat-panel";
+    box.appendChild(makeDiv("stat-label", "By Genre"));
+
+    const genres = Object.entries(counts).sort(function (a, b) {
+        return b[1] - a[1];
+    }).slice(0, 5);
+
+    const biggest = Math.max(...genres.map(function (d) { return d[1]; }));
+
+    for (const genre of genres) {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.appendChild(makeDiv("stat-row-name", genre[0]));
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const bar = document.createElement("div");
+        bar.className = "bar-fill";
+        bar.style.width = (genre[1] / biggest * 100) + "%";
+        track.appendChild(bar);
+
+        row.appendChild(track);
+        row.appendChild(makeDiv("stat-row-count", genre[1]));
+        box.appendChild(row);
+    }
+
+    return box;
+}
+
+//Draw the summary cards
+function makeSummaryCard(label, value, sub) {
+    const card = document.createElement("div");
+    card.className = "summary-card";
+    card.appendChild(makeDiv("summary-card-label", label));
+    card.appendChild(makeDiv("summary-card-value", value));
+    if (sub) {
+        card.appendChild(makeDiv("summary-card-sub", sub));
+    }
+    return card;
+}
+
+/* ============================================
+   RENDERING
+   ============================================ */
 //Draw the stats panel.
 function renderStats() {
     if (!overviewStats) {
@@ -80,24 +131,11 @@ function renderStats() {
     statsArea.appendChild(makeStat("Total Spent", formatPrice(stats.totalSpent)))
     statsArea.appendChild(makeStat("Average Price", formatPrice(stats.averagePrice)));
     statsArea.appendChild(makeStat("Average Rating", stats.averageRating.toFixed(2)));
-    statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
-
+    // statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
     statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
     statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
     statsArea.appendChild(makeDecadeChart(stats.byDecade));
-}
-
-
-//Draw the summary cards
-function makeSummaryCard(label, value, sub) {
-    const card = document.createElement("div");
-    card.className = "summary-card";
-    card.appendChild(makeDiv("summary-card-label", label));
-    card.appendChild(makeDiv("summary-card-value", value));
-    if (sub) {
-        card.appendChild(makeDiv("summary-card-sub", sub));
-    }
-    return card;
+    statsArea.appendChild(makeGenreChart(stats.byGenre))
 }
 
 function renderSummaryCards() {

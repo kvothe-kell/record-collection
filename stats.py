@@ -54,4 +54,5 @@ def compute_overview(df):
         "topGenres": top_counts("genre"),
         "byGenre": all_counts("genre"),
         "byDecade": all_counts("decade"),
+        "bySubgenre": all_counts("subgenre"),
     }
