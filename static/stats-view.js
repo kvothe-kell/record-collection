@@ -1,13 +1,15 @@
-/* global overviewStats, growthStats, makeDiv, formatPrice, formatMonthLabel */
-/* exported renderStats, renderSummaryCards, renderGrowthPanel */
+/* global overviewStats, growthStats, spendingStats, makeDiv, formatPrice, formatMonthLabel */
+/* exported renderStats, renderSummaryCards, renderGrowthPanel, renderSpendingPanel */
 
 
 /* ============================================
    DOM REFERENCES
    ============================================ */
-const growthPanelArea = document.getElementById("growth-panel");
 const summaryCardsArea = document.getElementById("summary-cards");
 const statsArea = document.getElementById("stats");
+const growthPanelArea = document.getElementById("growth-panel");
+const spendingStatsArea = document.getElementById("spending-panel")
+
 
 
 // One label-and-value block.
@@ -117,27 +119,7 @@ function makeSummaryCard(label, value, sub) {
 /* ============================================
    RENDERING
    ============================================ */
-//Draw the stats panel.
-function renderStats() {
-    if (!overviewStats) {
-        return;
-    }
-
-    const stats = overviewStats;
-
-    statsArea.innerHTML = "";
-
-    statsArea.appendChild(makeStat("Records", stats.count));
-    statsArea.appendChild(makeStat("Total Spent", formatPrice(stats.totalSpent)))
-    statsArea.appendChild(makeStat("Average Price", formatPrice(stats.averagePrice)));
-    statsArea.appendChild(makeStat("Average Rating", stats.averageRating.toFixed(2)));
-    // statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
-    statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
-    statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
-    statsArea.appendChild(makeDecadeChart(stats.byDecade));
-    statsArea.appendChild(makeGenreChart(stats.byGenre))
-}
-
+//Draw the sumary cards on the main page.
 function renderSummaryCards() {
     if (!overviewStats) {
         return;
@@ -164,6 +146,28 @@ function renderSummaryCards() {
     }
 }
 
+//Draw the overview panel on the stats page.
+function renderStats() {
+    if (!overviewStats) {
+        return;
+    }
+
+    const stats = overviewStats;
+
+    statsArea.innerHTML = "";
+
+    statsArea.appendChild(makeStat("Records", stats.count));
+    statsArea.appendChild(makeStat("Total Spent", formatPrice(stats.totalSpent)))
+    statsArea.appendChild(makeStat("Average Price", formatPrice(stats.averagePrice)));
+    statsArea.appendChild(makeStat("Average Rating", stats.averageRating.toFixed(2)));
+    // statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
+    statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
+    statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
+    statsArea.appendChild(makeDecadeChart(stats.byDecade));
+    statsArea.appendChild(makeGenreChart(stats.byGenre))
+}
+
+// Draw the growth panel on the stats page.
 function renderGrowthPanel() {
     if (!growthStats) {
         return;
@@ -194,5 +198,24 @@ function renderGrowthPanel() {
         row.appendChild(track);
         row.appendChild(makeDiv("stat-row-count", month[1]));
         growthPanelArea.appendChild(row);
+    }
+}
+
+// Draw the spending summary panel on the stats page. 
+function renderSpendingPanel() {
+    if (!spendingStats) {
+        return;
+    }
+
+    const stats = spendingStats;
+
+    spendingStatsArea.innerHTML = "";
+    spendingStatsArea.appendChild(makeStat("Median Price", formatPrice(stats.medianPrice)));
+
+    if (stats.mostExpensive) {
+        spendingStatsArea.appendChild(makeStat(
+            "Most Expensive: " + stats.mostExpensive.artist + " - " + stats.mostExpensive.album,
+            formatPrice(stats.mostExpensive.price)
+        ));
     }
 }

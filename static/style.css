@@ -537,6 +537,12 @@ select:focus-visible {
     font-variant-numeric: tabular-nums;
 }
 
+#view-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
 .bar-track {
     flex: 2;
     height: 6px;

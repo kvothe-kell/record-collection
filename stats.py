@@ -56,3 +56,24 @@ def compute_overview(df):
         "byDecade": all_counts("decade"),
         "bySubgenre": all_counts("subgenre"),
     }
+
+
+def compute_spending(df):
+    owned = df[df["status"] != "want"].copy()
+    with_price = owned[owned["purchasePrice"].notna()]
+
+    median_price = with_price["purchasePrice"].median() if len(with_price) else 0
+
+    most_expensive = None
+    if len(with_price):
+        row = with_price.loc[with_price["purchasePrice"].idxmax()]
+        most_expensive = {
+            "artist": row["artist"],
+            "album": row["album"],
+            "price": float(row["purchasePrice"]),
+        }
+
+        return {
+            "medianPrice": float(median_price),
+            "mostExpensive": most_expensive,
+        }

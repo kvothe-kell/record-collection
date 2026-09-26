@@ -1,7 +1,7 @@
 /* global apiFetch, showMessage */
 /* exported statusFilterValue, setStatusFilter, genreFilterValue, setGenreFilter,
 records, replaceLocalRecords, overviewStats, growthStats, loadRecords, currentView,
-setCurrentView, loadOverviewStats, loadGrowthStats */
+setCurrentView, loadOverviewStats, loadGrowthStats, spendingStats, loadSpendingStats */
 
 /* ============================================
    STATE
@@ -10,6 +10,7 @@ let statusFilterValue = "all";
 let genreFilterValue = "";
 let overviewStats = null;
 let growthStats = null;
+let spendingStats = null;
 let currentView = "collection";
 
 /* ============================================
@@ -69,5 +70,13 @@ async function loadGrowthStats() {
         growthStats = await apiFetch("/api/stats/growth");
     } catch (error) {
         showMessage("Couldn't load growth stats: " + error.message);
+    }
+}
+
+async function loadSpendingStats() {
+    try {
+        spendingStats = await apiFetch("/api/stats/spending");
+    } catch (error) {
+        showMessage("Couldn't load spending stats: " + error.message);
     }
 }
