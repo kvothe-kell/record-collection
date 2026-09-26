@@ -1,4 +1,4 @@
-/* global FIELDS, records, addButton, cancelButton, showView,
+/* global FIELDS, records, addButton, cancelButton, setCurrentView, renderCurrentView,
 showMessage, createRecordOnServer, updateRecordOnServer,
 deleteRecordOnServer, loadOverviewStats, loadGrowthStats, renderRecords */
 /* exported addRecord, startEditing, saveEdit, deleteRecord */
@@ -89,7 +89,8 @@ function startEditing(id) {
 
     editingId = id;
     fillForm(record);
-    showView("add");
+    setCurrentView("add");
+    renderCurrentView();
 
     addButton.textContent = "Save Changes";
     cancelButton.style.display = "inline-block";
@@ -117,7 +118,8 @@ async function saveEdit() {
         await loadOverviewStats();
         await loadGrowthStats();
         stopEditing();
-        showView("collection");
+        setCurrentView("collection");
+        renderCurrentView();
         renderRecords();
     } catch (error) {
         showMessage("Couldn't save: " + error.message);

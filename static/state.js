@@ -1,7 +1,7 @@
 /* global apiFetch, showMessage */
 /* exported statusFilterValue, setStatusFilter, genreFilterValue, setGenreFilter,
-records, replaceLocalRecords, overviewStats, growthStats, loadRecords,
-loadOverviewStats, loadGrowthStats */
+records, replaceLocalRecords, overviewStats, growthStats, loadRecords, currentView,
+setCurrentView, loadOverviewStats, loadGrowthStats */
 
 /* ============================================
    STATE
@@ -10,8 +10,19 @@ let statusFilterValue = "all";
 let genreFilterValue = "";
 let overviewStats = null;
 let growthStats = null;
+let currentView = "collection";
 
-// Manage Genre Filter
+/* ============================================
+   VIEW
+   ============================================ */
+function setCurrentView(name) {
+    currentView = name;
+}
+
+/* ============================================
+   FILTERS
+   ============================================ */
+
 function setStatusFilter(value) {
     statusFilterValue = value;
 }
@@ -20,6 +31,9 @@ function setGenreFilter(value) {
     genreFilterValue = value;
 }
 
+/* ============================================
+   RECORDS
+   ============================================ */
 const records = [];
 
 // Replace the contents of the records array in place. 
@@ -30,10 +44,6 @@ function replaceLocalRecords(list) {
         records.push(record);
     }
 }
-
-/* ============================================
-   DATA LOADING
-   ============================================ */
 
 // Fetch the collection from the server into the records array.
 async function loadRecords() {

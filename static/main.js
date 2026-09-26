@@ -1,8 +1,6 @@
 /* global replaceAllOnServer, renderRecords, showMessage, editingId,
 addRecord, saveEdit, setStatusFilter, stopEditing, replaceLocalRecords, records,
-loadRecords, loadOverviewStats, loadGrowthStats */
-/* exported */
-
+loadRecords, loadOverviewStats, loadGrowthStats, setCurrentView, currentView */
 
 /* ============================================
    DOM REFERENCES
@@ -26,14 +24,12 @@ const recordDialogClose = document.getElementById("dialog-close-button");
 const navButtons = document.querySelectorAll(".nav-button");
 const views = document.querySelectorAll(".view");
 
-//Show one view and higlight its nav button.
-function showView(name) {
+function renderCurrentView() {
     for (const view of views) {
-        view.classList.toggle("active", view.id === "view-" + name);
+        view.classList.toggle("active", view.id === "view-" + currentView);
     }
-
     for (const button of navButtons) {
-        button.classList.toggle("nav-active", button.dataset.view === name);
+        button.classList.toggle("nav-active", button.dataset.view === currentView);
     }
 }
 
@@ -108,7 +104,8 @@ for (const button of navButtons) {
             stopEditing();
         }
 
-        showView(target);
+        setCurrentView(target);
+        renderCurrentView();
     });
 }
 
@@ -117,7 +114,8 @@ searchInput.addEventListener("input", renderRecords);
 sortSelect.addEventListener("change", renderRecords);
 cancelButton.addEventListener("click", function () {
     stopEditing();
-    showView("collection");
+    setCurrentView("collection");
+    renderCurrentView();
 });
 recordDialogClose.addEventListener("click", function () {
     recordDialog.close()
@@ -168,7 +166,8 @@ importFileInput.addEventListener("change", handleImportFile);
 
 //Set the starting UI state and draw the collection
 async function init() {
-    showView("collection");
+    setCurrentView("collection");
+    renderCurrentView();
     stopEditing();
 
     await loadRecords();
