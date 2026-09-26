@@ -6,3 +6,4 @@ venv/
 records.json
 records.json.tmp
 records.db
+__pycache__/

@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def compute_growth(df):
-    owned = df[df["status"] == "owned"].copy()
+    owned = df[df["status"] != "want"].copy()
     owned["dateAdded"] = pd.to_datetime(owned["dateAdded"])
     owned["month"] = owned["dateAdded"].dt.to_period("M")
 
