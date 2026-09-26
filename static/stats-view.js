@@ -1,5 +1,5 @@
-/* global overviewStats, growthStats, spendingStats, makeDiv, formatPrice, formatMonthLabel */
-/* exported renderStats, renderSummaryCards, renderGrowthPanel, renderSpendingPanel */
+/* global overviewStats, growthStats, spendingStats, makeDiv, formatPrice, */
+/* exported renderStatsPanel, renderSummaryCards, renderGrowthPanel, renderSpendingPanel */
 
 
 /* ============================================
@@ -52,64 +52,29 @@ function makeSummaryCard(label, value, sub) {
     return card;
 }
 
-function makeDecadeChart(counts) {
+//Bar Chart Creator
+function makeBarChart(title, entries, formatValue) {
     const box = document.createElement("div");
     box.className = "stat-panel";
-    box.appendChild(makeDiv("stat-label", "By Decade"));
+    box.appendChild(makeDiv("stat-label", title));
 
-    const decades = Object.entries(counts).sort(function (a, b) {
-        return a[0].localeCompare(b[0]);
-    });
+    const biggest = Math.max(...entries.map(function (e) { return e[1]; }));
 
-    const biggest = Math.max(...decades.map(function (d) { return d[1]; }));
-
-    for (const decade of decades) {
+    for (const entry of entries) {
         const row = document.createElement("div");
         row.className = "stat-row";
-        row.appendChild(makeDiv("stat-row-name", decade[0]));
+        row.appendChild(makeDiv("stat-row-name", entry[0]));
 
         const track = document.createElement("div");
         track.className = "bar-track";
 
         const bar = document.createElement("div");
         bar.className = "bar-fill";
-        bar.style.width = (decade[1] / biggest * 100) + "%";
+        bar.style.width = (entry[1] / biggest * 100) + "%";
         track.appendChild(bar);
 
         row.appendChild(track);
-        row.appendChild(makeDiv("stat-row-count", decade[1]));
-        box.appendChild(row);
-    }
-
-    return box;
-}
-
-function makeGenreChart(counts) {
-    const box = document.createElement("div");
-    box.className = "stat-panel";
-    box.appendChild(makeDiv("stat-label", "By Genre"));
-
-    const genres = Object.entries(counts).sort(function (a, b) {
-        return b[1] - a[1];
-    }).slice(0, 5);
-
-    const biggest = Math.max(...genres.map(function (d) { return d[1]; }));
-
-    for (const genre of genres) {
-        const row = document.createElement("div");
-        row.className = "stat-row";
-        row.appendChild(makeDiv("stat-row-name", genre[0]));
-
-        const track = document.createElement("div");
-        track.className = "bar-track";
-
-        const bar = document.createElement("div");
-        bar.className = "bar-fill";
-        bar.style.width = (genre[1] / biggest * 100) + "%";
-        track.appendChild(bar);
-
-        row.appendChild(track);
-        row.appendChild(makeDiv("stat-row-count", genre[1]));
+        row.appendChild(makeDiv("stat-row-count", formatValue(entry[1])));
         box.appendChild(row);
     }
 
@@ -147,7 +112,7 @@ function renderSummaryCards() {
 }
 
 //Draw the overview panel on the stats page.
-function renderStats() {
+function renderStatsPanel() {
     if (!overviewStats) {
         return;
     }
@@ -163,9 +128,20 @@ function renderStats() {
     // statsArea.appendChild(makeStat("Price Unknown", stats.missingPrice));
     statsArea.appendChild(makeStatList("Top Artists", stats.topArtists));
     statsArea.appendChild(makeStatList("Top Labels", stats.topLabels));
-    statsArea.appendChild(makeDecadeChart(stats.byDecade));
-    statsArea.appendChild(makeGenreChart(stats.byGenre))
+    statsArea.appendChild(makeBarChart("By Decade",
+        Object.entries(stats.byDecade).sort(function (a, b) {
+            return a[0].localeCompare(b[0]);
+        }),
+        function (v) { return v; }
+    ));
+    statsArea.appendChild(makeBarChart("By Genre",
+        Object.entries(stats.byGenre).sort(function (a, b) {
+            return b[1] - a[1];
+        }).slice(0, 5),
+        function (v) { return v; }
+    ));
 }
+
 
 // Draw the growth panel on the stats page.
 function renderGrowthPanel() {
@@ -173,32 +149,15 @@ function renderGrowthPanel() {
         return;
     }
 
+    const stats = growthStats;
+
     growthPanelArea.innerHTML = "";
-    growthPanelArea.appendChild(makeDiv("stat-label", "Records Added by Month"));
-
-    const months = Object.entries(growthStats).sort(function (a, b) {
-        return a[0].localeCompare(b[0]);
-    });
-
-    const biggest = Math.max(...months.map(function (m) { return m[1]; }));
-
-    for (const month of months) {
-        const row = document.createElement("div");
-        row.className = "stat-row";
-        row.appendChild(makeDiv("stat-row-name", formatMonthLabel(month[0])));
-
-        const track = document.createElement("div");
-        track.className = "bar-track";
-
-        const bar = document.createElement("div");
-        bar.className = "bar-fill";
-        bar.style.width = (month[1] / biggest * 100) + "%";
-        track.appendChild(bar);
-
-        row.appendChild(track);
-        row.appendChild(makeDiv("stat-row-count", month[1]));
-        growthPanelArea.appendChild(row);
-    }
+    growthPanelArea.appendChild(makeBarChart("Records Added by Month",
+        Object.entries(stats.byMonth).sort(function (a, b) {
+            return a[0].localeCompare(b[0]);
+        }),
+        function (v) { return v; }
+    ));
 }
 
 // Draw the spending summary panel on the stats page. 
@@ -211,42 +170,16 @@ function renderSpendingPanel() {
 
     spendingStatsArea.innerHTML = "";
     spendingStatsArea.appendChild(makeStat("Median Price", formatPrice(stats.medianPrice)));
-
     if (stats.mostExpensive) {
         spendingStatsArea.appendChild(makeStat(
             "Most Expensive: " + stats.mostExpensive.artist + " - " + stats.mostExpensive.album,
             formatPrice(stats.mostExpensive.price)
         ));
     }
-
-
-    const months = Object.entries(stats.spendingByMonth).sort(function (a, b) {
-        return a[0].localeCompare(b[0]);
-    });
-
-    const biggest = Math.max(...months.map(function (m) { return m[1]; }));
-
-    const box = document.createElement("div");
-    box.className = "stat-panel";
-    box.appendChild(makeDiv("stat-label", "Spending by Month"));
-
-    for (const month of months) {
-        const row = document.createElement("div");
-        row.className = "stat-row";
-        row.appendChild(makeDiv("stat-row-name", formatMonthLabel(month[0])));
-
-        const track = document.createElement("div");
-        track.className = "bar-track";
-
-        const bar = document.createElement("div");
-        bar.className = "bar-fill";
-        bar.style.width = (month[1] / biggest * 100) + "%";
-        track.appendChild(bar);
-
-        row.appendChild(track);
-        row.appendChild(makeDiv("stat-row-count", formatPrice(month[1])));
-        box.appendChild(row);
-    }
-
-    spendingStatsArea.appendChild(box);
+    spendingStatsArea.appendChild(makeBarChart("Spending By Month",
+        Object.entries(stats.spendingByMonth).sort(function (a, b) {
+            return a[0].localeCompare(b[0]);
+        }),
+        formatPrice
+    ));
 }

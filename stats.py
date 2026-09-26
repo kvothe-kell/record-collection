@@ -7,7 +7,7 @@ def compute_growth(df):
     owned["month"] = owned["dateAdded"].dt.to_period("M")
 
     by_month = owned.groupby("month").size()
-    return {str(month): int(count) for month, count in by_month.items()}
+    return {"byMonth": {str(month): int(count) for month, count in by_month.items()}}
 
 
 def compute_overview(df):

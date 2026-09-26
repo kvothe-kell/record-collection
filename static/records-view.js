@@ -1,7 +1,7 @@
 /* global records, overviewStats, statusFilterValue, genreFilterValue,
 setGenreFilter, searchInput, sortSelect, missingPriceToggle, statusTabs, recordDialog,
 makeDiv, joinParts, formatPrice, formatRating, coverColorFor,
-renderStats, renderSummaryCards, renderGrowthPanel, renderSpendingPanel, startEditing, deleteRecord */
+renderStatsPanel, renderSummaryCards, renderGrowthPanel, renderSpendingPanel, startEditing, deleteRecord */
 /* exported renderRecords, renderRecordList */
 
 /* ============================================
@@ -227,7 +227,7 @@ function renderRecords() {
     updateStatusTabsCounts();
     renderSummaryCards();
     renderGenreList();
-    renderStats();
+    renderStatsPanel();
     renderGrowthPanel();
     renderSpendingPanel();
     renderRecordList();
