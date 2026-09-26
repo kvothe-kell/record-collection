@@ -40,6 +40,18 @@ function makeStatList(title, entries) {
 /* ============================================
    PANELS
    ============================================ */
+//Draw the summary cards
+function makeSummaryCard(label, value, sub) {
+    const card = document.createElement("div");
+    card.className = "summary-card";
+    card.appendChild(makeDiv("summary-card-label", label));
+    card.appendChild(makeDiv("summary-card-value", value));
+    if (sub) {
+        card.appendChild(makeDiv("summary-card-sub", sub));
+    }
+    return card;
+}
+
 function makeDecadeChart(counts) {
     const box = document.createElement("div");
     box.className = "stat-panel";
@@ -102,18 +114,6 @@ function makeGenreChart(counts) {
     }
 
     return box;
-}
-
-//Draw the summary cards
-function makeSummaryCard(label, value, sub) {
-    const card = document.createElement("div");
-    card.className = "summary-card";
-    card.appendChild(makeDiv("summary-card-label", label));
-    card.appendChild(makeDiv("summary-card-value", value));
-    if (sub) {
-        card.appendChild(makeDiv("summary-card-sub", sub));
-    }
-    return card;
 }
 
 /* ============================================
@@ -218,4 +218,35 @@ function renderSpendingPanel() {
             formatPrice(stats.mostExpensive.price)
         ));
     }
+
+
+    const months = Object.entries(stats.spendingByMonth).sort(function (a, b) {
+        return a[0].localeCompare(b[0]);
+    });
+
+    const biggest = Math.max(...months.map(function (m) { return m[1]; }));
+
+    const box = document.createElement("div");
+    box.className = "stat-panel";
+    box.appendChild(makeDiv("stat-label", "Spending by Month"));
+
+    for (const month of months) {
+        const row = document.createElement("div");
+        row.className = "stat-row";
+        row.appendChild(makeDiv("stat-row-name", formatMonthLabel(month[0])));
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const bar = document.createElement("div");
+        bar.className = "bar-fill";
+        bar.style.width = (month[1] / biggest * 100) + "%";
+        track.appendChild(bar);
+
+        row.appendChild(track);
+        row.appendChild(makeDiv("stat-row-count", formatPrice(month[1])));
+        box.appendChild(row);
+    }
+
+    spendingStatsArea.appendChild(box);
 }

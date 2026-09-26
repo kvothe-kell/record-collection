@@ -73,7 +73,17 @@ def compute_spending(df):
             "price": float(row["purchasePrice"]),
         }
 
-        return {
-            "medianPrice": float(median_price),
-            "mostExpensive": most_expensive,
-        }
+    owned = df[df["status"] != "want"].copy()
+    owned["dateAdded"] = pd.to_datetime(owned["dateAdded"])
+    owned["month"] = owned["dateAdded"].dt.to_period("M")
+
+    by_month = owned.groupby("month")["purchasePrice"].sum()
+    spending_by_month = {
+        str(month): float(amount) for month, amount in by_month.items()
+    }
+
+    return {
+        "medianPrice": float(median_price),
+        "mostExpensive": most_expensive,
+        "spendingByMonth": spending_by_month,
+    }
