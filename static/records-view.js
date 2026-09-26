@@ -1,5 +1,5 @@
-/* global records, overviewStats, statusFilterValue, genreFilterValue: writable,
-searchInput, sortSelect, missingPriceToggle, statusTabs, recordDialog,
+/* global records, overviewStats, statusFilterValue, genreFilterValue,
+setGenreFilter, searchInput, sortSelect, missingPriceToggle, statusTabs, recordDialog,
 makeDiv, joinParts, formatPrice, formatRating, coverColorFor,
 renderStats, renderSummaryCards, renderGrowthPanel, startEditing, deleteRecord */
 /* exported renderRecords */
@@ -155,7 +155,7 @@ function renderGenreList() {
         chip.classList.toggle("chip-active", name === genreFilterValue);
 
         chip.addEventListener("click", function () {
-            genreFilterValue = (genreFilterValue === name) ? "" : name;
+            setGenreFilter(genreFilterValue === name ? "" : name);
             renderRecords();
         });
 

@@ -1,6 +1,7 @@
-/* global apiFetch, replaceAllOnServer, renderRecords, showMessage, editingId,
-addRecord, saveEdit, stopEditing */
-/* exported growthStats, overviewStats, statusFilterValue, genreFilterValue */
+/* global replaceAllOnServer, renderRecords, showMessage, editingId,
+addRecord, saveEdit, setStatusFilter, stopEditing, replaceLocalRecords, records,
+loadRecords, loadOverviewStats, loadGrowthStats */
+/* exported */
 
 
 /* ============================================
@@ -16,25 +17,6 @@ const exportButton = document.getElementById("export-button");
 const importFileInput = document.getElementById("import-file");
 const recordDialog = document.getElementById("record-dialog");
 const recordDialogClose = document.getElementById("dialog-close-button");
-
-/* ============================================
-   STATE
-   ============================================ */
-
-const records = [];
-let statusFilterValue = "all";
-let genreFilterValue = "";
-let overviewStats = null;
-let growthStats = null;
-
-// Replace the contents of the records array in place.
-function replaceLocalRecords(list) {
-    records.length = 0;
-
-    for (const record of list) {
-        records.push(record);
-    }
-}
 
 
 /* ============================================
@@ -52,40 +34,6 @@ function showView(name) {
 
     for (const button of navButtons) {
         button.classList.toggle("nav-active", button.dataset.view === name);
-    }
-}
-
-/* ============================================
-   DATA LOADING
-   ============================================ */
-
-// Fetch the collection from the server into the records array.
-async function loadRecords() {
-    try {
-        const loaded = await apiFetch("/api/records");
-        replaceLocalRecords(loaded);
-
-        for (const record of loaded) {
-            records.push(record);
-        }
-    } catch (error) {
-        showMessage("Couldn't load records: " + error.message);
-    }
-}
-
-async function loadOverviewStats() {
-    try {
-        overviewStats = await apiFetch("/api/stats/overview");
-    } catch (error) {
-        showMessage("Couldn't load stats: " + error.message);
-    }
-}
-
-async function loadGrowthStats() {
-    try {
-        growthStats = await apiFetch("/api/stats/growth");
-    } catch (error) {
-        showMessage("Couldn't load growth stats: " + error.message);
     }
 }
 
@@ -119,11 +67,7 @@ function handleImportFile(event) {
 
             const saved = await replaceAllOnServer(loaded);
 
-            replaceLocalRecords(loaded);
-
-            for (const record of saved) {
-                records.push(record);
-            }
+            replaceLocalRecords(saved);
 
             await loadOverviewStats();
             await loadGrowthStats();
@@ -186,7 +130,7 @@ recordDialog.addEventListener("click", function (event) {
 
 for (const tab of statusTabs) {
     tab.addEventListener("click", function () {
-        statusFilterValue = tab.dataset.status;
+        setStatusFilter(tab.dataset.status);
 
         for (const t of statusTabs) {
             t.classList.toggle("tab-active", t === tab);

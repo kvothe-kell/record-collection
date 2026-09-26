@@ -1,4 +1,6 @@
-/* global FIELDS, records, addButton, cancelButton, showView, showMessage, createRecordOnServer, updateRecordOnServer, deleteRecordOnServer, loadOverviewStats, loadGrowthStats, renderRecords */
+/* global FIELDS, records, addButton, cancelButton, showView,
+showMessage, createRecordOnServer, updateRecordOnServer,
+deleteRecordOnServer, loadOverviewStats, loadGrowthStats, renderRecords */
 /* exported addRecord, startEditing, saveEdit, deleteRecord */
 
 let editingId = null;
