@@ -1,4 +1,4 @@
-/* global replaceAllOnServer, renderRecords, showMessage, editingId,
+/* global replaceAllOnServer, renderRecords, showMessage, editingId, renderRecordList,
 addRecord, saveEdit, setStatusFilter, stopEditing, replaceLocalRecords, records,
 loadRecords, loadOverviewStats, loadGrowthStats, setCurrentView, currentView */
 
@@ -110,8 +110,8 @@ for (const button of navButtons) {
 }
 
 addButton.addEventListener("click", handleAddButtonClick);
-searchInput.addEventListener("input", renderRecords);
-sortSelect.addEventListener("change", renderRecords);
+searchInput.addEventListener("input", renderRecordList);
+sortSelect.addEventListener("change", renderRecordList);
 cancelButton.addEventListener("click", function () {
     stopEditing();
     setCurrentView("collection");
@@ -134,7 +134,7 @@ for (const tab of statusTabs) {
             t.classList.toggle("tab-active", t === tab);
         }
 
-        renderRecords();
+        renderRecordList();
     });
 }
 
@@ -155,7 +155,7 @@ document.addEventListener("keydown", function (event) {
     searchInput.focus();
 })
 
-missingPriceToggle.addEventListener("change", renderRecords);
+missingPriceToggle.addEventListener("change", renderRecordList);
 exportButton.addEventListener("click", exportRecords);
 importFileInput.addEventListener("change", handleImportFile);
 

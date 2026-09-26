@@ -2,7 +2,7 @@
 setGenreFilter, searchInput, sortSelect, missingPriceToggle, statusTabs, recordDialog,
 makeDiv, joinParts, formatPrice, formatRating, coverColorFor,
 renderStats, renderSummaryCards, renderGrowthPanel, startEditing, deleteRecord */
-/* exported renderRecords */
+/* exported renderRecords, renderRecordList */
 
 /* ============================================
    DOM REFERENCES
@@ -156,20 +156,17 @@ function renderGenreList() {
 
         chip.addEventListener("click", function () {
             setGenreFilter(genreFilterValue === name ? "" : name);
-            renderRecords();
+            renderRecordList();
+            renderGenreList();
         });
 
         genreListArea.appendChild(chip)
     }
 }
 
-function renderRecords() {
+function renderRecordList() {
     collectionList.innerHTML = "";
-
     const query = searchInput.value.toLowerCase();
-    updateStatusTabsCounts();
-    renderSummaryCards();
-    renderGenreList();
     const statusValue = statusFilterValue;
 
     const visibleRecords = records
@@ -213,9 +210,6 @@ function renderRecords() {
         return (a.album || "").localeCompare(b.album || "");
     });
 
-    renderStats();
-    renderGrowthPanel();
-
     if (visibleRecords.length === 0) {
         const empty = document.createElement("li");
         empty.textContent = "No records found.";
@@ -227,4 +221,13 @@ function renderRecords() {
     for (const record of visibleRecords) {
         collectionList.appendChild(createRecordElement(record));
     }
+}
+
+function renderRecords() {
+    updateStatusTabsCounts();
+    renderSummaryCards();
+    renderGenreList();
+    renderStats();
+    renderGrowthPanel();
+    renderRecordList();
 }
