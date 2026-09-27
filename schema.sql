@@ -14,5 +14,6 @@ CREATE TABLE IF NOT EXISTS records (
     sleeveCondition   TEXT,
     purchasePrice     REAL,
     purchaseLocation  TEXT,
-    dateAdded         TEXT
+    dateAdded         TEXT,
+    coverPath         TEXT
 );

@@ -182,4 +182,19 @@ function renderSpendingPanel() {
         }),
         formatPrice
     ));
+
+    spendingStatsArea.appendChild(makeBarChart("Spending By Genre",
+        Object.entries(stats.spendingByGenre).sort(function (a, b) {
+            return b[1] - a[1];
+        }).slice(0, 5),
+        formatPrice
+    ));
+
+    spendingStatsArea.appendChild(makeBarChart("Spending By Artist",
+        Object.entries(stats.spendingByArtist).sort(function (a, b) {
+            return b[1] - a[1];
+        }).slice(0, 5),
+        formatPrice
+    ));
+
 }

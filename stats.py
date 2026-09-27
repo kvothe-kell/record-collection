@@ -82,8 +82,21 @@ def compute_spending(df):
         str(month): float(amount) for month, amount in by_month.items()
     }
 
+    with_genre = owned[owned["genre"].notna() & (owned["genre"] != "")]
+    by_genre = with_genre.groupby("genre")["purchasePrice"].sum()
+    spending_by_genre = {
+        str(genre): float(amount) for genre, amount in by_genre.items()
+    }
+
+    by_artist = owned.groupby("artist")["purchasePrice"].sum()
+    spending_by_artist = {
+        str(artist): float(amount) for artist, amount in by_artist.items()
+    }
+
     return {
         "medianPrice": float(median_price),
         "mostExpensive": most_expensive,
         "spendingByMonth": spending_by_month,
+        "spendingByGenre": spending_by_genre,
+        "spendingByArtist": spending_by_artist,
     }
