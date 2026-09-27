@@ -5,6 +5,7 @@ from datetime import date
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
 
+from discogs import fetch_cover
 from stats import compute_growth, compute_overview, compute_spending
 
 app = Flask(__name__, static_folder="static", static_url_path="")
@@ -26,6 +27,7 @@ COLUMNS = [
     "purchasePrice",
     "purchaseLocation",
     "dateAdded",
+    "coverPath",
 ]
 
 
@@ -80,9 +82,20 @@ def create_record():
     except sqlite3.IntegrityError as error:
         return jsonify({"error": str(error)}), 409
 
+    release_id = record.get("releaseId")
+    if release_id:
+        cover_path = fetch_cover(release_id)
+        if cover_path:
+            db.execute(
+                "UPDATE records SET coverPath = ? WHERE id =? ",
+                (cover_path, cursor.lastrowid),
+            )
+            db.commit()
+
     row = db.execute(
         "SELECT * FROM records WHERE id = ?", (cursor.lastrowid,)
     ).fetchone()
+
     return jsonify(row_to_dict(row)), 201
 
 

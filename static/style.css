@@ -418,6 +418,13 @@ select:focus-visible {
     overflow-wrap: break-word;
 }
 
+.record-cover-image {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    padding: 0;
+}
+
 .record-body {
     padding: var(--space-3);
 }
@@ -537,7 +544,7 @@ select:focus-visible {
     font-variant-numeric: tabular-nums;
 }
 
-#view-stats {
+#view-stats.active {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);

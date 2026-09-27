@@ -12,15 +12,32 @@ const genreListArea = document.getElementById("genre-list");
 const collectionList = document.getElementById("collection");
 
 
-// Build the <li> for one record
-function createRecordElement(record) {
-    const item = document.createElement("li");
-    item.className = "record-card";
+/* ============================================
+   CREATE STUFF
+   ============================================ */
+
+function createCoverElement(record) {
+    if (record.coverPath) {
+        const img = document.createElement("img");
+        img.className = "record-cover record-cover-image";
+        img.src = "/" + record.coverPath;
+        img.alt = record.album;
+        return img;
+    }
 
     const cover = document.createElement("div");
     cover.className = "record-cover";
     cover.style.backgroundColor = coverColorFor(record);
     cover.appendChild(makeDiv("record-cover-title", record.album));
+    return cover;
+}
+
+// Build the <li> for one record
+function createRecordElement(record) {
+    const item = document.createElement("li");
+    item.className = "record-card";
+
+    const cover = createCoverElement(record);
 
     const body = document.createElement("div");
     body.className = "record-body";

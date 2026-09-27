@@ -16,6 +16,7 @@ def fetch_cover(release_id):
     response = requests.get(url, headers=headers)
 
     if response.status_code != 200:
+        print(f"Discogs release lookup failed for {release_id}: {response.status_code}")
         return None
 
     data = response.json()
@@ -28,6 +29,7 @@ def fetch_cover(release_id):
     image_response = requests.get(cover_url, headers=headers)
 
     if image_response.status_code != 200:
+        print(f"No images found for release {release_id}")
         return None
 
     os.makedirs(COVERS_DIR, exist_ok=True)
@@ -36,4 +38,4 @@ def fetch_cover(release_id):
     with open(file_path, "wb") as f:
         f.write(image_response.content)
 
-    return file_path
+    return f"covers/{release_id}.jpg"
