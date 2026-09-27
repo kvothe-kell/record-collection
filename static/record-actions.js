@@ -113,8 +113,8 @@ async function saveEdit() {
     const updated = { ...record, ...readForm() };
 
     try {
-        await updateRecordOnServer(updated);
-        Object.assign(record, updated);
+        const saved = await updateRecordOnServer(updated);
+        Object.assign(record, saved);
         await loadOverviewStats();
         await loadGrowthStats();
         stopEditing();

@@ -104,11 +104,18 @@ def create_record():
 def update_record(record_id):
     updated = request.get_json()
 
+    db = get_db()
+
+    existing = db.execute(
+        "SELECT releaseId, coverPath FROM records WHERE id = ?", (record_id,)
+    ).fetchone()
+
+    if existing is None:
+        return jsonify({"error": "Record not found"}), 404
+
     assignments = ", ".join([column + " = ?" for column in COLUMNS])
     sql = "UPDATE records SET " + assignments + " WHERE id = ?"
     values = [updated.get(column) for column in COLUMNS] + [record_id]
-
-    db = get_db()
 
     try:
         cursor = db.execute(sql, values)
@@ -116,8 +123,18 @@ def update_record(record_id):
     except sqlite3.IntegrityError as error:
         return jsonify({"error": str(error)}), 409
 
-    if cursor.rowcount == 0:
-        return jsonify({"error": "Record not found"}), 404
+    new_release_id = updated.get("releaseId")
+    release_id_changed = new_release_id != existing["releaseId"]
+    cover_missing = existing["coverPath"] is None
+
+    if new_release_id and (release_id_changed or cover_missing):
+        cover_path = fetch_cover(new_release_id)
+        if cover_path:
+            db.execute(
+                "UPDATE records SET coverPath = ? WHERE id = ?",
+                (cover_path, record_id),
+            )
+            db.commit()
 
     row = db.execute("SELECT * FROM records WHERE id = ?", (record_id,)).fetchone()
     return jsonify(row_to_dict(row))
