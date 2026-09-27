@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import date
+from datetime import date, datetime
 
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
@@ -222,6 +222,53 @@ def stats_overview():
 def stats_spending():
     df = pd.read_sql_query("SELECT * FROM records", get_db())
     return jsonify(compute_spending(df))
+
+
+"""LISTENING EVENTS"""
+
+
+# Manual entry
+@app.route("/api/listening/events", methods=["POST"])
+def log_listening_event():
+    db = get_db()
+
+    event = request.get_json()
+    record_id = event.get("recordId")
+    if record_id is None:
+        return jsonify({"error": "recordId is required"}), 400
+
+    existing = db.execute(
+        "SELECT id FROM records WHERE id = ?", (record_id,)
+    ).fetchone()
+
+    if existing is None:
+        return jsonify({"error": "Record not found"}), 404
+
+    now = datetime.now().isoformat()
+
+    cursor = db.execute(
+        """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source, matchStatus, notes)
+       VALUES (?, ?, ?, ?, ?, ?)""",
+        (record_id, now, now, "manual", "matched", event.get("notes")),
+    )
+    db.commit()
+
+    row = db.execute(
+        "SELECT * FROM listening_events WHERE id = ?", (cursor.lastrowid,)
+    ).fetchone()
+
+    return jsonify(row_to_dict(row)), 201
+
+
+# Get from DB Table
+@app.route("/api/listening/events", methods=["GET"])
+def get_listening_events():
+    rows = (
+        get_db()
+        .execute("SELECT * FROM listening_events ORDER BY lastSeenAt DESC")
+        .fetchall()
+    )
+    return jsonify([row_to_dict(row) for row in rows])
 
 
 """ MAIN ROUTE """

@@ -1,6 +1,7 @@
 /* global replaceAllOnServer, renderRecords, showMessage, editingId, renderRecordList,
 addRecord, saveEdit, setStatusFilter, stopEditing, replaceLocalRecords, records,
-loadRecords, loadOverviewStats, loadGrowthStats, loadSpendingStats, setCurrentView, currentView */
+loadRecords, loadOverviewStats, loadGrowthStats, loadSpendingStats, loadListeningEvents,
+ setCurrentView, currentView */
 
 /* ============================================
    DOM REFERENCES
@@ -174,6 +175,7 @@ async function init() {
     await loadOverviewStats();
     await loadGrowthStats();
     await loadSpendingStats();
+    await loadListeningEvents();
     renderRecords();
 }
 

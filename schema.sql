@@ -1,3 +1,18 @@
+CREATE TABLE IF NOT EXISTS listening_events (
+    id                INTEGER PRIMARY KEY,
+    recordId          INTEGER REFERENCES records(id),
+    playedAt          TEXT NOT NULL,
+    lastSeenAt        TEXT NOT NULL,
+    source            TEXT NOT NULL DEFAULT 'manual',
+    recognizedArtist  TEXT,
+    recognizedAlbum   TEXT,
+    recognizedTrack   TEXT,
+    confidence        REAL,
+    externalId        TEXT,
+    matchStatus       TEXT NOT NULL DEFAULT 'matched',
+    notes             TEXT
+);
+
 CREATE TABLE IF NOT EXISTS records (
     id                INTEGER PRIMARY KEY,
     releaseId         INTEGER UNIQUE,

@@ -1,7 +1,8 @@
 /* global apiFetch, showMessage */
 /* exported statusFilterValue, setStatusFilter, genreFilterValue, setGenreFilter,
 records, replaceLocalRecords, overviewStats, growthStats, loadRecords, currentView,
-setCurrentView, loadOverviewStats, loadGrowthStats, spendingStats, loadSpendingStats */
+setCurrentView, loadOverviewStats, loadGrowthStats, spendingStats,
+loadSpendingStats, listeningEvents, loadListeningEvents */
 
 /* ============================================
    STATE
@@ -12,6 +13,7 @@ let overviewStats = null;
 let growthStats = null;
 let spendingStats = null;
 let currentView = "collection";
+let listeningEvents = [];
 
 /* ============================================
    VIEW
@@ -78,5 +80,13 @@ async function loadSpendingStats() {
         spendingStats = await apiFetch("/api/stats/spending");
     } catch (error) {
         showMessage("Couldn't load spending stats: " + error.message);
+    }
+}
+
+async function loadListeningEvents() {
+    try {
+        listeningEvents = await apiFetch("/api/listening/events");
+    } catch (error) {
+        showMessage("Couldn't load events: " + error.message);
     }
 }

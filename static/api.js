@@ -1,4 +1,5 @@
-/* exported apiFetch, createRecordOnServer, updateRecordOnServer, deleteRecordOnServer, replaceAllOnServer */
+/* exported apiFetch, createRecordOnServer, updateRecordOnServer,
+deleteRecordOnServer, replaceAllOnServer, createListeningEventOnServer */
 /* ============================================
    API CALLS
    ============================================ */
@@ -43,5 +44,17 @@ async function replaceAllOnServer(list) {
         method: "PUT",
         headers: JSON_HEADERS,
         body: JSON.stringify(list)
+    });
+}
+
+/* ============================================
+   LISTENING EVENTS
+   ============================================ */
+
+async function createListeningEventOnServer(event) {
+    return apiFetch("/api/listening/events", {
+        method: "POST",
+        headers: JSON_HEADERS,
+        body: JSON.stringify(event)
     });
 }
