@@ -7,3 +7,4 @@ records.json
 records.json.tmp
 records.db
 __pycache__/
+static/covers/
