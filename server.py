@@ -1,4 +1,8 @@
+from dotenv import load_dotenv
+
+load_dotenv()
 import json
+import os
 import sqlite3
 from datetime import date, datetime, timedelta
 
@@ -30,6 +34,7 @@ COLUMNS = [
     "coverPath",
 ]
 DEDUP_WINDOW_MINUTES = 60
+PI_API_TOKEN = os.environ.get("PI_API_TOKEN")
 
 
 def get_db():
@@ -276,6 +281,13 @@ def get_listening_events():
 @app.route("/api/listening/recognize", methods=["POST"])
 def recognize_listening_event():
     db = get_db()
+
+    if (
+        PI_API_TOKEN
+        and request.headers.get("Authorization") != f"Bearer {PI_API_TOKEN}"
+    ):
+        return jsonify({"error": "Unauthorized"}), 401
+
     payload = request.get_json()
     now = datetime.now()
     now_str = now.isoformat()
