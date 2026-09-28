@@ -1,6 +1,6 @@
 import json
 import sqlite3
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
@@ -29,6 +29,7 @@ COLUMNS = [
     "dateAdded",
     "coverPath",
 ]
+DEDUP_WINDOW_MINUTES = 60
 
 
 def get_db():
@@ -269,6 +270,110 @@ def get_listening_events():
         .fetchall()
     )
     return jsonify([row_to_dict(row) for row in rows])
+
+
+# Receive event from Pi
+@app.route("/api/listening/recognize", methods=["POST"])
+def recognize_listening_event():
+    db = get_db()
+    payload = request.get_json()
+    now = datetime.now()
+    now_str = now.isoformat()
+
+    artist = (payload.get("artist") or "").strip()
+    album = (payload.get("album") or "").strip()
+
+    if not artist or not album:
+        return jsonify({"error": "artist and album are required"}), 400
+
+    matches = (
+        get_db()
+        .execute(
+            """SELECT * FROM records
+        WHERE status != 'want'
+        AND LOWER(artist) = LOWER(?)
+        AND LOWER(album) = LOWER(?)
+        ORDER BY id""",
+            (artist, album),
+        )
+        .fetchall()
+    )
+
+    if len(matches) == 0:
+        record_id = None
+        match_status = "unresolved"
+    elif len(matches) == 1:
+        record_id = matches[0]["id"]
+        match_status = "matched"
+    else:
+        record_id = matches[0]["id"]
+        match_status = "ambiguous"
+
+    if record_id is None:
+        cursor = db.execute(
+            """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source,
+            matchStatus, recognizedArtist, recognizedAlbum, recognizedTrack ,confidence,
+                    externalId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                None,
+                now_str,
+                now_str,
+                "automatic",
+                "unresolved",
+                payload.get("artist"),
+                payload.get("album"),
+                payload.get("track"),
+                payload.get("confidence"),
+                payload.get("externalId"),
+            ),
+        )
+        db.commit()
+    else:
+        recent_event = db.execute(
+            """SELECT * FROM listening_events
+                WHERE recordId = ?
+                ORDER BY lastSeenAt DESC
+                LIMIT 1""",
+            (record_id,),
+        ).fetchone()
+
+        if recent_event is not None and (
+            now - datetime.fromisoformat(recent_event["lastSeenAt"])
+        ) < timedelta(minutes=DEDUP_WINDOW_MINUTES):
+            db.execute(
+                """UPDATE listening_events
+                SET lastSeenAt = ?, recognizedTrack = ?, confidence = ?
+                WHERE id = ?""",
+                (
+                    now_str,
+                    payload.get("track"),
+                    payload.get("confidence"),
+                    recent_event["id"],
+                ),
+            )
+            db.commit()
+        else:
+            cursor = db.execute(
+                """INSERT INTO listening_events
+                (recordId, playedAt, lastSeenAt, source, matchStatus,
+                    recognizedArtist, recognizedAlbum, recognizedTrack, confidence, externalId)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    record_id,
+                    now_str,
+                    now_str,
+                    "automatic",
+                    match_status,
+                    payload.get("artist"),
+                    payload.get("album"),
+                    payload.get("track"),
+                    payload.get("confidence"),
+                    payload.get("externalId"),
+                ),
+            )
+            db.commit()
+
+    return jsonify({"matchStatus": match_status, "recordId": record_id}), 201
 
 
 """ MAIN ROUTE """
