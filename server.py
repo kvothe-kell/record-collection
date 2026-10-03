@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import json
 import os
+import re
 import sqlite3
 from datetime import date, datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -67,6 +68,98 @@ def parse_listening_timestamp(value):
         timestamp = timestamp.replace(tzinfo=ZoneInfo("America/New_York"))
 
     return timestamp.astimezone(timezone.utc)
+
+
+def normalize_recognition_name(value):
+    normalized = " ".join(value.casefold().split())
+    return re.sub(r"\s*/\s*", "/", normalized)
+
+
+def find_recognition_matches(db, artist, album):
+    artist_key = normalize_recognition_name(artist)
+    album_key = normalize_recognition_name(album)
+
+    override = db.execute(
+        """SELECT r.*
+           FROM listening_match_overrides AS o
+           JOIN records AS r ON r.id = o.recordId
+           WHERE o.recognizedArtist = ?
+             AND o.recognizedAlbum = ?
+             AND r.status != 'want'""",
+        (artist_key, album_key),
+    ).fetchone()
+
+    if override is not None:
+        return [override]
+
+    owned_records = db.execute(
+        "SELECT * FROM records WHERE status != 'want' ORDER BY id"
+    ).fetchall()
+
+    return [
+        record
+        for record in owned_records
+        if normalize_recognition_name(record["artist"]) == artist_key
+        and normalize_recognition_name(record["album"]) == album_key
+    ]
+
+
+def merge_record_sessions(db, record_id):
+    events = [
+        row_to_dict(row)
+        for row in db.execute("SELECT * FROM listening_events").fetchall()
+    ]
+
+    events.sort(
+        key=lambda event: (
+            parse_listening_timestamp(event["playedAt"]),
+            event["id"],
+        )
+    )
+
+    previous = None
+
+    for event in events:
+        eligible = (
+            event["recordId"] == record_id
+            and event["matchStatus"] == "matched"
+            and event["source"] == "automatic"
+        )
+
+        if not eligible:
+            previous = None
+            continue
+
+        if previous is not None:
+            gap = parse_listening_timestamp(
+                event["playedAt"]
+            ) - parse_listening_timestamp(previous["lastSeenAt"])
+
+            if gap < timedelta(minutes=DEDUP_WINDOW_MINUTES):
+                last_seen = max(
+                    parse_listening_timestamp(previous["lastSeenAt"]),
+                    parse_listening_timestamp(event["lastSeenAt"]),
+                ).isoformat()
+
+                db.execute(
+                    "UPDATE listening_events SET lastSeenAt = ? WHERE id = ?",
+                    (last_seen, previous["id"]),
+                )
+
+                db.execute(
+                    "UPDATE listening_recognitions SET eventId = ? WHERE eventId = ?",
+                    (previous["id"], event["id"]),
+                )
+
+                db.execute(
+                    "DELETE FROM listening_events WHERE id = ?",
+                    (event["id"],),
+                )
+
+                previous["lastSeenAt"] = last_seen
+                continue
+
+        previous = event
 
 
 """ RECORD ROUTES """
@@ -298,6 +391,95 @@ def get_listening_events():
     return jsonify(events)
 
 
+@app.route("/api/listening/events/<int:event_id>/resolve", methods=["POST"])
+def resolve_listening_event(event_id):
+    payload = request.get_json(silent=True)
+
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object"}), 400
+
+    record_id = payload.get("recordId")
+
+    if type(record_id) is not int:
+        return jsonify({"error": "recordId must be an integer"}), 400
+
+    db = get_db()
+
+    with db:
+        db.execute("BEGIN IMMEDIATE")
+
+        event = db.execute(
+            "SELECT * FROM listening_events WHERE id = ?",
+            (event_id,),
+        ).fetchone()
+
+        if event is None:
+            return jsonify({"error": "Listening event not found"}), 404
+
+        if event["source"] != "automatic" or event["matchStatus"] not in (
+            "unresolved",
+            "ambiguous",
+        ):
+            return jsonify({"error": "This event does not need resolution"}), 409
+
+        record = db.execute(
+            "SELECT id FROM records WHERE id =? AND status != 'want'",
+            (record_id,),
+        ).fetchone()
+
+        if record is None:
+            return jsonify({"error": "Owned record not found"}), 404
+
+        artist_key = normalize_recognition_name(event["recognizedArtist"] or "")
+        album_key = normalize_recognition_name(event["recognizedAlbum"] or "")
+
+        if not artist_key or not album_key:
+            return jsonify({"error": "Recognition metadata is missing"}), 400
+
+        db.execute(
+            """INSERT INTO listening_match_overrides
+               (recognizedArtist, recognizedAlbum, recordId)
+               VALUES (?, ?, ?)
+               ON CONFLICT (recognizedArtist, recognizedAlbum)
+               DO UPDATE SET recordId = excluded.recordId""",
+            (artist_key, album_key, record_id),
+        )
+
+        pending_events = db.execute("""SELECT * FROM listening_events
+            WHERE source = 'automatic'
+            AND matchStatus IN ('unresolved', 'ambiguous')""").fetchall()
+
+        resolved_count = 0
+
+        for pending in pending_events:
+            same_artist = (
+                normalize_recognition_name(pending["recognizedArtist"] or "")
+                == artist_key
+            )
+            same_album = (
+                normalize_recognition_name(pending["recognizedAlbum"] or "")
+                == album_key
+            )
+
+            if same_artist and same_album:
+                db.execute(
+                    """UPDATE listening_events
+                    SET recordId = ?, matchstatus = 'matched'
+                    WHERE id = ?""",
+                    (record_id, pending["id"]),
+                )
+                resolved_count += 1
+
+        merge_record_sessions(db, record_id)
+
+    return jsonify(
+        {
+            "recordId": record_id,
+            "resolvedCount": resolved_count,
+        }
+    )
+
+
 # Receive event from Pi
 @app.route("/api/listening/recognize", methods=["POST"])
 def recognize_listening_event():
@@ -362,18 +544,7 @@ def recognize_listening_event():
     if not artist or not album:
         return jsonify({"error": "artist and album are required"}), 400
 
-    matches = (
-        get_db()
-        .execute(
-            """SELECT * FROM records
-        WHERE status != 'want'
-        AND LOWER(artist) = LOWER(?)
-        AND LOWER(album) = LOWER(?)
-        ORDER BY id""",
-            (artist, album),
-        )
-        .fetchall()
-    )
+    matches = find_recognition_matches(db, artist, album)
 
     if len(matches) == 0:
         record_id = None

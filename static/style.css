@@ -780,7 +780,16 @@ select:focus-visible {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     overflow: hidden;
+}
+
+.recently-detected-card {
+    grid-template-columns: 160px minmax(0, 1fr);
+}
+
+.recently-detected-card h3 {
+    font-size: var(--text-xl);
 }
 
 @media (max-width: 480px) {
@@ -788,4 +797,41 @@ select:focus-visible {
         grid-template-columns: 64px minmax(0, 1fr);
         gap: var(--space-3);
     }
+
+    .recently-detected-card {
+        grid-template-columns: 96px minmax(0, 1fr);
+    }
+}
+
+.listening-match-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+}
+
+.listening-match-form label {
+    display: grid;
+    gap: var(--space-2);
+    flex: 1 1 240px;
+    min-width: 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+}
+
+.listening-match-form select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+.listening-match-form button {
+    flex-shrink: 0;
+}
+
+.listening-match-form button:disabled,
+.listening-match-form select:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }

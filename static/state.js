@@ -86,7 +86,9 @@ async function loadSpendingStats() {
 async function loadListeningEvents() {
     try {
         listeningEvents = await apiFetch("/api/listening/events");
+        return true;
     } catch (error) {
         showMessage("Couldn't load events: " + error.message);
+        return false;
     }
 }

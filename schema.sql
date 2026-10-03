@@ -38,3 +38,10 @@ CREATE TABLE IF NOT EXISTS listening_recognitions (
     eventId       INTEGER NOT NULL REFERENCES listening_events(id),
     capturedAt    TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS listening_match_overrides (
+    recognizedArtist TEXT NOT NULL,
+    recognizedAlbum  TEXT NOT NULL,
+    recordId         INTEGER NOT NULL REFERENCES records(id),
+    PRIMARY KEY (recognizedArtist, recognizedAlbum)
+);
