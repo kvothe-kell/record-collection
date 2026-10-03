@@ -70,7 +70,7 @@ function makeBarChart(title, entries, formatValue) {
 
         const bar = document.createElement("div");
         bar.className = "bar-fill";
-        bar.style.width = (entry[1] / biggest * 100) + "%";
+        bar.style.width = (biggest > 0 ? entry[1] / biggest * 100 : 0) + "%";
         track.appendChild(bar);
 
         row.appendChild(track);

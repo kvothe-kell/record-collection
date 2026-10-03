@@ -12,7 +12,18 @@ async function apiFetch(url, options) {
     const response = await fetch(url, options || {});
 
     if (!response.ok) {
-        throw new Error("Server returned " + response.status);
+        let message = "Server returned " + response.status;
+
+        try {
+            const body = await response.json();
+            if (body && typeof body.error === "string") {
+                message = body.error;
+            }
+        } catch {
+            // Keep the fallback message if the response isn't JSON.
+        }
+
+        throw new Error(message);
     }
 
     return response.json();

@@ -73,7 +73,6 @@ def compute_spending(df):
             "price": float(row["purchasePrice"]),
         }
 
-    owned = df[df["status"] != "want"].copy()
     owned["dateAdded"] = pd.to_datetime(owned["dateAdded"])
     owned["month"] = owned["dateAdded"].dt.to_period("M")
 

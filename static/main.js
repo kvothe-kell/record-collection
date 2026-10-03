@@ -68,8 +68,12 @@ function handleImportFile(event) {
 
             await loadOverviewStats();
             await loadGrowthStats();
+            await loadSpendingStats();
 
             renderRecords();
+            renderRecentlyDetected();
+            renderListeningSummary();
+            renderListeningHistory();
 
             showMessage("Loaded " + records.length + " records.", "success");
         } catch (error) {

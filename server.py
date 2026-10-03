@@ -6,6 +6,7 @@ import os
 import re
 import sqlite3
 from datetime import date, datetime, timedelta, timezone
+from math import isfinite
 from zoneinfo import ZoneInfo
 
 import pandas as pd
@@ -43,6 +44,7 @@ def get_db():
     """One connection per request, reused within it."""
     if "db" not in g:
         g.db = sqlite3.connect(DB_FILE)
+        g.db.execute("PRAGMA foreign_keys = ON")
         g.db.row_factory = sqlite3.Row
     return g.db
 
@@ -56,6 +58,76 @@ def close_db(exception):
 
 def row_to_dict(row):
     return {key: row[key] for key in row.keys()}
+
+
+def validate_record(record):
+    for field in ("artist", "album"):
+        value = record.get(field)
+        if not isinstance(value, str) or not value.strip():
+            return f"{field} must be a non-empty string"
+
+    if record.get("status") not in ("owned", "want"):
+        return "status must be owned or want"
+
+    date_added = record.get("dateAdded")
+    if date_added not in (None, ""):
+        if not isinstance(date_added, str):
+            return "dateAdded must be a date in YYYY-MM-DD format"
+
+        try:
+            parsed_date = date.fromisoformat(date_added)
+        except ValueError:
+            return "dateAdded must be a date in YYYY-MM-DD format"
+
+        if parsed_date.isoformat() != date_added:
+            return "dateAdded must be a date in YYYY-MM-DD format"
+
+    for (
+        field,
+        minimum,
+        maximum,
+    ) in (
+        ("year", 1, 9999),
+        ("rating", 0, 5),
+        ("releaseId", 1, 9223372036854775807),
+    ):
+        value = record.get(field)
+
+        if value is not None and (
+            type(value) is not int or not minimum <= value <= maximum
+        ):
+            return f"{field} must be an integer from {minimum} to {maximum}, or null"
+
+    price = record.get("purchasePrice")
+
+    if price is not None:
+        if type(price) not in (int, float):
+            return "purchasePrice must be a finite, non-negative number or null"
+
+        try:
+            valid_price = isfinite(price) and price >= 0
+        except OverflowError:
+            valid_price = False
+
+        if not valid_price:
+            return "purchasePrice must be a finite, non-negative number or null"
+
+    for field in (
+        "genre",
+        "subgenre",
+        "label",
+        "format",
+        "mediaCondition",
+        "sleeveCondition",
+        "purchaseLocation",
+        "coverPath",
+    ):
+        value = record.get(field)
+
+        if value is not None and not isinstance(value, str):
+            return f"{field} must be a string or null"
+
+    return None
 
 
 def parse_listening_timestamp(value):
@@ -175,10 +247,14 @@ def get_records():
 # Add New Record
 @app.route("/api/records", methods=["POST"])
 def create_record():
-    record = request.get_json()
+    record = request.get_json(silent=True)
 
     if not isinstance(record, dict):
         return jsonify({"error": "Expected a record object"}), 400
+
+    error = validate_record(record)
+    if error:
+        return jsonify({"error": error}), 400
 
     placeholders = ", ".join(["?"] * len(COLUMNS))
     sql = (
@@ -192,6 +268,7 @@ def create_record():
         cursor = db.execute(sql, values)
         db.commit()
     except sqlite3.IntegrityError as error:
+        db.rollback()
         return jsonify({"error": str(error)}), 409
 
     release_id = record.get("releaseId")
@@ -214,7 +291,14 @@ def create_record():
 # Update/Edit Record
 @app.route("/api/records/<int:record_id>", methods=["PUT"])
 def update_record(record_id):
-    updated = request.get_json()
+    updated = request.get_json(silent=True)
+
+    if not isinstance(updated, dict):
+        return jsonify({"error": "Expected a record object"}), 400
+
+    error = validate_record(updated)
+    if error:
+        return jsonify({"error": error}), 400
 
     db = get_db()
 
@@ -233,6 +317,7 @@ def update_record(record_id):
         cursor = db.execute(sql, values)
         db.commit()
     except sqlite3.IntegrityError as error:
+        db.rollback()
         return jsonify({"error": str(error)}), 409
 
     new_release_id = updated.get("releaseId")
@@ -256,11 +341,35 @@ def update_record(record_id):
 @app.route("/api/records/<int:record_id>", methods=["DELETE"])
 def delete_record(record_id):
     db = get_db()
-    cursor = db.execute("DELETE FROM records WHERE id = ?", (record_id,))
-    db.commit()
 
-    if cursor.rowcount == 0:
-        return jsonify({"error": "Record not found"}), 404
+    with db:
+        db.execute("BEGIN IMMEDIATE")
+
+        referenced = db.execute(
+            """SELECT 1 FROM listening_events WHERE recordId = ?
+            UNION ALL
+            SELECT 1 FROM listening_match_overrides WHERE recordId = ?
+            LIMIT 1""",
+            (record_id, record_id),
+        ).fetchone()
+
+        if referenced is not None:
+            return (
+                jsonify(
+                    {
+                        "error": "This record is referenced by listening history or saved matches"
+                    }
+                ),
+                409,
+            )
+
+        cursor = db.execute(
+            "DELETE FROM records WHERE id = ?",
+            (record_id,),
+        )
+
+        if cursor.rowcount == 0:
+            return jsonify({"error": "Record not found"}), 404
 
     return jsonify({"deleted": record_id})
 
@@ -285,10 +394,34 @@ def export_records():
 # Replace from IMPORT
 @app.route("/api/records", methods=["PUT"])
 def replace_records():
-    incoming = request.get_json()
+    incoming = request.get_json(silent=True)
 
     if not isinstance(incoming, list):
         return jsonify({"error": "Expected a list of records"}), 400
+
+    if any(not isinstance(record, dict) for record in incoming):
+        return jsonify({"error": "Each imported record must be an object"}), 400
+
+    incoming_by_id = {}
+
+    for record in incoming:
+        record_id = record.get("id")
+
+        error = validate_record(record)
+        if error:
+            return jsonify({"error": error}), 400
+
+        if type(record_id) is not int or record_id <= 0:
+            return (
+                jsonify(
+                    {"error": "Each imported record must have a positive integer id"}
+                ),
+                400,
+            )
+        if record_id in incoming_by_id:
+            return jsonify({"error": "Imported record ids must be unique"}), 400
+
+        incoming_by_id[record_id] = record
 
     import_columns = ["id"] + COLUMNS
     placeholders = ", ".join(["?"] * len(import_columns))
@@ -303,6 +436,33 @@ def replace_records():
     db = get_db()
 
     try:
+        db.execute("BEGIN IMMEDIATE")
+        db.execute("PRAGMA defer_foreign_keys = ON")
+        referenced_records = db.execute("""SELECT id, artist, album FROM records
+            WHERE id IN (
+            SELECT recordId FROM listening_events
+            UNION
+            SELECT recordId FROM listening_match_overrides
+            )""").fetchall()
+
+        for existing in referenced_records:
+            imported = incoming_by_id.get(existing["id"])
+
+            if (
+                imported is None
+                or imported.get("artist") != existing["artist"]
+                or imported.get("album") != existing["album"]
+            ):
+                db.rollback()
+                return (
+                    jsonify(
+                        {
+                            "error": "Import must preserve the ids, artists, and albums referenced by listening history or saved matches"
+                        }
+                    ),
+                    409,
+                )
+
         db.execute("DELETE FROM records")
         for record in incoming:
             db.execute(sql, [record.get(column) for column in import_columns])
@@ -344,10 +504,20 @@ def stats_spending():
 def log_listening_event():
     db = get_db()
 
-    event = request.get_json()
+    event = request.get_json(silent=True)
+
+    if not isinstance(event, dict):
+        return jsonify({"error": "Expected a JSON object"}), 400
+
     record_id = event.get("recordId")
-    if record_id is None:
-        return jsonify({"error": "recordId is required"}), 400
+
+    if type(record_id) is not int:
+        return jsonify({"error": "recordId must be an integer"}), 400
+
+    notes = event.get("notes")
+
+    if notes is not None and not isinstance(notes, str):
+        return jsonify({"error": "notes must be a string or null"}), 400
 
     existing = db.execute(
         "SELECT id FROM records WHERE id = ?", (record_id,)
@@ -356,13 +526,16 @@ def log_listening_event():
     if existing is None:
         return jsonify({"error": "Record not found"}), 404
 
-    now = datetime.now().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
 
-    cursor = db.execute(
-        """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source, matchStatus, notes)
+    cursor = (
+        db.execute(
+            """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source, matchStatus, notes)
        VALUES (?, ?, ?, ?, ?, ?)""",
-        (record_id, now, now, "manual", "matched", event.get("notes")),
+            (record_id, now, now, "manual", "matched", notes),
+        ),
     )
+
     db.commit()
 
     row = db.execute(
@@ -375,11 +548,7 @@ def log_listening_event():
 # Get from DB Table
 @app.route("/api/listening/events", methods=["GET"])
 def get_listening_events():
-    rows = (
-        get_db()
-        .execute("SELECT * FROM listening_events ORDER BY lastSeenAt DESC")
-        .fetchall()
-    )
+    rows = get_db().execute("SELECT * FROM listening_events").fetchall()
     events = []
 
     for row in rows:
@@ -388,6 +557,10 @@ def get_listening_events():
         event["lastSeenAt"] = parse_listening_timestamp(event["lastSeenAt"]).isoformat()
         events.append(event)
 
+    events.sort(
+        key=lambda event: parse_listening_timestamp(event["lastSeenAt"]),
+        reverse=True,
+    )
     return jsonify(events)
 
 
@@ -491,18 +664,17 @@ def recognize_listening_event():
     ):
         return jsonify({"error": "Unauthorized"}), 401
 
-    payload = request.get_json()
+    payload = request.get_json(silent=True)
 
     if not isinstance(payload, dict):
         return jsonify({"error": "Expected a JSON object"}), 400
 
     recognition_id = payload.get("recognitionId")
 
-    if recognition_id is not None:
-        if not isinstance(recognition_id, str) or not recognition_id.strip():
-            return jsonify({"error": "recognitionId must be a non-empty string"}), 400
+    if not isinstance(recognition_id, str) or not recognition_id.strip():
+        return jsonify({"error": "recognitionId must be a non-empty string"}), 400
 
-        recognition_id = recognition_id.strip()
+    recognition_id = recognition_id.strip()
 
     db.execute("BEGIN IMMEDIATE")
 
@@ -528,21 +700,45 @@ def recognize_listening_event():
                 200,
             )
     try:
-        if "capturedAt" in payload:
-            now = parse_listening_timestamp(payload["capturedAt"])
-        else:
-            now = datetime.now(timezone.utc)
+        captured_at = payload.get("capturedAt")
+
+        if not isinstance(captured_at, str) or not captured_at.strip():
+            raise ValueError("capturedAt is required")
+
+        captured_time = datetime.fromisoformat(
+            captured_at.strip().replace("Z", "+00:00")
+        )
+
+        if captured_time.utcoffset() is None:
+            raise ValueError("capturedAt must include a timezone")
+
+        now = captured_time.astimezone(timezone.utc)
     except ValueError:
         db.rollback()
-        return jsonify({"error": "capturedAt must be a valid ISO timestamp"}), 400
+        return (
+            jsonify(
+                {"error": "capturedAt must be a valid ISO timestamp with a timezone"}
+            ),
+            400,
+        )
 
     now_str = now.isoformat()
 
-    artist = (payload.get("artist") or "").strip()
-    album = (payload.get("album") or "").strip()
+    artist = payload.get("artist")
+    album = payload.get("album")
 
-    if not artist or not album:
+    if (
+        not isinstance(artist, str)
+        or not isinstance(album, str)
+        or not artist.strip()
+        or not album.strip()
+    ):
+
+        db.rollback()
         return jsonify({"error": "artist and album are required"}), 400
+
+    artist = artist.strip()
+    album = album.strip()
 
     matches = find_recognition_matches(db, artist, album)
 
@@ -592,6 +788,9 @@ def recognize_listening_event():
 
         if (
             recent_event is not None
+            and match_status == "matched"
+            and recent_event["matchStatus"] == "matched"
+            and recent_event["source"] == "automatic"
             and recent_event["recordId"] == record_id
             and (now - parse_listening_timestamp(recent_event["lastSeenAt"]))
             < timedelta(minutes=DEDUP_WINDOW_MINUTES)

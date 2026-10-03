@@ -1,6 +1,7 @@
 /* global FIELDS, records, addButton, cancelButton, setCurrentView, renderCurrentView,
-showMessage, createRecordOnServer, updateRecordOnServer,
-deleteRecordOnServer, loadOverviewStats, loadGrowthStats, renderRecords */
+showMessage, createRecordOnServer, updateRecordOnServer, deleteRecordOnServer,
+loadOverviewStats, loadGrowthStats, renderRecords, loadSpendingStats, renderRecentlyDetected,
+renderListeningSummary, renderListeningHistory */
 /* exported addRecord, startEditing, saveEdit, deleteRecord */
 
 let editingId = null;
@@ -70,8 +71,12 @@ async function addRecord() {
         records.push(saved);
         await loadOverviewStats();
         await loadGrowthStats();
+        await loadSpendingStats();
         clearForm();
         renderRecords();
+        renderRecentlyDetected();
+        renderListeningSummary();
+        renderListeningHistory();
     } catch (error) {
         showMessage("Couldn't save: " + error.message);
     }
@@ -117,10 +122,14 @@ async function saveEdit() {
         Object.assign(record, saved);
         await loadOverviewStats();
         await loadGrowthStats();
+        await loadSpendingStats();
         stopEditing();
         setCurrentView("collection");
         renderCurrentView();
         renderRecords();
+        renderRecentlyDetected();
+        renderListeningSummary();
+        renderListeningHistory();
     } catch (error) {
         showMessage("Couldn't save: " + error.message);
     }
@@ -152,7 +161,11 @@ async function deleteRecord(id) {
         records.splice(index, 1);
         await loadOverviewStats();
         await loadGrowthStats();
+        await loadSpendingStats();
         renderRecords();
+        renderRecentlyDetected();
+        renderListeningSummary();
+        renderListeningHistory();
     } catch (error) {
         showMessage("Couldn't delete: " + error.message);
     }
