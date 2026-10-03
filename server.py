@@ -287,7 +287,15 @@ def get_listening_events():
         .execute("SELECT * FROM listening_events ORDER BY lastSeenAt DESC")
         .fetchall()
     )
-    return jsonify([row_to_dict(row) for row in rows])
+    events = []
+
+    for row in rows:
+        event = row_to_dict(row)
+        event["playedAt"] = parse_listening_timestamp(event["playedAt"]).isoformat()
+        event["lastSeenAt"] = parse_listening_timestamp(event["lastSeenAt"]).isoformat()
+        events.append(event)
+
+    return jsonify(events)
 
 
 # Receive event from Pi

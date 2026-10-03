@@ -731,3 +731,61 @@ select:focus-visible {
 .dialog-row-value {
     text-align: right;
 }
+
+/* ============================================
+   LISTENING HISTORY
+   ============================================ */
+
+#listening-history {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.listening-event {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: start;
+    padding: var(--space-4);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.listening-event-body {
+    overflow-wrap: anywhere;
+}
+
+.listening-event h3 {
+    margin: 0 0 var(--space-2);
+}
+
+.listening-meta,
+.listening-time {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+}
+
+.listening-event>.record-cover {
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.listening-event .record-cover-title {
+    font-size: var(--text-sm);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+
+@media (max-width: 480px) {
+    .listening-event {
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: var(--space-3);
+    }
+}
