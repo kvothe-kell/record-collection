@@ -4,7 +4,8 @@ load_dotenv()
 import json
 import os
 import sqlite3
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
@@ -54,6 +55,18 @@ def close_db(exception):
 
 def row_to_dict(row):
     return {key: row[key] for key in row.keys()}
+
+
+def parse_listening_timestamp(value):
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("Timestamp must be a non-empty string")
+
+    timestamp = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.replace(tzinfo=ZoneInfo("America/New_York"))
+
+    return timestamp.astimezone(timezone.utc)
 
 
 """ RECORD ROUTES """
@@ -289,7 +302,50 @@ def recognize_listening_event():
         return jsonify({"error": "Unauthorized"}), 401
 
     payload = request.get_json()
-    now = datetime.now()
+
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object"}), 400
+
+    recognition_id = payload.get("recognitionId")
+
+    if recognition_id is not None:
+        if not isinstance(recognition_id, str) or not recognition_id.strip():
+            return jsonify({"error": "recognitionId must be a non-empty string"}), 400
+
+        recognition_id = recognition_id.strip()
+
+    db.execute("BEGIN IMMEDIATE")
+
+    if recognition_id is not None:
+        processed = db.execute(
+            """SELECT e.matchstatus, e.recordId
+            FROM listening_recognitions as r
+            JOIN listening_events AS e ON e.id = r.eventId
+            WHERE r.recognitionId = ?""",
+            (recognition_id,),
+        ).fetchone()
+
+        if processed is not None:
+            db.rollback()
+            return (
+                jsonify(
+                    {
+                        "matchStatus": processed["matchStatus"],
+                        "recordId": processed["recordId"],
+                        "duplicate": True,
+                    }
+                ),
+                200,
+            )
+    try:
+        if "capturedAt" in payload:
+            now = parse_listening_timestamp(payload["capturedAt"])
+        else:
+            now = datetime.now(timezone.utc)
+    except ValueError:
+        db.rollback()
+        return jsonify({"error": "capturedAt must be a valid ISO timestamp"}), 400
+
     now_str = now.isoformat()
 
     artist = (payload.get("artist") or "").strip()
@@ -339,31 +395,44 @@ def recognize_listening_event():
                 payload.get("externalId"),
             ),
         )
-        db.commit()
+        event_id = cursor.lastrowid
     else:
-        recent_event = db.execute(
-            """SELECT * FROM listening_events
-                WHERE recordId = ?
-                ORDER BY lastSeenAt DESC
-                LIMIT 1""",
-            (record_id,),
-        ).fetchone()
+        events = db.execute("SELECT * FROM listening_events").fetchall()
 
-        if recent_event is not None and (
-            now - datetime.fromisoformat(recent_event["lastSeenAt"])
-        ) < timedelta(minutes=DEDUP_WINDOW_MINUTES):
-            db.execute(
-                """UPDATE listening_events
-                SET lastSeenAt = ?, recognizedTrack = ?, confidence = ?
-                WHERE id = ?""",
-                (
-                    now_str,
-                    payload.get("track"),
-                    payload.get("confidence"),
-                    recent_event["id"],
-                ),
-            )
-            db.commit()
+        earlier_events = [
+            event
+            for event in events
+            if parse_listening_timestamp(event["playedAt"]) <= now
+        ]
+
+        recent_event = max(
+            earlier_events,
+            key=lambda event: parse_listening_timestamp(event["playedAt"]),
+            default=None,
+        )
+
+        if (
+            recent_event is not None
+            and recent_event["recordId"] == record_id
+            and (now - parse_listening_timestamp(recent_event["lastSeenAt"]))
+            < timedelta(minutes=DEDUP_WINDOW_MINUTES)
+        ):
+            last_seen = parse_listening_timestamp(recent_event["lastSeenAt"])
+
+            if now > last_seen:
+                db.execute(
+                    """UPDATE listening_events
+                       SET lastSeenAt = ?, recognizedTrack = ?, confidence = ?
+                       WHERE id = ?""",
+                    (
+                        now_str,
+                        payload.get("track"),
+                        payload.get("confidence"),
+                        recent_event["id"],
+                    ),
+                )
+
+            event_id = recent_event["id"]
         else:
             cursor = db.execute(
                 """INSERT INTO listening_events
@@ -383,9 +452,24 @@ def recognize_listening_event():
                     payload.get("externalId"),
                 ),
             )
-            db.commit()
+            event_id = cursor.lastrowid
 
-    return jsonify({"matchStatus": match_status, "recordId": record_id}), 201
+    if recognition_id is not None:
+        db.execute(
+            """INSERT INTO listening_recognitions
+            (recognitionId, eventId, capturedAt)
+            VALUES (?, ?, ?)""",
+            (recognition_id, event_id, now_str),
+        )
+
+    db.commit()
+
+    return (
+        jsonify(
+            {"matchStatus": match_status, "recordId": record_id, "eventId": event_id}
+        ),
+        201,
+    )
 
 
 """ MAIN ROUTE """

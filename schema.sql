@@ -32,3 +32,9 @@ CREATE TABLE IF NOT EXISTS records (
     dateAdded         TEXT,
     coverPath         TEXT
 );
+
+CREATE TABLE IF NOT EXISTS listening_recognitions (
+    recognitionId TEXT PRIMARY KEY NOT NULL,
+    eventId       INTEGER NOT NULL REFERENCES listening_events(id),
+    capturedAt    TEXT NOT NULL
+);
