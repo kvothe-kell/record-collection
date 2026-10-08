@@ -207,6 +207,76 @@ function renderListeningHistory() {
     }
 }
 
+function createNowPlayingCard(event) {
+    const record = event.matchStatus === "matched"
+        ? records.find(function (record) {
+            return record.id === event.recordId;
+        })
+        : null;
+
+    const artist = record
+        ? record.artist
+        : event.recognizedArtist || "Unknown artist";
+
+    const album = record
+        ? record.album
+        : event.recognizedAlbum || "Unknown album";
+
+    const card = document.createElement("article");
+    card.className = "listening-event recently-detected-card";
+
+    card.appendChild(
+        createCoverElement(record || { artist: artist, album: album })
+    );
+
+    const body = document.createElement("div");
+    body.className = "listening-event-body";
+    card.appendChild(body);
+
+    body.appendChild(makeDiv("listening-meta", "Last detected album"));
+    body.appendChild(makeDiv("now-playing-artist", artist));
+    if (record) {
+        const artistKey = record.artist.trim().replace(/\s+/g, " ").toLowerCase();
+
+        const artistRecordCount = records.filter(function (ownedRecord) {
+            return ownedRecord.status === "owned"
+                && ownedRecord.artist.trim().replace(/\s+/g, " ").toLowerCase()
+                === artistKey;
+        }).length;
+        const recordLabel = artistRecordCount === 1 ? "Record" : "Records";
+
+        body.appendChild(
+            makeDiv(
+                "listening-meta",
+                artistRecordCount + " " + recordLabel + " Owned " + " by this Artist"
+            )
+        );
+    }
+
+    const heading = document.createElement("h3");
+    heading.textContent = album;
+    body.appendChild(heading);
+
+    body.appendChild(
+        makeDiv(
+            "listening-time",
+            "Last detected: " + formatListeningTimestamp(event.lastSeenAt)
+        )
+    );
+
+    if (
+        event.matchStatus === "unresolved"
+        || event.matchStatus === "ambiguous"
+    ) {
+        body.appendChild(
+            makeDiv("listening-meta", "Choose your collection copy.")
+        );
+        body.appendChild(createListeningMatchForm(event));
+    }
+
+    return card;
+}
+
 function renderRecentlyDetected() {
     recentlyDetectedArea.replaceChildren();
 
@@ -223,8 +293,7 @@ function renderRecentlyDetected() {
         return;
     }
 
-    const card = createListeningEventElement(latestEvent);
-    card.classList.add("recently-detected-card");
+    const card = createNowPlayingCard(latestEvent);
 
     const body = card.querySelector(".listening-event-body");
 
@@ -249,6 +318,7 @@ function renderRecentlyDetected() {
             const details = joinParts([
                 record.year,
                 record.genre,
+                record.subgenre,
                 record.label,
                 record.format
             ]);

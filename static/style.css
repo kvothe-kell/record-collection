@@ -785,7 +785,14 @@ select:focus-visible {
 }
 
 .recently-detected-card {
-    grid-template-columns: 160px minmax(0, 1fr);
+    grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+}
+
+.now-playing-artist {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 600;
 }
 
 .recently-detected-card h3 {
@@ -799,7 +806,11 @@ select:focus-visible {
     }
 
     .recently-detected-card {
-        grid-template-columns: 96px minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .recently-detected-card>.record-cover {
+        max-width: 280px;
     }
 }
 
