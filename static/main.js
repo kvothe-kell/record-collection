@@ -1,7 +1,8 @@
 /* global replaceAllOnServer, renderRecords, showMessage, editingId, renderRecordList,
 addRecord, saveEdit, setStatusFilter, stopEditing, replaceLocalRecords, records,
 loadRecords, loadOverviewStats, loadGrowthStats, loadSpendingStats, loadListeningEvents,
- setCurrentView, currentView, renderListeningHistory,renderRecentlyDetected, renderListeningSummary */
+ setCurrentView, currentView, renderListeningHistory,renderRecentlyDetected,
+ renderListeningSummary, loadListenerState, renderPlaybackStatus, refreshListeningTile */
 
 /* ============================================
    DOM REFERENCES
@@ -169,6 +170,16 @@ importFileInput.addEventListener("change", handleImportFile);
    STARTUP
    ============================================ */
 
+async function pollPlaybackStatus() {
+    try {
+        const stateLoaded = await loadListenerState();
+        renderPlaybackStatus(stateLoaded);
+        await refreshListeningTile();
+    } finally {
+        window.setTimeout(pollPlaybackStatus, 15 * 1000);
+    }
+}
+
 //Set the starting UI state and draw the collection
 async function init() {
     setCurrentView("collection");
@@ -180,10 +191,13 @@ async function init() {
     await loadGrowthStats();
     await loadSpendingStats();
     await loadListeningEvents();
+    const stateLoaded = await loadListenerState();
+    renderPlaybackStatus(stateLoaded);
     renderRecentlyDetected();
     renderListeningSummary();
     renderListeningHistory();
     renderRecords();
+    window.setTimeout(pollPlaybackStatus, 15 * 1000);
 }
 
 init();

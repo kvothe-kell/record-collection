@@ -1,5 +1,8 @@
-/* global listeningEvents, records, makeDiv, joinParts, createCoverElement, makeSummaryCard, resolveListeningEventOnServer, loadListeningEvents, showMessage */
-/* exported renderListeningHistory, renderRecentlyDetected, renderListeningSummary */
+/* global listeningEvents, records, makeDiv, joinParts, createCoverElement, 
+makeSummaryCard, resolveListeningEventOnServer, loadListeningEvents, showMessage,
+listenerServerTime, listenerState */
+/* exported renderListeningHistory, renderRecentlyDetected, renderListeningSummary,
+renderPlaybackStatus, getPlaybackStatus, refreshListeningTile */
 
 const listeningHistoryArea = document.getElementById("listening-history");
 const recentlyDetectedArea = document.getElementById("recently-detected");
@@ -20,6 +23,47 @@ function formatListeningTimestamp(value) {
         minute: "2-digit",
         timeZoneName: "short"
     });
+}
+
+function getPlaybackStatus(stateLoaded) {
+    if (!stateLoaded) {
+        return "Playback status unavailable";
+    }
+
+    if (!listenerState) {
+        return "Waiting for listener";
+    }
+
+    const serverTime = Date.parse(listenerServerTime);
+    const observedAt = Date.parse(listenerState.observedAt);
+    const receivedAt = Date.parse(listenerState.receivedAt)
+
+    if (![serverTime, observedAt, receivedAt].every(Number.isFinite)) {
+        return "Playback status unavailable";
+    }
+
+    const freshnessLimit = 4 * 60 * 1000;
+
+    if (
+        serverTime - observedAt >= freshnessLimit
+        || serverTime - receivedAt >= freshnessLimit
+    ) {
+        return "Listener unavailable";
+    }
+
+    switch (listenerState.audioState) {
+        case "active":
+            return "Audio detected";
+        case "silent":
+            return "No audio detected";
+        default:
+            return "Playback unknown";
+    }
+}
+
+function renderPlaybackStatus(stateloaded) {
+    const statusArea = document.getElementById("playback-status");
+    statusArea.textContent = getPlaybackStatus(stateloaded);
 }
 
 function createListeningMatchForm(event) {
@@ -166,7 +210,11 @@ function renderListeningHistory() {
 function renderRecentlyDetected() {
     recentlyDetectedArea.replaceChildren();
 
-    const latestEvent = listeningEvents[0];
+    const latestEvent = listeningEvents.find(function (event) {
+        return event.source === "automatic"
+    });
+
+    recentlyDetectedArea.dataset.eventKey = JSON.stringify(latestEvent || null);
 
     if (!latestEvent) {
         recentlyDetectedArea.appendChild(
@@ -223,6 +271,41 @@ function renderRecentlyDetected() {
 
     recentlyDetectedArea.appendChild(card);
 }
+
+async function refreshListeningTile() {
+    const loaded = await loadListeningEvents();
+
+    if (!loaded) {
+        return;
+    }
+
+    const latestEvent = listeningEvents.find(function (event) {
+        return event.source === "automatic";
+    });
+
+    const nextKey = JSON.stringify(latestEvent || null);
+
+    if (nextKey === recentlyDetectedArea.dataset.eventKey) {
+        return;
+    }
+
+    const form = recentlyDetectedArea.querySelector(".listening-match-form");
+
+    if (form) {
+        const select = form.querySelector("select");
+        const button = form.querySelector("button");
+
+        if (
+            form.contains(document.activeElement)
+            || select.value != ""
+            || button.disabled
+        ) {
+            return;
+        }
+    }
+    renderRecentlyDetected();
+}
+
 
 function renderListeningSummary() {
     listeningSummaryArea.replaceChildren();

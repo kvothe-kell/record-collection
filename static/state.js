@@ -2,7 +2,8 @@
 /* exported statusFilterValue, setStatusFilter, genreFilterValue, setGenreFilter,
 records, replaceLocalRecords, overviewStats, growthStats, loadRecords, currentView,
 setCurrentView, loadOverviewStats, loadGrowthStats, spendingStats,
-loadSpendingStats, listeningEvents, loadListeningEvents */
+loadSpendingStats, listeningEvents, loadListeningEvents, listenerState,
+listenerServerTime, loadListenerState */
 
 /* ============================================
    STATE
@@ -14,6 +15,8 @@ let growthStats = null;
 let spendingStats = null;
 let currentView = "collection";
 let listeningEvents = [];
+let listenerState = null;
+let listenerServerTime = null;
 
 /* ============================================
    VIEW
@@ -89,6 +92,17 @@ async function loadListeningEvents() {
         return true;
     } catch (error) {
         showMessage("Couldn't load events: " + error.message);
+        return false;
+    }
+}
+
+async function loadListenerState() {
+    try {
+        const loaded = await apiFetch("/api/listening/state");
+        listenerState = loaded.state;
+        listenerServerTime = loaded.serverTime;
+        return true;
+    } catch {
         return false;
     }
 }

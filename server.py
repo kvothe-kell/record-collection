@@ -653,6 +653,106 @@ def resolve_listening_event(event_id):
     )
 
 
+@app.route("/api/listening/state", methods=["POST"])
+def update_listener_state():
+    if not PI_API_TOKEN:
+        return jsonify({"error": "Pi authentication is not configured"}), 503
+
+    if request.headers.get("Authorization") != f"Bearer {PI_API_TOKEN}":
+        return jsonify({"error": "Unauthorized"}), 401
+
+    payload = request.get_json(silent=True)
+
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object"}), 400
+
+    audio_state = payload.get("audioState")
+
+    if audio_state not in ("active", "silent", "unknown"):
+        return jsonify({"error": "Invalid audioState"}), 400
+
+    timestamps = {}
+
+    for field in ("observedAt", "audioStateSince"):
+        value = payload.get(field)
+
+        try:
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError()
+
+            parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+
+            if parsed.utcoffset() is None:
+                raise ValueError()
+
+            timestamps[field] = parsed.astimezone(timezone.utc)
+
+        except ValueError:
+            return (
+                jsonify({"error": f"{field} must be an ISO timestamp with a timezone"}),
+                400,
+            )
+
+    observed_at = timestamps["observedAt"]
+    state_since = timestamps["audioStateSince"]
+    received_at = datetime.now(timezone.utc)
+
+    if state_since > observed_at:
+        return jsonify({"error": "audioStateSince cannot follow observedAt"}), 400
+
+    if observed_at > received_at + timedelta(seconds=30):
+        return jsonify({"error": "observedAt is too far in the future"}), 400
+
+    db = get_db()
+
+    with db:
+        db.execute("BEGIN IMMEDIATE")
+
+        existing = db.execute(
+            "SELECT observedAt FROM listener_state WHERE id = 1"
+        ).fetchone()
+
+        if existing and observed_at <= parse_listening_timestamp(
+            existing["observedAt"]
+        ):
+            return jsonify({"accepted": False, "reason": "Not a newer observation"})
+
+        db.execute(
+            """INSERT INTO listener_state
+               (id, observedAt, receivedAt, audioState, audioStateSince)
+               VALUES (1, ?, ?, ?, ?)
+               ON CONFLICT(id) DO UPDATE SET
+                   observedAt = excluded.observedAt,
+                   receivedAt = excluded.receivedAt,
+                   audioState = excluded.audioState,
+                   audioStateSince = excluded.audioStateSince""",
+            (
+                observed_at.isoformat(),
+                received_at.isoformat(),
+                audio_state,
+                state_since.isoformat(),
+            ),
+        )
+
+    return jsonify({"accepted": True})
+
+
+@app.route("/api/listening/state", methods=["GET"])
+def get_listener_state():
+    row = get_db().execute("SELECT * FROM listener_state WHERE id = 1").fetchone()
+
+    response = jsonify(
+        {
+            "state": row_to_dict(row) if row is not None else None,
+            "serverTime": datetime.now(timezone.utc).isoformat(),
+        }
+    )
+
+    response.headers["Cache-Control"] = "no-store"
+
+    return response
+
+
 # Receive event from Pi
 @app.route("/api/listening/recognize", methods=["POST"])
 def recognize_listening_event():

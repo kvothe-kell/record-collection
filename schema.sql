@@ -45,3 +45,12 @@ CREATE TABLE IF NOT EXISTS listening_match_overrides (
     recordId         INTEGER NOT NULL REFERENCES records(id),
     PRIMARY KEY (recognizedArtist, recognizedAlbum)
 );
+
+CREATE TABLE IF NOT EXISTS listener_state (
+    id              INTEGER PRIMARY KEY CHECK (id = 1),
+    observedAt      TEXT NOT NULL,
+    receivedAt      TEXT NOT NULL,
+    audioState      TEXT NOT NULL
+                    CHECK (audioState IN ('active', 'silent', 'unknown')),
+    audioStateSince TEXT NOT NULL
+);
