@@ -1,6 +1,6 @@
 /* global listeningEvents, records, makeDiv, joinParts, createCoverElement, 
 makeSummaryCard, resolveListeningEventOnServer, loadListeningEvents, showMessage,
-listenerServerTime, listenerState */
+listenerServerTime, listenerState, formatPrice */
 /* exported renderListeningHistory, renderRecentlyDetected, renderListeningSummary,
 renderPlaybackStatus, getPlaybackStatus, refreshListeningTile */
 
@@ -19,9 +19,9 @@ function formatListeningTimestamp(value) {
         month: "short",
         day: "numeric",
         year: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short"
+        // hour: "numeric",
+        // minute: "2-digit",
+        // timeZoneName: "short"
     });
 }
 
@@ -176,7 +176,7 @@ function createListeningEventElement(event) {
     body.appendChild(
         makeDiv(
             "listening-time",
-            "Last Detected: " + formatListeningTimestamp(event.lastSeenAt)
+            "Last Played: " + formatListeningTimestamp(event.lastSeenAt)
         )
     );
 
@@ -205,6 +205,45 @@ function renderListeningHistory() {
             createListeningEventElement(event)
         );
     }
+}
+
+function createMyCopyDetails(record) {
+    const section = document.createElement("section");
+    section.className = "now-playing-copy";
+
+    const heading = document.createElement("h4");
+    heading.textContent = "Our Copy";
+    section.appendChild(heading);
+
+    const fields = [
+        ["Rating", record.rating != null ? record.rating + "/5" : ""],
+        ["Purchase Price", formatPrice(record.purchasePrice)],
+        ["Purchase Location", record.purchaseLocation],
+        ["Media Condition", record.mediaCondition],
+        ["Sleeve condition", record.sleeveCondition],
+        ["Date Purchased", record.dateAdded]
+    ];
+
+    let detailCount = 0;
+
+    for (const [label, value] of fields) {
+        if (value === null || value === undefined || value === "") {
+            continue;
+        }
+
+        section.appendChild(
+            makeDiv("listening-meta", label + ": " + value)
+        );
+        detailCount++;
+    }
+
+    if (detailCount === 0) {
+        section.appendChild(
+            makeDiv("listening-meta", "No copy details added yet.")
+        );
+    }
+
+    return section;
 }
 
 function createNowPlayingCard(event) {
@@ -260,7 +299,7 @@ function createNowPlayingCard(event) {
     body.appendChild(
         makeDiv(
             "listening-time",
-            "Last detected: " + formatListeningTimestamp(event.lastSeenAt)
+            "Last Played: " + formatListeningTimestamp(event.lastSeenAt)
         )
     );
 
@@ -328,6 +367,8 @@ function renderRecentlyDetected() {
                     makeDiv("listening-meta", details)
                 );
             }
+
+            body.appendChild(createMyCopyDetails(record));
         }
 
     } else {
