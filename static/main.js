@@ -17,6 +17,7 @@ const exportButton = document.getElementById("export-button");
 const importFileInput = document.getElementById("import-file");
 const recordDialog = document.getElementById("record-dialog");
 const recordDialogClose = document.getElementById("dialog-close-button");
+const displayModeButton = document.getElementById("display-mode-button");
 
 
 /* ============================================
@@ -27,6 +28,7 @@ const navButtons = document.querySelectorAll(".nav-button");
 const views = document.querySelectorAll(".view");
 
 function renderCurrentView() {
+    document.body.dataset.view = currentView;
     for (const view of views) {
         view.classList.toggle("active", view.id === "view-" + currentView);
     }
@@ -102,6 +104,15 @@ function handleAddButtonClick() {
         saveEdit();
     }
 }
+
+displayModeButton.addEventListener("click", function () {
+    const enabled = document.body.classList.toggle("display-mode");
+
+    displayModeButton.setAttribute("aria-pressed", String(enabled));
+    displayModeButton.textContent = enabled
+        ? "Exit display mode"
+        : "Display mode";
+});
 
 for (const button of navButtons) {
     button.addEventListener("click", function () {

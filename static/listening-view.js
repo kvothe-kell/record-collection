@@ -212,15 +212,15 @@ function createMyCopyDetails(record) {
     section.className = "now-playing-copy";
 
     const heading = document.createElement("h4");
-    heading.textContent = "Our Copy";
+    heading.textContent = "Collection Copy";
     section.appendChild(heading);
 
     const fields = [
         ["Rating", record.rating != null ? record.rating + "/5" : ""],
         ["Purchase Price", formatPrice(record.purchasePrice)],
         ["Purchase Location", record.purchaseLocation],
-        ["Media Condition", record.mediaCondition],
-        ["Sleeve condition", record.sleeveCondition],
+        // ["Media Condition", record.mediaCondition],
+        // ["Sleeve condition", record.sleeveCondition],
         ["Date Purchased", record.dateAdded]
     ];
 
@@ -272,8 +272,18 @@ function createNowPlayingCard(event) {
     body.className = "listening-event-body";
     card.appendChild(body);
 
-    body.appendChild(makeDiv("listening-meta", "Last detected album"));
     body.appendChild(makeDiv("now-playing-artist", artist));
+
+    const heading = document.createElement("h3");
+    heading.textContent = album;
+    body.appendChild(heading);
+
+    body.appendChild(
+        makeDiv(
+            "listening-time",
+            "Last Played: " + formatListeningTimestamp(event.lastSeenAt)
+        )
+    );
     if (record) {
         const artistKey = record.artist.trim().replace(/\s+/g, " ").toLowerCase();
 
@@ -291,18 +301,6 @@ function createNowPlayingCard(event) {
             )
         );
     }
-
-    const heading = document.createElement("h3");
-    heading.textContent = album;
-    body.appendChild(heading);
-
-    body.appendChild(
-        makeDiv(
-            "listening-time",
-            "Last Played: " + formatListeningTimestamp(event.lastSeenAt)
-        )
-    );
-
     if (
         event.matchStatus === "unresolved"
         || event.matchStatus === "ambiguous"

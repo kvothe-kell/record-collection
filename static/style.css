@@ -846,3 +846,105 @@ select:focus-visible {
     opacity: 0.6;
     cursor: wait;
 }
+
+/* ============================================
+   DIPLAY MODE
+   ============================================ */
+/* Display mode */
+body.display-mode[data-view="now-playing"] {
+    margin: 0;
+    padding: 0;
+}
+
+body.display-mode[data-view="now-playing"] .app-shell {
+    gap: 0;
+}
+
+body.display-mode[data-view="now-playing"] .sidebar,
+body.display-mode[data-view="now-playing"] .topbar,
+body.display-mode[data-view="now-playing"] #recently-detected-heading {
+    display: none;
+}
+
+body.display-mode[data-view="now-playing"] main {
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--space-3);
+}
+
+body.display-mode[data-view="now-playing"] #display-mode-button {
+    min-height: 44px;
+}
+
+
+/* Now Playing Sub View */
+
+body.display-mode[data-view="now-playing"] .recently-detected-card {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    gap: var(--space-4);
+    padding: var(--space-3);
+}
+
+body.display-mode[data-view="now-playing"] .now-playing-artist,
+body.display-mode[data-view="now-playing"] .recently-detected-card h3 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+}
+
+@media (max-width: 600px) {
+    body.display-mode[data-view="now-playing"] .recently-detected-card {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.display-mode[data-view="now-playing"] .recently-detected-card>.record-cover {
+        max-width: 320px;
+        justify-self: center;
+    }
+}
+
+body.display-mode[data-view="now-playing"] #message:empty {
+    display: none;
+}
+
+body.display-mode[data-view="now-playing"] .now-playing-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+body.display-mode[data-view="now-playing"] #playback-status {
+    margin: 0;
+}
+
+.now-playing-controls-menu {
+    margin-bottom: var(--space-3);
+    margin-top: var(--space-3);
+}
+
+.now-playing-controls-menu>summary {
+    width: fit-content;
+    padding: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    cursor: pointer;
+}
+
+.now-playing-controls-menu[open] .now-playing-controls {
+    margin-top: var(--space-2);
+}
+
+body.display-mode[data-view="now-playing"] .now-playing-artist {
+    margin: var(--space-1) 0;
+}
+
+body.display-mode[data-view="now-playing"] .listening-meta,
+body.display-mode[data-view="now-playing"] .listening-time {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+body.display-mode[data-view="now-playing"] .now-playing-copy h4 {
+    margin: var(--space-3) 0 var(--space-1);
+}
