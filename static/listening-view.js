@@ -358,6 +358,15 @@ function createAlbumArtwork(record) {
         }
     });
 
+    square.addEventListener("click", function () {
+        button.click();
+    })
+
+    square.style.cursor = button.disabled ? "default" : "pointer";
+    square.title = button.disabled
+        ? "Tracks unavailable"
+        : "Tap to switch between artwork and tracks";
+
     return panel;
 }
 
