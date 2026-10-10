@@ -13,7 +13,6 @@ import pandas as pd
 from flask import Flask, Response, g, jsonify, request
 
 from discogs import fetch_cover, fetch_tracklist
-from recognition import track_matches
 from stats import compute_growth, compute_overview, compute_spending
 
 app = Flask(__name__, static_folder="static", static_url_path="")
