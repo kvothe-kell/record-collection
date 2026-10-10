@@ -54,3 +54,9 @@ CREATE TABLE IF NOT EXISTS listener_state (
                     CHECK (audioState IN ('active', 'silent', 'unknown')),
     audioStateSince TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS discogs_tracklists (
+    releaseId   INTEGER PRIMARY KEY CHECK (releaseId > 0),
+    tracklist   TEXT NOT NULL,
+    fetchedAt   TEXT NOT NULL
+);

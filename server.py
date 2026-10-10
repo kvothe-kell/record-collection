@@ -12,7 +12,8 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
 
-from discogs import fetch_cover
+from discogs import fetch_cover, fetch_tracklist
+from recognition import track_matches
 from stats import compute_growth, compute_overview, compute_spending
 
 app = Flask(__name__, static_folder="static", static_url_path="")
@@ -242,6 +243,58 @@ def merge_record_sessions(db, record_id):
 def get_records():
     rows = get_db().execute("SELECT * FROM records").fetchall()
     return jsonify([row_to_dict(row) for row in rows])
+
+
+# Get Track Listing
+@app.route("/api/records/<int:record_id>/tracklist", methods=["GET"])
+def get_record_tracklist(record_id):
+    db = get_db()
+    record = db.execute(
+        "SELECT releaseId FROM records WHERE id = ?", (record_id,)
+    ).fetchone()
+
+    if record is None:
+        return jsonify({"error": "Record not found"}), 404
+
+    release_id = record["releaseId"]
+
+    if not release_id:
+        return jsonify({"error": "No Discogs release ID for this record"}), 404
+
+    cached = db.execute(
+        "SELECT * FROM discogs_tracklists WHERE releaseId = ?",
+        (release_id,),
+    ).fetchone()
+
+    if cached is None:
+        tracklist = fetch_tracklist(release_id)
+
+        if tracklist is None:
+            return jsonify({"error": "Couldn't load tracks from Discogs"}), 502
+
+        fetched_at = datetime.now(timezone.utc).isoformat()
+
+        with db:
+            db.execute(
+                """INSERT INTO discogs_tracklists
+                (releaseId, tracklist, fetchedAt)
+                VALUES (?, ?, ?)
+                ON CONFLICT(releaseId) DO NOTHING""",
+                (release_id, json.dumps(tracklist), fetched_at),
+            )
+
+        cached = db.execute(
+            "SELECT * FROM discogs_tracklists WHERE releaseId = ?",
+            (release_id,),
+        ).fetchone()
+
+    return jsonify(
+        {
+            "releaseId": cached["releaseId"],
+            "tracklist": json.loads(cached["tracklist"]),
+            "fetchedAt": cached["fetchedAt"],
+        }
+    )
 
 
 # Add New Record

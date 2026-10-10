@@ -1,5 +1,5 @@
 /* exported apiFetch, createRecordOnServer, updateRecordOnServer,resolveListeningEventOnServer,
-deleteRecordOnServer, replaceAllOnServer, createListeningEventOnServer */
+deleteRecordOnServer, replaceAllOnServer, createListeningEventOnServer, loadRecordTracklist */
 /* ============================================
    API CALLS
    ============================================ */
@@ -76,4 +76,8 @@ async function resolveListeningEventOnServer(eventId, recordId) {
         headers: JSON_HEADERS,
         body: JSON.stringify({ recordId: recordId })
     });
+}
+
+async function loadRecordTracklist(recordId) {
+    return apiFetch("/api/records/" + recordId + "/tracklist");
 }

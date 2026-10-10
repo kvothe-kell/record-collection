@@ -1,6 +1,6 @@
 /* global listeningEvents, records, makeDiv, joinParts, createCoverElement, 
 makeSummaryCard, resolveListeningEventOnServer, loadListeningEvents, showMessage,
-listenerServerTime, listenerState, formatPrice */
+listenerServerTime, listenerState, formatPrice, loadRecordTracklist */
 /* exported renderListeningHistory, renderRecentlyDetected, renderListeningSummary,
 renderPlaybackStatus, getPlaybackStatus, refreshListeningTile */
 
@@ -246,6 +246,121 @@ function createMyCopyDetails(record) {
     return section;
 }
 
+function createTrackListElement(tracks) {
+    const list = document.createElement("div");
+    list.className = "album-tracklist";
+
+    for (const track of tracks) {
+        if (!track || typeof track != "object") {
+            continue;
+        }
+
+        const row = makeDiv(
+            "album-track",
+            joinParts([
+                track.position,
+                track.title || "Untitled track",
+                track.duration
+            ])
+        );
+
+        if (track.type_ === "heading") {
+            row.classList.add("album-track-heading");
+        }
+
+        list.appendChild(row);
+
+        if (Array.isArray(track.sub_tracks)) {
+            const children = createTrackListElement(track.sub_tracks);
+            children.classList.add("album-subtracks");
+            list.appendChild(children);
+        }
+    }
+
+    return list;
+}
+
+function createAlbumArtwork(record) {
+    const panel = document.createElement("div");
+    panel.className = "album-artwork-panel";
+
+    panel.dataset.recordKey = JSON.stringify([record.id, record.releaseId]);
+
+    const square = document.createElement("div");
+    square.className = "album-artwork-square";
+    panel.appendChild(square);
+
+    const front = document.createElement("div");
+    front.className = "album-artwork-front";
+    front.appendChild(createCoverElement(record));
+    square.appendChild(front);
+
+    const back = document.createElement("div");
+    back.className = "album-artwork-back";
+    back.hidden = true;
+    back.appendChild(makeDiv("listening-meta", "Track listing"));
+    square.appendChild(back);
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "album-artwork-toggle";
+    button.textContent = "Show tracks";
+    button.setAttribute("aria-expanded", "false");
+    panel.appendChild(button);
+
+    let tracksLoaded = false;
+    let loading = false;
+
+    if (!record.id || !record.releaseId) {
+        button.disabled = true;
+        button.textContent = "Tracks unavailable";
+    }
+
+    button.addEventListener("click", async function () {
+        const showingTracks = back.hidden;
+
+        square.classList.add("has-flipped");
+
+        front.hidden = showingTracks;
+        back.hidden = !showingTracks;
+        button.textContent = showingTracks ? "Show artwork" : "Show Tracks";
+        button.setAttribute("aria-expanded", String(showingTracks));
+
+        if (!showingTracks || tracksLoaded || loading) {
+            return;
+        }
+
+        loading = true;
+        back.replaceChildren(makeDiv("listening-meta", "Loading tracks..."));
+
+        try {
+            const result = await loadRecordTracklist(record.id);
+
+            if (result.tracklist.length === 0) {
+                back.replaceChildren(
+                    makeDiv("listening-meta", "No tracks listed for this pressing.")
+                );
+            } else {
+                back.replaceChildren(createTrackListElement(result.tracklist));
+            }
+
+            tracksLoaded = true;
+        } catch (error) {
+            back.replaceChildren(
+                makeDiv(
+                    "listening-meta",
+                    "Couldn't load tracks: " + error.message
+                    + ". Switch to artwork and back to retry."
+                )
+            );
+        } finally {
+            loading = false;
+        }
+    });
+
+    return panel;
+}
+
 function createNowPlayingCard(event) {
     const record = event.matchStatus === "matched"
         ? records.find(function (record) {
@@ -265,7 +380,7 @@ function createNowPlayingCard(event) {
     card.className = "listening-event recently-detected-card";
 
     card.appendChild(
-        createCoverElement(record || { artist: artist, album: album })
+        createAlbumArtwork(record || { artist: artist, album: album })
     );
 
     const body = document.createElement("div");
@@ -315,6 +430,14 @@ function createNowPlayingCard(event) {
 }
 
 function renderRecentlyDetected() {
+    const previousPanel = recentlyDetectedArea.querySelector(".album-artwork-panel");
+    const previousKey = previousPanel ? previousPanel.dataset.recordKey : null;
+    const previousButton = previousPanel
+        ? previousPanel.querySelector(".album-artwork-toggle")
+        : null;
+    const wasShowingTracks = previousButton
+        && previousButton.getAttribute("aria-expanded") === "true";
+
     recentlyDetectedArea.replaceChildren();
 
     const latestEvent = listeningEvents.find(function (event) {
@@ -379,6 +502,12 @@ function renderRecentlyDetected() {
     }
 
     recentlyDetectedArea.appendChild(card);
+
+    const nextPanel = card.querySelector(".album-artwork-panel");
+
+    if (wasShowingTracks && nextPanel.dataset.recordKey === previousKey) {
+        nextPanel.querySelector(".album-artwork-toggle").click();
+    }
 }
 
 async function refreshListeningTile() {
