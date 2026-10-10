@@ -948,10 +948,6 @@ body.display-mode[data-view="now-playing"] .now-playing-copy h4 {
     margin: var(--space-3) 0 var(--space-1);
 }
 
-.album-artwork-panel {
-    min-width: 0;
-}
-
 .album-artwork-square {
     position: relative;
     aspect-ratio: 1;
@@ -1030,6 +1026,7 @@ body.display-mode[data-view="now-playing"] .now-playing-copy h4 {
 
 .album-artwork-panel {
     position: relative;
+    min-width: 0;
 }
 
 .album-artwork-toggle:not(:focus-visible) {
