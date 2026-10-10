@@ -148,7 +148,58 @@ def normalize_recognition_name(value):
     return re.sub(r"\s*/\s*", "/", normalized)
 
 
-def find_recognition_matches(db, artist, album):
+def find_track_matches(db, artist, track):
+    if not isinstance(track, str) or not track.strip():
+        return []
+
+    artist_key = normalize_recognition_name(artist)
+    track_key = normalize_recognition_name(track)
+
+    def contains_track(entries):
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+
+            title = entry.get("title")
+
+            if (
+                entry.get("type_") == "track"
+                and isinstance(title, str)
+                and normalize_recognition_name(title) == track_key
+            ):
+                return True
+
+            sub_tracks = entry.get("sub_tracks")
+
+            if isinstance(sub_tracks, list) and contains_track(sub_tracks):
+                return True
+
+        return False
+
+    rows = db.execute("""SELECT r.*, t.tracklist
+           FROM records AS r
+           JOIN discogs_tracklists AS t ON t.releaseId = r.releaseId
+           WHERE r.status = 'owned'
+           ORDER BY r.id""").fetchall()
+
+    matches = []
+
+    for record in rows:
+        if normalize_recognition_name(record["artist"]) != artist_key:
+            continue
+
+        try:
+            entries = json.loads(record["tracklist"])
+        except (TypeError, ValueError):
+            continue
+
+        if isinstance(entries, list) and contains_track(entries):
+            matches.append(record)
+
+    return matches
+
+
+def find_recognition_matches(db, artist, album, album_candidates=None, track=None):
     artist_key = normalize_recognition_name(artist)
     album_key = normalize_recognition_name(album)
 
@@ -169,12 +220,50 @@ def find_recognition_matches(db, artist, album):
         "SELECT * FROM records WHERE status != 'want' ORDER BY id"
     ).fetchall()
 
-    return [
+    direct_matches = [
         record
         for record in owned_records
         if normalize_recognition_name(record["artist"]) == artist_key
         and normalize_recognition_name(record["album"]) == album_key
     ]
+
+    if direct_matches:
+        return direct_matches
+
+    candidate_matches = {}
+
+    if not isinstance(album_candidates, list):
+        album_candidates = []
+
+    for candidate in album_candidates:
+        if not isinstance(candidate, dict):
+            continue
+
+        candidate_artist = candidate.get("artist")
+        candidate_album = candidate.get("album")
+
+        if (
+            not isinstance(candidate_artist, str)
+            or not candidate_artist.strip()
+            or not isinstance(candidate_album, str)
+            or not candidate_album.strip()
+        ):
+            continue
+
+        candidate_artist_key = normalize_recognition_name(candidate_artist)
+        candidate_album_key = normalize_recognition_name(candidate_album)
+
+        for record in owned_records:
+            if (
+                normalize_recognition_name(record["artist"]) == candidate_artist_key
+                and normalize_recognition_name(record["album"]) == candidate_album_key
+            ):
+                candidate_matches[record["id"]] = record
+
+    if candidate_matches:
+        return list(candidate_matches.values())
+
+    return find_track_matches(db, artist, track)
 
 
 def merge_record_sessions(db, record_id):
@@ -893,7 +982,13 @@ def recognize_listening_event():
     artist = artist.strip()
     album = album.strip()
 
-    matches = find_recognition_matches(db, artist, album)
+    matches = find_recognition_matches(
+        db,
+        artist,
+        album,
+        payload.get("albumCandidates"),
+        payload.get("track"),
+    )
 
     if len(matches) == 0:
         record_id = None
