@@ -6,6 +6,7 @@ import os
 import sqlite3
 from datetime import date, datetime, timedelta, timezone
 from math import isfinite
+from pathlib import Path
 
 import pandas as pd
 from flask import Flask, Response, g, jsonify, request
@@ -22,7 +23,10 @@ from stats import compute_growth, compute_overview, compute_spending
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
-DB_FILE = "records.db"
+DB_FILE = Path(
+    os.environ.get("DATABASE_PATH", Path(__file__).resolve().parent / "records.db")
+)
+
 COLUMNS = [
     "releaseId",
     "artist",
@@ -481,12 +485,10 @@ def log_listening_event():
 
     now = datetime.now(timezone.utc).isoformat()
 
-    cursor = (
-        db.execute(
-            """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source, matchStatus, notes)
-       VALUES (?, ?, ?, ?, ?, ?)""",
-            (record_id, now, now, "manual", "matched", notes),
-        ),
+    cursor = db.execute(
+        """INSERT INTO listening_events (recordId, playedAt, lastSeenAt, source, matchStatus, notes)
+        VALUES (?, ?, ?, ?, ?, ?)""",
+        (record_id, now, now, "manual", "matched", notes),
     )
 
     db.commit()
