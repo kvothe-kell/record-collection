@@ -8,3 +8,5 @@ records.json.tmp
 records.db
 __pycache__/
 static/covers/
+records.db-*
+backups/
