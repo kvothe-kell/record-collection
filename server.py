@@ -4,6 +4,7 @@ load_dotenv()
 import json
 import os
 import sqlite3
+from contextlib import closing
 from datetime import date, datetime, timedelta, timezone
 from hmac import compare_digest
 from math import isfinite
@@ -24,9 +25,65 @@ from stats import compute_growth, compute_overview, compute_spending
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
-DB_FILE = Path(
-    os.environ.get("DATABASE_PATH", Path(__file__).resolve().parent / "records.db")
+DB_FILE = (
+    Path(
+        os.environ.get("DATABASE_PATH", Path(__file__).resolve().parent / "records.db")
+    )
+    .expanduser()
+    .resolve()
 )
+
+if not DB_FILE.is_file():
+    raise RuntimeError(
+        f"Database file not found: {DB_FILE}. "
+        "Set DATABASE_PATH to an existing collection database."
+    )
+
+
+def validate_database_schema():
+    schema_path = Path(__file__).resolve().parent / "schema.sql"
+
+    try:
+        with closing(sqlite3.connect(":memory:")) as expected_db:
+            expected_db.executescript(schema_path.read_text(encoding="utf-8"))
+
+            tables = expected_db.execute(
+                "SELECT name FROM sqlite_master "
+                "WHERE type = 'table' AND name NOT LIKE 'sqlite_%'"
+            ).fetchall()
+
+            with closing(
+                sqlite3.connect(DB_FILE.as_uri() + "?mode=ro", uri=True)
+            ) as actual_db:
+                for (table,) in tables:
+                    quoted_table = '"' + table.replace('"', '""') + '"'
+                    query = f"PRAGMA table_info({quoted_table})"
+
+                    expected_columns = {row[1] for row in expected_db.execute(query)}
+                    actual_columns = {row[1] for row in actual_db.execute(query)}
+
+                    if not actual_columns:
+                        raise RuntimeError(
+                            f"Required database table missing: {table}. "
+                            "Restore the correct database or apply a reviewed migration."
+                        )
+
+                    missing = expected_columns - actual_columns
+
+                    if missing:
+                        raise RuntimeError(
+                            f"Database table {table} is missing columns: "
+                            f"{', '.join(sorted(missing))}. "
+                            "Apply a reviewed database migration before starting."
+                        )
+
+    except (sqlite3.Error, OSError) as error:
+        raise RuntimeError(
+            f"Could not validate database schema for {DB_FILE}: {error}"
+        ) from error
+
+
+validate_database_schema()
 
 COLUMNS = [
     "releaseId",
@@ -66,7 +123,11 @@ def check_pi_auth():
 def get_db():
     """One connection per request, reused within it."""
     if "db" not in g:
-        g.db = sqlite3.connect(DB_FILE)
+        g.db = sqlite3.connect(
+            DB_FILE.as_uri() + "?mode=rw",
+            uri=True,
+            timeout=10,
+        )
         g.db.execute("PRAGMA foreign_keys = ON")
         g.db.row_factory = sqlite3.Row
     return g.db
