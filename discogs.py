@@ -47,8 +47,8 @@ def fetch_cover(release_id):
             print(f"No images found for release {release_id}")
             return None
 
-        COVERS_DIR.mkdir(parents=True, exist_ok=True)
-        file_path = COVERS_DIR / f"{release_id}.jpg"
+        COVER_DIR.mkdir(parents=True, exist_ok=True)
+        file_path = COVER_DIR / f"{release_id}.jpg"
 
         with open(file_path, "wb") as f:
             f.write(image_response.content)

@@ -5,6 +5,7 @@ import json
 import os
 import sqlite3
 from datetime import date, datetime, timedelta, timezone
+from hmac import compare_digest
 from math import isfinite
 from pathlib import Path
 
@@ -47,6 +48,19 @@ COLUMNS = [
 ]
 
 PI_API_TOKEN = os.environ.get("PI_API_TOKEN")
+
+
+def check_pi_auth():
+    if not PI_API_TOKEN or not PI_API_TOKEN.strip():
+        return jsonify({"error": "Pi authentication is not configured"}), 503
+
+    supplied = request.headers.get("Authorization", "")
+    expected = f"Bearer {PI_API_TOKEN}"
+
+    if not compare_digest(supplied.encode("utf-8"), expected.encode("utf-8")):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    return None
 
 
 def get_db():
@@ -610,11 +624,9 @@ def resolve_listening_event(event_id):
 
 @app.route("/api/listening/state", methods=["POST"])
 def update_listener_state():
-    if not PI_API_TOKEN:
-        return jsonify({"error": "Pi authentication is not configured"}), 503
-
-    if request.headers.get("Authorization") != f"Bearer {PI_API_TOKEN}":
-        return jsonify({"error": "Unauthorized"}), 401
+    auth_error = check_pi_auth()
+    if auth_error is not None:
+        return auth_error
 
     payload = request.get_json(silent=True)
 
@@ -711,13 +723,9 @@ def get_listener_state():
 # Receive event from Pi
 @app.route("/api/listening/recognize", methods=["POST"])
 def recognize_listening_event():
-    db = get_db()
-
-    if (
-        PI_API_TOKEN
-        and request.headers.get("Authorization") != f"Bearer {PI_API_TOKEN}"
-    ):
-        return jsonify({"error": "Unauthorized"}), 401
+    auth_error = check_pi_auth()
+    if auth_error is not None:
+        return auth_error
 
     payload = request.get_json(silent=True)
 
@@ -731,6 +739,7 @@ def recognize_listening_event():
 
     recognition_id = recognition_id.strip()
 
+    db = get_db()
     db.execute("BEGIN IMMEDIATE")
 
     if recognition_id is not None:
@@ -913,7 +922,7 @@ def recognize_listening_event():
 
 @app.route("/covers/<path:filename>")
 def serve_cover(filename):
-    return send_from_directory(COVERS_DIR, filename)
+    return send_from_directory(COVER_DIR, filename)
 
 
 """ MAIN ROUTE """
