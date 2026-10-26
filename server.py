@@ -9,9 +9,9 @@ from math import isfinite
 from pathlib import Path
 
 import pandas as pd
-from flask import Flask, Response, g, jsonify, request
+from flask import Flask, Response, g, jsonify, request, send_from_directory
 
-from discogs import fetch_cover, fetch_tracklist
+from discogs import COVER_DIR, fetch_cover, fetch_tracklist
 from listening import (
     DEDUP_WINDOW_MINUTES,
     find_recognition_matches,
@@ -909,6 +909,11 @@ def recognize_listening_event():
         ),
         201,
     )
+
+
+@app.route("/covers/<path:filename>")
+def serve_cover(filename):
+    return send_from_directory(COVERS_DIR, filename)
 
 
 """ MAIN ROUTE """

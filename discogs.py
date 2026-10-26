@@ -1,9 +1,19 @@
 import os
+from pathlib import Path
 
 import requests
 
 DISCOGS_TOKEN = os.environ.get("DISCOGS_TOKEN")
-COVERS_DIR = "static/covers"
+COVER_DIR = (
+    Path(
+        os.environ.get(
+            "COVER_DIR",
+            Path(__file__).resolve().parent / "static" / "covers",
+        )
+    )
+    .expanduser()
+    .resolve()
+)
 
 
 def fetch_cover(release_id):
@@ -37,8 +47,8 @@ def fetch_cover(release_id):
             print(f"No images found for release {release_id}")
             return None
 
-        os.makedirs(COVERS_DIR, exist_ok=True)
-        file_path = f"{COVERS_DIR}/{release_id}.jpg"
+        COVERS_DIR.mkdir(parents=True, exist_ok=True)
+        file_path = COVERS_DIR / f"{release_id}.jpg"
 
         with open(file_path, "wb") as f:
             f.write(image_response.content)
