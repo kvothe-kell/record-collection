@@ -995,4 +995,8 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=5002)
+    app.run(
+        host=os.environ.get("DEV_HOST", "127.0.0.1"),
+        port=5002,
+        debug=os.environ.get("DEV_DEBUG", "0") == "1",
+    )
